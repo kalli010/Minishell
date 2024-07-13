@@ -6,7 +6,7 @@ GNL_SRC = ./lib/get_next_line/
 GNL = $(GNL_SRC)/get_next_line.a
 
 LIBFT_SRC = ./lib/libft/
-LIBFT = $(GNL_SRC)/libft.a
+LIBFT = $(LIBFT_SRC)/libft.a
 
 src = ./utils/Minishell.c
 
@@ -24,13 +24,13 @@ $(LIBFT): $(LIBFT_SRC)/*.c
 	make -C $(LIBFT_SRC)
 
 clean:
-	make -C clean $(GNL_SRC)
-	make -C clean $(LIBFT_SRC)
+	make -C $(LIBFT_SRC) clean
+	make -C $(GNL_SRC) clean
 	rm -fr $(obj)
 
 fclean: clean
-	make -C fclean $(LIBFT_SRC)
-	make -C fclean $(GNL_SRC)
+	make -C $(LIBFT_SRC) fclean
+	make -C $(GNL_SRC) fclean
 	rm -fr $(NAME)
 
 re: fclean all
