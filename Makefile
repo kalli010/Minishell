@@ -12,7 +12,7 @@ obj = $(src:.c=.o)
 all: compile
 
 $(NAME): $(obj) $(LIBFT)
-	$(CC) $(CFLAGS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)
 
 compile:
 	@if make -q $(NAME); then \
