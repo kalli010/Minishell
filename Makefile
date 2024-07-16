@@ -1,4 +1,4 @@
-NAME = Minishell
+NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC)
 
