@@ -9,7 +9,7 @@ src = ./utils/Minishell.c
 
 obj = $(src:.c=.o)
 
-all: compile
+all:$(NAME)
 
 $(NAME): $(obj) $(LIBFT)
 	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)
@@ -55,4 +55,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re compile

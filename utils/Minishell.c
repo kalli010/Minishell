@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <minishell.h>
 
 int main()
 {
-  printf("hello\n");
+  
   return(0);
 }
