@@ -438,7 +438,6 @@ int main()
     free(line);
     tokens = tokenizer(cmd);
     basic_symbols_check(tokens);
-    (void)tokens;
   }
   return(0);
 }
