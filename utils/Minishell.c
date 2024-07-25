@@ -3,7 +3,7 @@
 void quotes_check(char *str)
 {
   int i;
-  char c;
+char c;
   int e;
 
   e = 0;
@@ -25,11 +25,225 @@ void quotes_check(char *str)
         e = 0;
       else
       {
-        printf("error, check %c.\n",c);
+        printf("Error, check %c.\n",c);
         break;
       }
     }
   }
+}
+
+void symbols_check(char *str)
+{
+  while(*str)
+  {
+    if(*str == '|' && *(str + 1) == '|' && *(str + 2) == '|')
+    {
+      printf("Error, there is more than two pipes\n");
+      break;
+    }
+    else if(*str == '<' && *(str + 1) == '<' && *(str + 2) == '<')
+    {
+      printf("Error, there is more than two redirections\n");
+      break;
+    }
+    else if(*str == '>' && *(str + 1) == '>' && *(str + 2) == '>')
+    {
+      printf("Error, there is more than two redirections\n");
+      break;
+    }
+    else if(*str == '>' && *(str + 1) == '<')
+    {
+      printf("Error\n");
+      break;
+    }
+    else if(*str == '<' && *(str + 1) == '>')
+    {
+      printf("Error\n");
+      break;
+    }
+    str++;
+  }
+}
+
+void check_p_r(char *str, int *i, int *s)
+{
+  if(str[0] == '|')
+  {
+    if(str[0 + 1] != '|')
+      *s = *s + 2;
+    else
+    {
+      *s = *s + 2;
+      *i = *i + 1;
+    }
+  }
+  else if(str[0] == '>')
+  {
+    if(str[0 + 1] != '>')
+      *s = *s + 2;
+    else
+    {
+      *s = *s + 2;
+      *i = *i + 1;
+    }
+  }
+  else if(str[0] == '<')
+  {
+    if(str[0 + 1] != '<')
+      *s = *s + 2;
+    else
+    {
+      *s = *s + 2;
+      *i = *i + 1;
+    }
+  }
+}
+
+int check_p_r2(char *str,int *i)
+{
+  if(str[0] == '|')
+  {
+    if(str[0 + 1] != '|')
+      return(1);
+    else
+    {
+      *i = *i + 1;
+      return(0);
+    }
+  }
+  else if(str[0] == '>')
+  {
+    if(str[0 + 1] != '>')
+      return(1);
+    else
+    {
+      *i = *i + 1;
+      return(0);
+    }
+  }
+  else if(str[0] == '<')
+  {
+    if(str[0 + 1] != '<')
+      return(1);
+    else
+    {
+      *i = *i + 1;
+      return(0);
+    }
+  }
+  return(-1);
+}
+
+char *split_symbols(char *str)
+{
+  int i;
+  int s;
+  char *tmp;
+  char q;
+  int check;
+
+  s = 0;
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] == 34 || str[i] == 39)
+    {
+      q = str[i];
+      while(str[++i] != q);
+    }
+    check_p_r(&str[i], &i, &s);
+  }
+  tmp = (char *)malloc(sizeof(char) * (i + s + 1));
+  i = -1;
+  s = 0;
+  while(str[++i])
+  {
+    if(str[i] == 34 || str[i] == 39)
+    {
+      q = str[i];
+      tmp[s++] = str[i];
+      while(str[++i] != q)
+        tmp[s++] = str[i];
+      tmp[s++] = str[i];
+    }
+    else
+    {
+      check = check_p_r2(&str[i], &i);
+      if(check == 1)
+      {
+        tmp[s++] = ' ';
+        tmp[s++] = str[i];
+        tmp[s++] = ' ';
+      }
+      else if(check == 0)
+      {
+        tmp[s++] = ' ';
+        tmp[s++] = str[i];
+        tmp[s++] = str[i];
+        tmp[s++] = ' ';
+      }
+      else
+        tmp[s++] = str[i];
+    }
+  }
+  tmp[s] = '\0';
+  return(tmp);
+}
+
+int echo_check(char *str)
+{
+  int i;
+  int j;
+
+  i = -1;
+  j = 0;
+  while(str[++i])
+  {
+    if(str[i] != ' ')
+    {
+      j = i;
+      while(str[i] != ' ' && str[i++] != '\0');
+      if(!ft_strncmp(&str[j], "echo", i - j))
+        return(1);
+      else 
+        return(0);
+    }
+  }
+  return(0);
+}
+
+int echo_token_count(char *str)
+{
+  int i;
+  int c;
+  char q;
+
+  c = 0;
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] != ' ')
+    {
+      c++;
+      if(c == 1)
+      {
+        while(str[i] != '\0' && str[i] != ' ')
+          i++;
+      }
+      while(str[i] != '\0' && (str[i] != '|' || str[i] != '<' || str[i] != '>' ))
+      {
+        if(str[i] == 34 || str[i] == 39)
+        {
+          q = str[i];
+          while(str[++i] != q);
+        }
+        i++;
+      }
+      if(str[i] == '\0')
+        i--;
+    }
+  }
+  return(c);
 }
 
 int token_count(char *str)
@@ -61,7 +275,7 @@ int token_count(char *str)
   return(c);
 }
 
-void create_tokens(char *str, char **tokens)
+void echo_create_tokens(char *str, char **tokens)
 {
   int i;
   int s;
@@ -75,14 +289,30 @@ void create_tokens(char *str, char **tokens)
     if(str[i] != ' ')
     {
       s = i;
-      while(str[i] != '\0' && str[i] != ' ')
+      if(j == 0)
+        while(str[i] != '\0' && str[i] != ' ')
+          i++;
+      else
       {
-        if(str[i] == 34 || str[i] == 39)
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>')
         {
-          q = str[i];
-          while(str[++i] != q);
+          while(str[i] != '\0' && str[i] != ' ')
+            i++;
         }
-        i++;
+        else
+        {
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' )
+          {
+            if(str[i] == 34 || str[i] == 39)
+            {
+              q = str[i];
+              while(str[++i] != q);
+            }
+            i++;
+          }
+          if(str[i] != '\0')
+            i--;
+        }
       }
       tokens[j] = ft_substr(str, s, i - s);
       j++;
@@ -93,7 +323,44 @@ void create_tokens(char *str, char **tokens)
   tokens[j] = NULL;
 }
 
-remove_quotes(char **tokens)
+void create_tokens(char *str, char **tokens)
+{
+  int i;
+  int s;
+  int j;
+  char q;
+
+  j = 0;
+  i = -1;
+  if(echo_check(str))
+    echo_create_tokens(str, tokens);
+  else 
+  {
+    while(str[++i])
+    {
+      if(str[i] != ' ')
+      {
+        s = i;
+        while(str[i] != '\0' && str[i] != ' ')
+        {
+          if(str[i] == 34 || str[i] == 39)
+          {
+            q = str[i];
+            while(str[++i] != q);
+          }
+          i++;
+        }
+        tokens[j] = ft_substr(str, s, i - s);
+        j++;
+        if(str[i] == '\0')
+          i--;
+      }
+    }
+    tokens[j] = NULL;
+  }
+}
+
+void remove_quotes(char **tokens)
 {
   int i;
   int j;
@@ -108,7 +375,14 @@ remove_quotes(char **tokens)
       if(tokens[i][j] == 34 || tokens[i][j] == 39)
       {
         q = tokens[i][j];
-        while(tokens[i][j])
+        tokens[i][j] = tokens[i][j + 1];
+        while(tokens[i][++j + 1] != q)
+          tokens[i][j] = tokens[i][j + 1];
+        j++;
+        while(tokens[i][++j])
+          tokens[i][j - 2] = tokens[i][j];
+        tokens[i][j - 2] = '\0';
+        j = -1;;
       }
     }
   }
@@ -119,10 +393,16 @@ char **tokenizer(char *str)
   char **tokens;
   int tc;
 
-  tc = token_count(str);
+  if(echo_check(str))
+    tc = echo_token_count(str);
+  else
+    tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
   remove_quotes(tokens);
+  int i = -1;
+  while(tokens[++i])
+    printf("%s\n",tokens[i]);
   return(tokens);
 }
 
@@ -130,6 +410,7 @@ int main()
 {
   char *line;
   char **tokens;
+  char *cmd;
 
   while(1)
   {
@@ -137,7 +418,10 @@ int main()
     if(!line)
       break;
     quotes_check(line);
-    tokens = tokenizer(line);
+    symbols_check(line);
+    cmd = split_symbols(line);
+    free(line);
+    tokens = tokenizer(cmd);
     (void)tokens;
   }
   return(0);
