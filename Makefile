@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -lreadline
+CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -lreadline -g
 
 LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a

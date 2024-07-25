@@ -400,10 +400,25 @@ char **tokenizer(char *str)
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
   remove_quotes(tokens);
-  int i = -1;
-  while(tokens[++i])
-    printf("%s\n",tokens[i]);
+//  int i = -1;
+//  while(tokens[++i])
+//    printf("%s\n",tokens[i]);
   return(tokens);
+}
+
+void basic_symbols_check(char **tokens)
+{
+  int i;
+
+  i = 0;
+  if(tokens[i][0] == '|')
+    printf("Error\n");
+  else
+  {
+    while(tokens[i++]);
+    if(tokens[i - 2][0] == '>' || tokens[i - 2][0] == '<')
+      printf("Error\n");
+  }
 }
 
 int main()
@@ -422,6 +437,7 @@ int main()
     cmd = split_symbols(line);
     free(line);
     tokens = tokenizer(cmd);
+    basic_symbols_check(tokens);
     (void)tokens;
   }
   return(0);
