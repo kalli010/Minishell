@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -lreadline -g -fsanitize=address -g3 
+CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC)  -g -fsanitize=address -g3 
 
 LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a
@@ -12,7 +12,7 @@ obj = $(src:.c=.o)
 all:$(NAME)
 
 $(NAME): $(obj) $(LIBFT)
-	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME) -lreadline
 
 compile:
 	@if make -q $(NAME); then \

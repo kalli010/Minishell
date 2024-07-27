@@ -450,7 +450,10 @@ char **tokenizer(char *str)
 //  return(0);
 //}
 
-
+void creat_linked_list(char **tokens)
+{
+  (void)tokens;
+}
 
 void ft_minishell(char *line)
 {
