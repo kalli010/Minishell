@@ -364,30 +364,49 @@ void create_tokens(char *str, char **tokens)
 
 void remove_quotes(char **tokens)
 {
-  int i;
+  //int i;
   int j;
   char q;
 
-  i = -1;
-  while(tokens[++i])
-  {
+  //i = -1;
+  //while(tokens[++i])
+  //{
     j = -1;
-    while(tokens[i][++j])
+    while(tokens[0][++j])
     {
-      if(tokens[i][j] == 34 || tokens[i][j] == 39)
+      if(tokens[0][j] == '"' /*|| tokens[0][j] == 39*/)
       {
-        q = tokens[i][j];
-        tokens[i][j] = tokens[i][j + 1];
-        while(tokens[i][++j + 1] != q)
-          tokens[i][j] = tokens[i][j + 1];
+        q = tokens[0][j];
+        tokens[0][j] = tokens[0][j + 1];
+        while(tokens[0][++j + 1] != q)
+          tokens[0][j] = tokens[0][j + 1];
         j++;
-        while(tokens[i][++j])
-          tokens[i][j - 2] = tokens[i][j];
-        tokens[i][j - 2] = '\0';
+        while(tokens[0][++j])
+          tokens[0][j - 2] = tokens[0][j];
+        tokens[0][j - 2] = '\0';
         j = -1;;
       }
     }
+  //}
+}
+
+int check_commend(char *str)
+{
+  int i;
+
+  i = 0;
+  if(!str)
+    return(0);
+  if(str[0] == '"')
+  {
+    if(str[1] == '$')
+      return(0);
+    while(str[++i] != '"');
   }
+  i--;
+  if(!ft_strncmp(&str[1],"ls",i - 1))
+    return(1);
+  return(0);
 }
 
 char **tokenizer(char *str)
@@ -401,10 +420,11 @@ char **tokenizer(char *str)
     tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
-  //remove_quotes(tokens); 
+  if(check_commend(tokens[0]))
+    remove_quotes(tokens);
   int i = -1;
   while(tokens[++i])
-    printf("%s\n",tokens[i]);
+    printf("token %d: %s\n",i,tokens[i]);
   return(tokens);
 }
 
@@ -430,6 +450,8 @@ char **tokenizer(char *str)
 //  return(0);
 //}
 
+
+
 void ft_minishell(char *line)
 {
    char **tokens;
@@ -440,7 +462,7 @@ void ft_minishell(char *line)
   cmd = split_symbols(line);
   free(line);
   tokens = tokenizer(cmd);
-  (void)tokens;
+  creat_linked_list(tokens);
   return;
 }
 
