@@ -6,10 +6,5 @@
 #include <libft.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
-typedef struct s_free
-{
-  
-} t_free;
-
+#include <structs.h>
 #endif

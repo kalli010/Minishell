@@ -232,15 +232,28 @@ int echo_token_count(char *str)
         while(str[i] != '\0' && str[i] != ' ')
           i++;
       }
-      while(str[i] != '\0' && (str[i] != '|' || str[i] != '<' || str[i] != '>' ))
+      else
       {
-        if(str[i] == 34 || str[i] == 39)
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>')
         {
-          q = str[i];
-          while(str[++i] != q);
+          while(str[i] != '\0' && str[i] != ' ')
+            i++;
         }
-        i++;
+        else
+        {
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>')
+          {
+            if(str[i] == 34 || str[i] == 39)
+            {
+              q = str[i];
+              while(str[++i] != q);
+            }
+            i++;
+          }
+        }
       }
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+        i--;
       if(str[i] == '\0')
         i--;
     }
@@ -312,12 +325,12 @@ void echo_create_tokens(char *str, char **tokens)
             }
             i++;
           }
-          if(str[i] != '\0')
-            i--;
         }
       }
       tokens[j] = ft_substr(str, s, i - s);
       j++;
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+        i--;
       if(str[i] == '\0')
         i--;
     }
@@ -422,9 +435,7 @@ char **tokenizer(char *str)
   create_tokens(str, tokens);
   if(check_commend(tokens[0]))
     remove_quotes(tokens);
-  int i = -1;
-  while(tokens[++i])
-    printf("token %d: %s\n",i,tokens[i]);
+  
   return(tokens);
 }
 
@@ -450,22 +461,38 @@ char **tokenizer(char *str)
 //  return(0);
 //}
 
-void creat_linked_list(char **tokens)
+void creat_linked_list(t_list **list, char **tokens)
 {
-  (void)tokens;
+  int i;
+
+  i = -1;
+  while(tokens[++i])
+    ft_lstadd_back(list, ft_lstnew(tokens[i]));
+  free(tokens);
 }
 
 void ft_minishell(char *line)
 {
+  t_list *list;
    char **tokens;
    char *cmd;
-  
+ 
+  list = NULL;
   if(quotes_check(line))
       return;
   cmd = split_symbols(line);
   free(line);
   tokens = tokenizer(cmd);
-  creat_linked_list(tokens);
+  creat_linked_list(&list, tokens);
+  int i = 0;
+  t_list *tmp;
+  tmp = list;
+  while(tmp)
+  {
+    printf("token %d: %s\n",i,tmp->content);
+    tmp = tmp->next;
+    i++;
+  }
   return;
 }
 
