@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -lreadline -g
+CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -lreadline -g -fsanitize=address -g3 
 
 LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a

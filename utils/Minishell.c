@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void quotes_check(char *str)
+int quotes_check(char *str)
 {
   int i;
 char c;
@@ -26,44 +26,46 @@ char c;
       else
       {
         printf("Error, check %c.\n",c);
-        break;
+        return(1);
       }
     }
   }
+  return(0);
 }
 
-void symbols_check(char *str)
-{
-  while(*str)
-  {
-    if(*str == '|' && *(str + 1) == '|' && *(str + 2) == '|')
-    {
-      printf("Error, there is more than two pipes\n");
-      break;
-    }
-    else if(*str == '<' && *(str + 1) == '<' && *(str + 2) == '<')
-    {
-      printf("Error, there is more than two redirections\n");
-      break;
-    }
-    else if(*str == '>' && *(str + 1) == '>' && *(str + 2) == '>')
-    {
-      printf("Error, there is more than two redirections\n");
-      break;
-    }
-    else if(*str == '>' && *(str + 1) == '<')
-    {
-      printf("Error\n");
-      break;
-    }
-    else if(*str == '<' && *(str + 1) == '>')
-    {
-      printf("Error\n");
-      break;
-    }
-    str++;
-  }
-}
+//int symbols_check(char *str)
+//{
+//  while(*str)
+//  {
+//    if(*str == '|' && *(str + 1) == '|' && *(str + 2) == '|')
+//    {
+//      printf("Error, there is more than two pipes\n");
+//      return(1);
+//    }
+//    else if(*str == '<' && *(str + 1) == '<' && *(str + 2) == '<')
+//    {
+//      printf("Error, there is more than two redirections\n");
+//      return(1);
+//    }
+//    else if(*str == '>' && *(str + 1) == '>' && *(str + 2) == '>')
+//    {
+//      printf("Error, there is more than two redirections\n");
+//      return(1);
+//    }
+//   // else if(*str == '>' && *(str + 1) == '<')
+//   // {
+//   //   printf("Error\n");
+//   //   return(1);
+//   // }
+//   // else if(*str == '<' && *(str + 1) == '>')
+//   // {
+//   //   printf("Error\n");
+//   //   return(1);
+//   // }
+//    str++;
+//  }
+//  return(0);
+//}
 
 void check_p_r(char *str, int *i, int *s)
 {
@@ -399,45 +401,58 @@ char **tokenizer(char *str)
     tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
-  remove_quotes(tokens);
-//  int i = -1;
-//  while(tokens[++i])
-//    printf("%s\n",tokens[i]);
+  //remove_quotes(tokens); 
+  int i = -1;
+  while(tokens[++i])
+    printf("%s\n",tokens[i]);
   return(tokens);
 }
 
-void basic_symbols_check(char **tokens)
-{
-  int i;
+//int basic_symbols_check(char **tokens)
+//{
+//  int i;
+//
+//  i = 0;
+//  if(tokens[i][0] == '|')
+//  {
+//    printf("syntax error\n");
+//    return(1);
+//  }
+//  else
+//  {
+//    while(tokens[i++]);
+//    if(tokens[i - 2][0] == '>' || tokens[i - 2][0] == '<')
+//    {
+//      printf("syntax error\n");
+//      return(1);
+//    }
+//  }
+//  return(0);
+//}
 
-  i = 0;
-  if(tokens[i][0] == '|')
-    printf("Error\n");
-  else
-  {
-    while(tokens[i++]);
-    if(tokens[i - 2][0] == '>' || tokens[i - 2][0] == '<')
-      printf("Error\n");
-  }
+void ft_minishell(char *line)
+{
+   char **tokens;
+   char *cmd;
+  
+  if(quotes_check(line))
+      return;
+  cmd = split_symbols(line);
+  free(line);
+  tokens = tokenizer(cmd);
+  (void)tokens;
+  return;
 }
 
 int main()
 {
   char *line;
-  char **tokens;
-  char *cmd;
 
   while(1)
   {
     line = readline("minishell -> ");
-    if(!line)
-      break;
-    quotes_check(line);
-    symbols_check(line);
-    cmd = split_symbols(line);
-    free(line);
-    tokens = tokenizer(cmd);
-    basic_symbols_check(tokens);
+    if(line)
+      ft_minishell(line); 
   }
   return(0);
 }
