@@ -498,6 +498,53 @@ void creat_linked_list(t_list **list, char **tokens)
   free(tokens);
 }
 
+int symbols_check(t_list *list)
+{
+  if(list->type == PIPE)
+  {
+    printf("syntax error\n");
+    return(1);
+  }
+  if(list->back == NULL)
+    return(0);
+  while(list != NULL)
+  {
+    if(list->type == PIPE && list->back->type != WORD && list->back->type != OPTIONS)
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->type == list->back->type)
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if((list->content[0] == '<' && list->back->content[0] == '>') && \
+      (list->content[1] == '\0' || list->content[2] == '\0') &&\
+      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->content[0] == '>' && list->back->content[0] == '<' && \
+      (list->content[1] == '\0' || list->content[2] == '\0') &&\
+      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->content[0] == '|' && list->back->content[0] == '|' && \
+      (list->content[1] == '\0' || list->content[2] == '\0') &&\
+      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    list = list->next;
+  }
+  return(0);
+}
+
 void ft_minishell(char *line)
 {
   t_list *list;
@@ -511,6 +558,8 @@ void ft_minishell(char *line)
   free(line);
   tokens = tokenizer(cmd);
   creat_linked_list(&list, tokens);
+  if (symbols_check(list))
+    return;
   int i = 0;
   t_list *tmp;
   tmp = list;
