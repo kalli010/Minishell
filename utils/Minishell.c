@@ -461,22 +461,49 @@ char **tokenizer(char *str)
 //  return(0);
 //}
 
+void token_type(t_list *list)
+{
+  while(list->next != NULL)
+    list = list->next;
+  if(list->content[0] == '|' && list->content[1] == '|' && list->content[2] == '\0')
+    list->type = OR;
+  else if(list->content[0] == '&' && list->content[1] == '&' && list->content[2] == '\0')
+    list->type = AND;
+  else if(list->content[0] == '>' && list->content[1] == '>' && list->content[2] == '\0')
+    list->type = HEREDOC;
+  else if(list->content[0] == '<' && list->content[1] == '<' && list->content[2] == '\0')
+    list->type = APPEND;
+  else if(list->content[0] == '|' && list->content[1] == '\0')
+      list->type = PIPE;
+  else if(list->content[0] == '>' && list->content[1] == '\0')
+      list->type = OUTPUT;
+  else if(list->content[0] == '<' && list->content[1] == '\0')
+      list->type = INPUT;
+  else if(list->content[0] == '-')
+    list->type = OPTIONS;
+  else
+      list->type = WORD;
+}
+
 void creat_linked_list(t_list **list, char **tokens)
 {
   int i;
 
   i = -1;
   while(tokens[++i])
+  {
     ft_lstadd_back(list, ft_lstnew(tokens[i]));
+    token_type(*list);
+  }
   free(tokens);
 }
 
 void ft_minishell(char *line)
 {
   t_list *list;
-   char **tokens;
-   char *cmd;
- 
+  char **tokens;
+  char *cmd;
+
   list = NULL;
   if(quotes_check(line))
       return;
@@ -489,7 +516,7 @@ void ft_minishell(char *line)
   tmp = list;
   while(tmp)
   {
-    printf("token %d: %s\n",i,tmp->content);
+    printf("token %d: %s (%d)\n",i,tmp->content,tmp->type);
     tmp = tmp->next;
     i++;
   }
