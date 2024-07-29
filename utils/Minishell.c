@@ -33,40 +33,6 @@ char c;
   return(0);
 }
 
-//int symbols_check(char *str)
-//{
-//  while(*str)
-//  {
-//    if(*str == '|' && *(str + 1) == '|' && *(str + 2) == '|')
-//    {
-//      printf("Error, there is more than two pipes\n");
-//      return(1);
-//    }
-//    else if(*str == '<' && *(str + 1) == '<' && *(str + 2) == '<')
-//    {
-//      printf("Error, there is more than two redirections\n");
-//      return(1);
-//    }
-//    else if(*str == '>' && *(str + 1) == '>' && *(str + 2) == '>')
-//    {
-//      printf("Error, there is more than two redirections\n");
-//      return(1);
-//    }
-//   // else if(*str == '>' && *(str + 1) == '<')
-//   // {
-//   //   printf("Error\n");
-//   //   return(1);
-//   // }
-//   // else if(*str == '<' && *(str + 1) == '>')
-//   // {
-//   //   printf("Error\n");
-//   //   return(1);
-//   // }
-//    str++;
-//  }
-//  return(0);
-//}
-
 void check_p_r(char *str, int *i, int *s)
 {
   if(str[0] == '|')
@@ -391,23 +357,29 @@ void remove_quotes(char **tokens)
       {
         q = tokens[0][j];
         tokens[0][j] = tokens[0][j + 1];
-        while(tokens[0][++j + 1] != q)
+        while(tokens[0][j + 1] != q)
+        {
           tokens[0][j] = tokens[0][j + 1];
+          j++;
+        }
         j++;
         while(tokens[0][++j])
           tokens[0][j - 2] = tokens[0][j];
         tokens[0][j - 2] = '\0';
-        j = -1;;
+        j = -1;
       }
     }
   //}
 }
 
-int check_commend(char *str)
+int check_command(char *str)
 {
   int i;
+  char *path;
+  char *dest;
 
   i = 0;
+  dest = NULL;
   if(!str)
     return(0);
   if(str[0] == '"')
@@ -415,10 +387,17 @@ int check_commend(char *str)
     if(str[1] == '$')
       return(0);
     while(str[++i] != '"');
+    ft_strlcpy(&dest,&str[1],i);
+    path = ft_strjoin("/usr/bin/",dest);
+    if(!(access(path, F_OK)))
+    {
+      free(path);
+      free(dest);
+      return(1);
+    }
+    free(path);
+    free(dest);
   }
-  i--;
-  if(!ft_strncmp(&str[1],"ls",i - 1))
-    return(1);
   return(0);
 }
 
@@ -433,45 +412,25 @@ char **tokenizer(char *str)
     tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
-  if(check_commend(tokens[0]))
+  if(check_command(tokens[0]))
     remove_quotes(tokens);
   
   return(tokens);
 }
 
-//int basic_symbols_check(char **tokens)
-//{
-//  int i;
-//
-//  i = 0;
-//  if(tokens[i][0] == '|')
-//  {
-//    printf("syntax error\n");
-//    return(1);
-//  }
-//  else
-//  {
-//    while(tokens[i++]);
-//    if(tokens[i - 2][0] == '>' || tokens[i - 2][0] == '<')
-//    {
-//      printf("syntax error\n");
-//      return(1);
-//    }
-//  }
-//  return(0);
-//}
-
 void token_type(t_list *list)
 {
+  char *path;
+
   while(list->next != NULL)
     list = list->next;
   if(list->content[0] == '|' && list->content[1] == '|' && list->content[2] == '\0')
     list->type = OR;
   else if(list->content[0] == '&' && list->content[1] == '&' && list->content[2] == '\0')
     list->type = AND;
-  else if(list->content[0] == '>' && list->content[1] == '>' && list->content[2] == '\0')
-    list->type = HEREDOC;
   else if(list->content[0] == '<' && list->content[1] == '<' && list->content[2] == '\0')
+    list->type = HEREDOC;
+  else if(list->content[0] == '>' && list->content[1] == '>' && list->content[2] == '\0')
     list->type = APPEND;
   else if(list->content[0] == '|' && list->content[1] == '\0')
       list->type = PIPE;
@@ -479,10 +438,22 @@ void token_type(t_list *list)
       list->type = OUTPUT;
   else if(list->content[0] == '<' && list->content[1] == '\0')
       list->type = INPUT;
-  else if(list->content[0] == '-')
+  else if(list->content[0] == '-' || ft_strncmp(list->content, "--", 2) == 0)
     list->type = OPTIONS;
+  else if(list->content[0] == '/' || list->content[0] == '~' \
+      || !ft_strncmp(list->content, "./", 2))
+      list->type = PATH;
+  else if(list->content[0] == '$')
+     list->type = VAR;
   else
-      list->type = WORD;
+  {
+    path = ft_strjoin("/usr/bin/",list->content);
+    if(!access(path, F_OK))
+        list->type = COMMAND;
+    else
+        list->type = WORD;
+    free(path);
+  }
 }
 
 void creat_linked_list(t_list **list, char **tokens)
@@ -500,48 +471,81 @@ void creat_linked_list(t_list **list, char **tokens)
 
 int symbols_check(t_list *list)
 {
+  if(list == NULL)
+    return(0);
   if(list->type == PIPE)
   {
     printf("syntax error\n");
     return(1);
   }
   if(list->back == NULL)
+    list = list->next;
+  if(list == NULL)
     return(0);
-  while(list != NULL)
+  while(list->next != NULL)
   {
-    if(list->type == PIPE && list->back->type != WORD && list->back->type != OPTIONS)
+    if(list->type == PIPE && list->back->type != WORD \
+      && list->back->type != COMMAND && list->back->type != OPTIONS \
+      && list->back->type != VAR && list->back->type != PATH)
     {
       printf("syntax error\n");
       return(1);
     }
-    else if(list->type == list->back->type)
+    else if((list->type == list->back->type) && \
+      (list->type != WORD && list->type != OPTIONS))
     {
       printf("syntax error\n");
       return(1);
     }
     else if((list->content[0] == '<' && list->back->content[0] == '>') && \
-      (list->content[1] == '\0' || list->content[2] == '\0') &&\
-      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+      (list->type == INPUT || list->type == HEREDOC) &&\
+      (list->back->type == OUTPUT || list->back->type == APPEND))
     {
       printf("syntax error\n");
       return(1);
     }
-    else if(list->content[0] == '>' && list->back->content[0] == '<' && \
-      (list->content[1] == '\0' || list->content[2] == '\0') &&\
-      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+    else if((list->content[0] == '>' && list->back->content[0] == '<') && \
+      (list->type == OUTPUT || list->type == APPEND) &&\
+      (list->back->type == INPUT || list->back->type == HEREDOC))
     {
       printf("syntax error\n");
       return(1);
     }
     else if(list->content[0] == '|' && list->back->content[0] == '|' && \
-      (list->content[1] == '\0' || list->content[2] == '\0') &&\
-      (list->back->content[1] == '\0' || list->back->content[2] == '\0'))
+      (list->type == OR || list->type == PIPE) &&\
+      (list->back->type == OR || list->back->type == PIPE))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->content[0] == '<' && list->back->content[0] == '<' && \
+      (list->type == INPUT || list->type == HEREDOC) &&\
+      (list->back->type == INPUT || list->back->type == HEREDOC))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->content[0] == '>' && list->back->content[0] == '>' && \
+      (list->type == OUTPUT || list->type == APPEND) &&\
+      (list->back->type == OUTPUT || list->back->type == APPEND))
+    {
+      printf("syntax error\n");
+      return(1);
+    }
+    else if(list->type == HEREDOC && list->back->type == PIPE)
     {
       printf("syntax error\n");
       return(1);
     }
     list = list->next;
   }
+  if(list->type != WORD && list->type != OPTIONS \
+      && list->type != COMMAND && list->type != OPTIONS \
+      && list->type != VAR && list->type != PATH)
+  {
+      printf("syntax error\n");
+      return(1);
+  } 
   return(0);
 }
 
@@ -565,8 +569,13 @@ void ft_minishell(char *line)
   tmp = list;
   while(tmp)
   {
-    printf("token %d: %s (%d)\n",i,tmp->content,tmp->type);
+    printf("token %d: %s   (%d)\n",i,tmp->content,tmp->type);
+    //if(tmp->back != NULL)
+    //  printf("back = %s   (%d)\n",tmp->back->content,tmp->back->type);
+    //if(tmp->next != NULL)
+    //  printf("next = %s   (%d)\n",tmp->next->content,tmp->next->type);
     tmp = tmp->next;
+    printf("--------------------------------\n");
     i++;
   }
   return;

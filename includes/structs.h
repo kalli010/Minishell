@@ -3,14 +3,17 @@
 
 typedef enum s_ttype{
   WORD,
-  PIPE,
-  OR,
-  AND,
-	OUTPUT,
-	HEREDOC,
-	INPUT,
-	APPEND,
-  OPTIONS
+  COMMAND,
+  PIPE, 
+  OR, 
+  AND, 
+	OUTPUT, /*>*/
+	HEREDOC, /*<<*/
+	INPUT, /*<*/
+	APPEND, /*>>*/
+  OPTIONS,
+  PATH,
+  VAR
 } t_ttype;
 
 typedef struct s_list{
