@@ -549,6 +549,11 @@ int symbols_check(t_list *list)
   return(0);
 }
 
+void crear_tree(t_list *list)
+{
+  
+}
+
 void ft_minishell(char *line)
 {
   t_list *list;
@@ -564,6 +569,7 @@ void ft_minishell(char *line)
   creat_linked_list(&list, tokens);
   if (symbols_check(list))
     return;
+  creat_tree(list);
   int i = 0;
   t_list *tmp;
   tmp = list;

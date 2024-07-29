@@ -23,6 +23,10 @@ typedef struct s_list{
   struct s_list *back;
 } t_list;
 
+typedef struct s_tree {
+  
+} t_tree;
+
 typedef struct s_free{
   
 } t_free;
