@@ -24,7 +24,9 @@ typedef struct s_list{
 } t_list;
 
 typedef struct s_tree {
-  
+  t_list *content;
+  struct s_tree *first_child;
+  struct s_tree *next_brother;
 } t_tree;
 
 typedef struct s_free{

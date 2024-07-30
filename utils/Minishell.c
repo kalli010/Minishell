@@ -549,9 +549,98 @@ int symbols_check(t_list *list)
   return(0);
 }
 
-void crear_tree(t_list *list)
+void add_child_to_tree(t_tree *parent, t_tree *child)
 {
-  
+  t_tree *bro;
+
+  if(parent->first_child == NULL)
+    parent->first_child = child;
+  else
+  {
+    bro = parent->first_child;
+    while(bro->next_brother != NULL)
+      bro = bro->next_brother;
+    bro->next_brother = child;
+  }
+}
+
+t_tree *create_tree_node(t_list *list)
+{
+  t_tree *tree_node;
+
+  tree_node = (t_tree *)malloc(sizeof(t_tree));
+  if(!tree_node)
+    return (NULL);
+  tree_node->content = list;
+  tree_node->first_child = NULL;
+  tree_node->next_brother = NULL;
+  return(tree_node);
+}
+
+void add_brother_to_child(t_tree *child, t_tree *bro)
+{
+  t_tree *l_bro;
+
+  if(child->next_brother == NULL)
+    child->next_brother = bro;
+  else {
+    l_bro = child->next_brother;
+    while(l_bro->next_brother != NULL)
+      l_bro = l_bro->next_brother;
+    l_bro->next_brother = child;
+  }
+}
+
+t_tree *creat_tree(t_list *list)
+{
+  t_tree *root;
+  t_tree *n_node;
+  t_tree *last_node;
+
+  root = NULL;
+  while(list)
+  {
+    n_node = create_tree_node(list);
+    if(root == NULL)
+      root = n_node;
+     else if(list->type == PIPE || list->type == OR \
+        || list->type == AND ||  list->type == OUTPUT \
+        ||  list->type == INPUT ||  list->type == HEREDOC \
+        ||  list->type == APPEND)
+    {
+      add_child_to_tree(n_node, root);
+      root = n_node;
+    }
+    else
+    {
+      if(last_node->content->type != COMMAND && root != last_node)
+        add_brother_to_child(last_node, n_node);
+      else
+        add_child_to_tree(last_node, n_node);
+    }
+    last_node = n_node;
+    list = list->next;
+  }
+  return(root);
+}
+
+void print_tree(t_tree *node, int d)
+{
+  int i = 0;
+  t_tree *child;
+
+  while(i < d)
+  {
+    printf("  ");
+    i++;
+  }
+  printf("%s\n", node->content->content);
+  child = node->first_child;
+  while (child != NULL)
+  {
+    print_tree(child, d + 1);
+    child = child->next_brother;
+  }
 }
 
 void ft_minishell(char *line)
@@ -559,6 +648,7 @@ void ft_minishell(char *line)
   t_list *list;
   char **tokens;
   char *cmd;
+  t_tree *root;
 
   list = NULL;
   if(quotes_check(line))
@@ -569,21 +659,8 @@ void ft_minishell(char *line)
   creat_linked_list(&list, tokens);
   if (symbols_check(list))
     return;
-  creat_tree(list);
-  int i = 0;
-  t_list *tmp;
-  tmp = list;
-  while(tmp)
-  {
-    printf("token %d: %s   (%d)\n",i,tmp->content,tmp->type);
-    //if(tmp->back != NULL)
-    //  printf("back = %s   (%d)\n",tmp->back->content,tmp->back->type);
-    //if(tmp->next != NULL)
-    //  printf("next = %s   (%d)\n",tmp->next->content,tmp->next->type);
-    tmp = tmp->next;
-    printf("--------------------------------\n");
-    i++;
-  }
+  root = creat_tree(list);
+  print_tree(root,0);
   return;
 }
 
