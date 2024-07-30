@@ -631,7 +631,7 @@ void print_tree(t_tree *node, int d)
 
   while(i < d)
   {
-    printf("  ");
+    printf(" ");
     i++;
   }
   printf("%s\n", node->content->content);
