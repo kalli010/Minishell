@@ -549,32 +549,31 @@ int symbols_check(t_list *list)
   return(0);
 }
 
+t_tree *create_tree_node(t_list *list)
+{
+  t_tree *n_node;
+
+  n_node = (t_tree *)malloc(sizeof(t_tree));
+  if(!n_node)
+    return (NULL);
+  n_node->content = list;
+  n_node->first_child = NULL;
+  n_node->next_brother = NULL;
+  return(n_node);
+}
+
 void add_child_to_tree(t_tree *parent, t_tree *child)
 {
-  t_tree *bro;
+  t_tree *last_bro;
 
   if(parent->first_child == NULL)
     parent->first_child = child;
-  else
-  {
-    bro = parent->first_child;
-    while(bro->next_brother != NULL)
-      bro = bro->next_brother;
-    bro->next_brother = child;
+  else {
+    last_bro = parent->first_child;
+    while(last_bro->next_brother != NULL)
+      last_bro = last_bro->next_brother;
+    last_bro->next_brother = child;
   }
-}
-
-t_tree *create_tree_node(t_list *list)
-{
-  t_tree *tree_node;
-
-  tree_node = (t_tree *)malloc(sizeof(t_tree));
-  if(!tree_node)
-    return (NULL);
-  tree_node->content = list;
-  tree_node->first_child = NULL;
-  tree_node->next_brother = NULL;
-  return(tree_node);
 }
 
 void add_brother_to_child(t_tree *child, t_tree *bro)
@@ -587,7 +586,7 @@ void add_brother_to_child(t_tree *child, t_tree *bro)
     l_bro = child->next_brother;
     while(l_bro->next_brother != NULL)
       l_bro = l_bro->next_brother;
-    l_bro->next_brother = child;
+    l_bro->next_brother = bro;
   }
 }
 
@@ -595,50 +594,53 @@ t_tree *creat_tree(t_list *list)
 {
   t_tree *root;
   t_tree *n_node;
-  t_tree *last_node;
+  t_tree *l_node;
 
+  l_node = NULL;
+  n_node = NULL;
   root = NULL;
   while(list)
   {
     n_node = create_tree_node(list);
     if(root == NULL)
       root = n_node;
-     else if(list->type == PIPE || list->type == OR \
-        || list->type == AND ||  list->type == OUTPUT \
-        ||  list->type == INPUT ||  list->type == HEREDOC \
-        ||  list->type == APPEND)
+    else if( n_node->content->type == PIPE \
+        || n_node->content->type == OR \
+        || n_node->content->type == AND \
+        || n_node->content->type == OUTPUT \
+        || n_node->content->type == HEREDOC \
+        || n_node->content->type == INPUT \
+        || n_node->content->type == APPEND)
     {
       add_child_to_tree(n_node, root);
       root = n_node;
     }
     else
     {
-      if(last_node->content->type != COMMAND && root != last_node)
-        add_brother_to_child(last_node, n_node);
+      if(l_node->content->type != COMMAND && root != l_node)
+        add_brother_to_child(l_node, n_node);
       else
-        add_child_to_tree(last_node, n_node);
+        add_child_to_tree(l_node, n_node);
     }
-    last_node = n_node;
+    l_node = n_node;
     list = list->next;
   }
   return(root);
 }
 
-void print_tree(t_tree *node, int d)
+void print_tree(t_tree *root, int spaces)
 {
-  int i = 0;
+  int i;
   t_tree *child;
 
-  while(i < d)
-  {
+  i = -1;
+  while(++i < spaces)
     printf(" ");
-    i++;
-  }
-  printf("%s\n", node->content->content);
-  child = node->first_child;
-  while (child != NULL)
+  printf("%s\n",root->content->content);
+  child = root->first_child;
+  while(child)
   {
-    print_tree(child, d + 1);
+    print_tree(child, spaces + 1);
     child = child->next_brother;
   }
 }
