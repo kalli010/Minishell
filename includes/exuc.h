@@ -1,39 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_path.c                                         :+:      :+:    :+:   */
+/*   exuc.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/01 17:40:19 by ayel-mou         ###   ########.fr       */
+/*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/08/01 17:46:30 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef EXUC_H
+# define EXUC_H
 #include <minishell.h>
 
-void	free_array(char **arr)
-{
-	int	i;
+int	ft_echp()
 
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
-
-char	**get_envp(char **env)
-{
-    int i;
-    
-    i = 0;
-    while (env[i] && ft_strncmp(env[i], "PATH=", 5))
-        i++;
-    if (env[i] == NULL)
-        return NULL;
-    return (ft_split(env[i] + 5, ':'));
-}
-
+#endif

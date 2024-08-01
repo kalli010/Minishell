@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/01 16:43:47 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:17:05 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 
 
-void find_command(t_tree *root, t_helper *helper)
+
+void find_command(t_list list,t_tree *root, t_helper *helper)
 {
 	t_tree *cmd;
+	
 	cmd = root;
-	while(cmd->first_child->content->type != COMMAND)
-	{
+	if (!root)
+		return ;
+	if ()
 		
-	}
 }

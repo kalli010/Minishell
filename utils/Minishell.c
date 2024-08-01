@@ -677,8 +677,7 @@ void ft_minishell(char *line,char **env)
     return;
   root = creat_tree(list);
   print_tree(root,0);
-  (void)env;
-  //find_command(root,env);
+  find_command(list,root,env);
   return;
 }
 
