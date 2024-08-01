@@ -442,7 +442,12 @@ void token_type(t_list *list)
     list->type = OPTIONS;
   else if(list->content[0] == '/' || list->content[0] == '~' \
       || !ft_strncmp(list->content, "./", 2))
+        list->type = PATH;
+  else if(list->back != NULL)
+  {
+    if(list->back->type == OUTPUT || list->back->type == APPEND)
       list->type = PATH;
+  }
   else if(list->content[0] == '$')
      list->type = VAR;
   else
@@ -451,7 +456,7 @@ void token_type(t_list *list)
     if(!access(path, F_OK))
         list->type = COMMAND;
     else
-        list->type = WORD;
+        list->type = COMMAND;
     free(path);
   }
 }
@@ -475,6 +480,7 @@ int symbols_check(t_list *list)
     return(0);
   if(list->type == PIPE)
   {
+    printf("10\n");
     printf("syntax error\n");
     return(1);
   }
@@ -488,19 +494,22 @@ int symbols_check(t_list *list)
       && list->back->type != COMMAND && list->back->type != OPTIONS \
       && list->back->type != VAR && list->back->type != PATH)
     {
+      printf("9 hna\n");
       printf("syntax error\n");
       return(1);
     }
-    else if((list->type == list->back->type) && \
-      (list->type != WORD && list->type != OPTIONS))
-    {
-      printf("syntax error\n");
-      return(1);
-    }
+    // else if((list->type == list->back->type) && \
+    //   (list->type != WORD && list->type != OPTIONS))
+    // {
+    //   printf("8 hna\n");
+    //   printf("syntax error\n");
+    //   return(1);
+    // }
     else if((list->content[0] == '<' && list->back->content[0] == '>') && \
       (list->type == INPUT || list->type == HEREDOC) &&\
       (list->back->type == OUTPUT || list->back->type == APPEND))
     {
+      printf("7 hna\n");
       printf("syntax error\n");
       return(1);
     }
@@ -508,6 +517,7 @@ int symbols_check(t_list *list)
       (list->type == OUTPUT || list->type == APPEND) &&\
       (list->back->type == INPUT || list->back->type == HEREDOC))
     {
+      printf("6 hna\n");
       printf("syntax error\n");
       return(1);
     }
@@ -515,6 +525,7 @@ int symbols_check(t_list *list)
       (list->type == OR || list->type == PIPE) &&\
       (list->back->type == OR || list->back->type == PIPE))
     {
+      printf("5 hna\n");
       printf("syntax error\n");
       return(1);
     }
@@ -522,6 +533,7 @@ int symbols_check(t_list *list)
       (list->type == INPUT || list->type == HEREDOC) &&\
       (list->back->type == INPUT || list->back->type == HEREDOC))
     {
+      printf("4 hna\n");
       printf("syntax error\n");
       return(1);
     }
@@ -529,20 +541,23 @@ int symbols_check(t_list *list)
       (list->type == OUTPUT || list->type == APPEND) &&\
       (list->back->type == OUTPUT || list->back->type == APPEND))
     {
+      printf("3 hna\n");
       printf("syntax error\n");
       return(1);
     }
     else if(list->type == HEREDOC && list->back->type == PIPE)
     {
+      printf("2 hna\n");
       printf("syntax error\n");
       return(1);
     }
     list = list->next;
   }
   if(list->type != WORD && list->type != OPTIONS \
-      && list->type != COMMAND && list->type != OPTIONS \
+      && list->type != COMMAND \
       && list->type != VAR && list->type != PATH)
   {
+    printf("1\n");
       printf("syntax error\n");
       return(1);
   } 
@@ -636,7 +651,7 @@ void print_tree(t_tree *root, int spaces)
   i = -1;
   while(++i < spaces)
     printf(" ");
-  printf("%s\n",root->content->content);
+  printf("%s  (%d)\n",root->content->content,root->content->type);
   child = root->first_child;
   while(child)
   {
@@ -645,13 +660,12 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-void ft_minishell(char *line)
+void ft_minishell(char *line,char **env)
 {
   t_list *list;
   char **tokens;
   char *cmd;
   t_tree *root;
-
   list = NULL;
   if(quotes_check(line))
       return;
@@ -663,18 +677,27 @@ void ft_minishell(char *line)
     return;
   root = creat_tree(list);
   print_tree(root,0);
+  (void)env;
+  //find_command(root,env);
   return;
 }
 
-int main()
+int main(int ac,char **av,char **env)
 {
   char *line;
 
+  ((void)ac, (void)av);
   while(1)
   {
     line = readline("minishell -> ");
     if(line)
-      ft_minishell(line); 
+    {
+      ft_minishell(line,env);
+      
+
+    }
+
+    //add_history(line);
   }
   return(0);
 }

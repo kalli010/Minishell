@@ -26,8 +26,18 @@ typedef struct s_list{
 typedef struct s_tree {
   t_list *content;
   struct s_tree *first_child;
+  //int child_counte;
   struct s_tree *next_brother;
 } t_tree;
+
+typedef struct helper
+{
+    char **envp;
+    char  *path;
+    char  *cmd;
+    char  **cmd_flag;
+} t_helper;
+
 
 typedef struct s_free{
   
