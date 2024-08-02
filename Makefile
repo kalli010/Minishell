@@ -5,7 +5,8 @@ CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC)  -g -fsanitize=addres
 LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a
 
-src = ./utils/Minishell.c
+src = ./utils/Minishell.c\
+			./utils/lparsiiiing.c\
 
 obj = $(src:.c=.o)
 
