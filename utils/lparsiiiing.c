@@ -284,6 +284,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
       {
         if(str[i] == '|' || str[i] == '<' || str[i] == '>')
         {
+          x = -1;
           while(str[i] != '\0' && str[i] != ' ')
             i++;
         }
@@ -364,18 +365,20 @@ int check_command(char **str)
   char *dest;
   int j;
 
-  i = 0;
   dest = NULL;
   if(*str == NULL)
-    return(0);
+    return(-1);
   j = -1;
   while(str[++j])
   {
+    i = 0;
     if(str[j][0] == '"')
     {
       if(str[j][1] == '$')
         return(0);
-      while(str[j][++i] != '"');
+      i++;
+      while(str[j][i] != '"')
+        i++;
       ft_strlcpy(&dest,&str[j][1],i);
       path = ft_strjoin("/usr/bin/",dest);
       if(!(access(path, F_OK)))
