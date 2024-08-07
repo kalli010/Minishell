@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/01 17:40:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/07 05:36:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,3 +37,81 @@ char	**get_envp(char **env)
     return (ft_split(env[i] + 5, ':'));
 }
 
+char *get_path(t_helper *helper, t_list *list)
+{
+    char *path;
+    char **dir;
+	char *temp;
+    int i;
+
+    i = 0;
+    dir = get_envp(helper->envp);
+    if (dir == NULL)
+        return (NULL);
+    if (list->type == PATH_COMMAND)
+    { 
+        if (access(list->content, F_OK) == 0)
+        {
+            free_array(dir);
+            return(ft_strdup(list->content));
+        }
+
+    }
+    else if  (list->type == COMMAND)
+    {
+        while (dir[i] != NULL)
+        {
+            temp = ft_strjoin(dir[i], "/");
+            path = ft_strjoin(temp, list->content);
+            free(temp);
+            if (access(path, F_OK) == 0)
+            {
+                free_array(dir);
+                return (path);
+            }
+            free(path);
+            i++;
+        }
+    }
+    free_array(dir);
+    return (NULL);
+}
+
+char **get_opetions(t_helper *helper, t_list *list)
+{
+    int i;
+    int count;
+    char **op;
+    
+    count = 0;
+    t_list *temp_list = list;
+    while (temp_list && temp_list->type == OPTIONS)
+    {
+        count++;
+        temp_list = temp_list->next;
+    }
+    op = (char **)malloc((count + 2) * sizeof(char *));
+    if (!op)
+        return NULL;
+    op[0] = get_path(helper, list);
+    if (!op[0])
+    {
+        free(op);
+        return NULL;
+    }
+    list = list->next;
+    i = 1;
+    while (list && list->type == OPTIONS)
+    {
+        op[i] = ft_strdup(list->content);
+        if (!op[i])
+        {
+            free_array(op);
+            return NULL;
+        }
+        list = list->next;
+        i++;
+    }
+    op[i] = NULL;
+    return op;
+}

@@ -13,7 +13,8 @@ typedef enum s_ttype{
 	APPEND, /*>>*/
   OPTIONS,
   PATH,
-  VAR
+  VAR,
+  PATH_COMMAND
 } t_ttype;
 
 typedef struct s_list{
@@ -36,6 +37,7 @@ typedef struct helper
     char  *path;
     char  *cmd;
     char  **cmd_flag;
+    char  **option;
 } t_helper;
 
 

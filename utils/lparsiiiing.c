@@ -467,7 +467,17 @@ void token_type(t_list *list)
     list->type = OPTIONS;
   else if(list->content[0] == '/' || list->content[0] == '~' \
       || !ft_strncmp(list->content, "./", 2))
-        list->type = PATH;
+      {
+        if(list->back != NULL)
+        {
+          if(list->back->type != COMMAND && list->back->type != VAR)
+            list->type = PATH_COMMAND;
+        }
+        else if(list->back == NULL)
+          list->type = PATH_COMMAND;
+        else
+          list->type = PATH;
+      }
   else if(list->back != NULL \
       && (list->back->type == OUTPUT || list->back->type == APPEND))
       list->type = PATH;
@@ -478,8 +488,9 @@ void token_type(t_list *list)
     path = ft_strjoin("/usr/bin/",list->content);
     if(!access(path, F_OK))
         list->type = COMMAND;
+    
     else
-        list->type = WORD;
+        list->type = COMMAND;
     free(path);
   }
 }

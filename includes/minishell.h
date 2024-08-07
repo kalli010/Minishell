@@ -7,6 +7,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <structs.h>
+#include "exuc.h"
 
 //parsing
 int quotes_check(char *str);
