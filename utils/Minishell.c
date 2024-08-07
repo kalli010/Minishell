@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-
 t_helper *init_helper(char **env)
 {
   t_helper *helper;
@@ -9,7 +8,6 @@ t_helper *init_helper(char **env)
   helper->envp = env;
   helper->cmd = NULL;
   helper->option = NULL;
-
   return (helper);
 }
 void ft_minishell(char *line,char **env)
@@ -18,8 +16,8 @@ void ft_minishell(char *line,char **env)
   char **tokens;
   char *cmd;
  t_tree *root;
- (void)env;
   t_helper *helper;
+  (void)env;
   list = NULL;
   if(quotes_check(line))
       return;
@@ -33,6 +31,7 @@ void ft_minishell(char *line,char **env)
   print_tree(root,0);
   helper = init_helper(env);
   find_command(list,root,helper);
+  free(list);
   free(helper);
   return;
 }
