@@ -6,21 +6,28 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/07 06:33:11 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/08 08:41:28 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+
+
 void find_command(t_list *list, t_tree *root, t_helper *helper)
 {
     (void)root;
+    // if (root->content->type == HEREDOC)
+    // {
+    //     here_doc(list,helper);
+    //     list =  list->next;
+    // }
     helper->cmd = get_path(helper, list);
     helper->option = get_opetions(helper, list);
 	if (helper->cmd == NULL && helper->option == NULL)
 	{
 		
-		printf("COMMAND NOT FOUND\n");
+		printf("%s: command not found\n",list->content);
 		free(helper->cmd);
 		return ;
 		

@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exuc.h                                             :+:      :+:    :+:   */
+/*   helper_fun.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/08 08:42:56 by ayel-mou         ###   ########.fr       */
+/*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/08/08 06:19:23 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXUC_H
-# define EXUC_H
 #include <minishell.h>
 
-char	*get_path(t_helper *help,t_list *list);
-void	find_command(t_list *list,t_tree *root, t_helper *helper);
-char	**get_opetions(t_helper *helper, t_list *list);
-void	free_array(char **arr);
-int		here_doc(t_list *list,t_helper *helper);
-int		check_upper(char *s);
-int		check_if_uppercase(char *line);
-char	*check_if_env(char *line);
+int check_upper(char *s)
+{
+	int i;
 
-
-#endif
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] >= 'a' && s[i] <= 'z')
+		{
+			break;
+			return (0);
+			
+		}
+		i++;
+	}
+	return (1);
+}

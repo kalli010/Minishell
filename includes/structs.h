@@ -34,11 +34,16 @@ typedef struct s_tree {
 typedef struct helper
 {
     char **envp;
-    char  *path;
     char  *cmd;
-    char  **cmd_flag;
     char  **option;
 } t_helper;
+
+typedef struct heredoc
+{
+  int fd;
+  char *del;
+
+} t_here_doc;
 
 
 typedef struct s_free{
