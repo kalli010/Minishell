@@ -519,82 +519,86 @@ int symbols_check(t_list *list)
     return(1);
   }
   if(list->back == NULL)
-    list = list->next;
-  if(list == NULL)
-    return(0);
-  while(list->next != NULL)
   {
-    if(list->type == PIPE && list->back->type != WORD \
-      && list->back->type != COMMAND && list->back->type != OPTIONS \
-      && list->back->type != VAR && list->back->type != PATH)
+    if(list->next != NULL)
+      list = list->next;
+  }
+  if(list->back != NULL)
+  {
+    while(list->next != NULL)
     {
-      printf("9\n");
-      printf("syntax error\n");
-      return(1);
+      if(list->type == PIPE && list->back->type != WORD \
+        && list->back->type != COMMAND && list->back->type != OPTIONS \
+        && list->back->type != VAR && list->back->type != PATH)
+      {
+        printf("9\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if((list->type == list->back->type) && \
+        (list->type != WORD && list->type != OPTIONS))
+      {
+        printf("8\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if((list->content[0] == '<' && list->back->content[0] == '>') && \
+        (list->type == INPUT || list->type == HEREDOC) &&\
+        (list->back->type == OUTPUT || list->back->type == APPEND))
+      {
+        printf("7\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if((list->content[0] == '>' && list->back->content[0] == '<') && \
+        (list->type == OUTPUT || list->type == APPEND) &&\
+        (list->back->type == INPUT || list->back->type == HEREDOC))
+      {
+        printf("6\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if(list->content[0] == '|' && list->back->content[0] == '|' && \
+        (list->type == OR || list->type == PIPE) &&\
+        (list->back->type == OR || list->back->type == PIPE))
+      {
+        printf("5\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if(list->content[0] == '<' && list->back->content[0] == '<' && \
+        (list->type == INPUT || list->type == HEREDOC) &&\
+        (list->back->type == INPUT || list->back->type == HEREDOC))
+      {
+        printf("4\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if(list->content[0] == '>' && list->back->content[0] == '>' && \
+        (list->type == OUTPUT || list->type == APPEND) &&\
+        (list->back->type == OUTPUT || list->back->type == APPEND))
+      {
+        printf("3\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      else if(list->type == HEREDOC && list->back->type == PIPE)
+      {
+        printf("2\n");
+        printf("syntax error\n");
+        return(1);
+      }
+      list = list->next;
     }
-     else if((list->type == list->back->type) && \
-       (list->type != WORD && list->type != OPTIONS))
-     {
-       printf("8\n");
-       printf("syntax error\n");
-       return(1);
-     }
-    else if((list->content[0] == '<' && list->back->content[0] == '>') && \
-      (list->type == INPUT || list->type == HEREDOC) &&\
-      (list->back->type == OUTPUT || list->back->type == APPEND))
-    {
-      printf("7\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    else if((list->content[0] == '>' && list->back->content[0] == '<') && \
-      (list->type == OUTPUT || list->type == APPEND) &&\
-      (list->back->type == INPUT || list->back->type == HEREDOC))
-    {
-      printf("6\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    else if(list->content[0] == '|' && list->back->content[0] == '|' && \
-      (list->type == OR || list->type == PIPE) &&\
-      (list->back->type == OR || list->back->type == PIPE))
-    {
-      printf("5\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    else if(list->content[0] == '<' && list->back->content[0] == '<' && \
-      (list->type == INPUT || list->type == HEREDOC) &&\
-      (list->back->type == INPUT || list->back->type == HEREDOC))
-    {
-      printf("4\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    else if(list->content[0] == '>' && list->back->content[0] == '>' && \
-      (list->type == OUTPUT || list->type == APPEND) &&\
-      (list->back->type == OUTPUT || list->back->type == APPEND))
-    {
-      printf("3\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    else if(list->type == HEREDOC && list->back->type == PIPE)
-    {
-      printf("2\n");
-      printf("syntax error\n");
-      return(1);
-    }
-    list = list->next;
   }
   if(list->type != WORD && list->type != OPTIONS \
       && list->type != COMMAND \
       && list->type != VAR && list->type != PATH)
   {
-    printf("1\n");
+      printf("1\n");
       printf("syntax error\n");
       return(1);
-  } 
+  }
   return(0);
 }
 
@@ -683,6 +687,8 @@ void print_tree(t_tree *root, int spaces)
   t_tree *child;
 
   i = -1;
+  if(root == NULL)
+    return;
   while(++i < spaces)
     printf(" ");
   printf("%s  (%d)\n",root->content->content,root->content->type);

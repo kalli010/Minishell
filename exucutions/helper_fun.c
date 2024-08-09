@@ -6,26 +6,16 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/08 06:19:23 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/08 22:46:55 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int check_upper(char *s)
+int check_upper(char c)
 {
-	int i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] >= 'a' && s[i] <= 'z')
-		{
-			break;
-			return (0);
-			
-		}
-		i++;
-	}
-	return (1);
+	
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
 }

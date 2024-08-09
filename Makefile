@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -g #-fsanitize=address -g3  
+CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -g -fsanitize=address -g3  
 
 LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a
@@ -8,7 +8,9 @@ LIBFT = $(LIBFT_SRC)/libft.a
 src = ./utils/Minishell.c \
 			./utils/lparsiiiing.c \
 			exucutions/run_exucution.c \
-			exucutions/get_path.c
+			exucutions/get_path.c \
+			exucutions/here_doc.c \
+			exucutions/helper_fun.c 
 
  
 obj = $(src:.c=.o)
