@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/07 06:25:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/09 06:54:33 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	**get_envp(char **env)
     return (ft_split(env[i] + 5, ':'));
 }
 
-char *get_path(t_helper *helper, t_list *list)
+char    *get_path(t_helper *helper, t_list *list)
 {
     char *path;
     char **dir;
@@ -78,7 +78,7 @@ char *get_path(t_helper *helper, t_list *list)
     return (NULL);
 }
 
-char **get_opetions(t_helper *helper, t_list *list)
+char **get_options(t_helper *helper, t_list *list)
 {
     int i;
     int count;
