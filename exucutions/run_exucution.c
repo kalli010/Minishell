@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/09 02:58:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/09 06:24:44 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
         }
         
     }
+    if (ft_strncmp(list->content,"env\n",ft_strlen(list->content)) == 0)
+        ft_env(helper->envp);
+    if (ft_strncmp(list->content,"pwd\n",ft_strlen(list->content)) == 0)
+        ft_pwd();
     free(helper->cmd);
     free_array(helper->option);
 }

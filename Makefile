@@ -6,16 +6,17 @@ LIBFT_SRC = ./lib/libft/
 LIBFT = $(LIBFT_SRC)/libft.a
 
 src = ./utils/Minishell.c \
-			./utils/lparsiiiing.c \
-			exucutions/run_exucution.c \
-			exucutions/get_path.c \
-			exucutions/here_doc.c \
-			exucutions/helper_fun.c 
+      ./utils/lparsiiiing.c \
+      exucutions/run_exucution.c \
+      exucutions/get_path.c \
+      exucutions/here_doc.c \
+      exucutions/helper_fun.c \
+      bulutins/ft_env.c \
+      bulutins/ft_pwd.c
 
- 
 obj = $(src:.c=.o)
 
-all:$(NAME)
+all: $(NAME)
 
 $(NAME): $(obj) $(LIBFT)
 	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME) -lreadline
