@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/09 07:03:05 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/10 03:47:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void find_command(t_list *list, t_tree *root, t_helper *helper)
 {
-    (void)root;
+    if (root == NULL)
+        return ;
     if (list->type == HEREDOC)
         here_doc(list,helper);
+<<<<<<< HEAD
    // list = list->next;
    // list = list->next;
     char *a[2];
@@ -30,6 +32,10 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
 
     
     }
+=======
+    // list = list->next;
+    // list = list->next;
+>>>>>>> d8fcebd95108ba5e1891f12b316f8629366de3c7
     if (list->type == COMMAND)
     {
         helper->cmd = get_path(helper, list);
@@ -39,14 +45,15 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
                 printf("%s: command not found\n", list->content);
                 free(helper->cmd);
          }
-        else if (helper->cmd != NULL)
-            execve(helper->cmd, helper->option, helper->envp);
+        execute_command(helper->cmd,helper->option,helper->envp);
+        // else if (helper->cmd != NULL)
+        //     execve(helper->cmd, helper->option, helper->envp);
         free(helper->cmd);
         free_array(helper->option);
 
     }
-    if (ft_strncmp(list->content,"env\n",ft_strlen(list->content)) == 0)
+    else if (ft_strncmp(list->content,"env\n",ft_strlen(list->content)) == 0)
         ft_env(helper->envp);
-    if (ft_strncmp(list->content,"pwd\n",ft_strlen(list->content)) == 0)
+    else if (ft_strncmp(list->content,"pwd\n",ft_strlen(list->content)) == 0)
         ft_pwd();
 }

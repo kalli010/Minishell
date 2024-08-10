@@ -1,14 +1,20 @@
 # ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <libft.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <structs.h>
-#include "exuc.h"
-#include <fcntl.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <structs.h>
+# include <exuc.h>
+# include <libft.h>
 
 //parsing
 int quotes_check(char *str);
