@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/10 03:47:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/10 22:22:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,25 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
         here_doc(list,helper);
    // list = list->next;
    // list = list->next;
-    char *a[2];
+//     char *a[2];
 
-    a[0] = list->content;
-    a[1] = NULL;
-   if (list->type == PATH_COMMAND)
-   {
-     if (execve(list->content,a, helper->envp) == 1)
-        printf("ZAKI ZAMAL \n");
+//     a[0] = list->content;
+//     a[1] = NULL;
+//    if (list->type == PATH_COMMAND)
+//    {
+//      if (execve(list->content,a, helper->envp) == 1)
+//         printf("ZAKI ZAMAL \n");
 
     
+<<<<<<< HEAD
     }
     // list = list->next;
     // list = list->next;
     if (list->type == COMMAND)
+=======
+//     }
+    if (list->type == COMMAND || list->type == PATH_COMMAND)
+>>>>>>> 95903ea699cab17cc88499874971664ac38435f6
     {
         helper->cmd = get_path(helper, list);
         helper->option = get_options(helper, list);
