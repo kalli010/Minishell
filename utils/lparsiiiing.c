@@ -484,6 +484,7 @@ void token_type(t_list *list)
       list->type = PATH;
   else if(list->content[0] == '$')
      list->type = VAR;
+  else if(list)
   else
   {
     path = ft_strjoin("/usr/bin/",list->content);

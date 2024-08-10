@@ -14,9 +14,11 @@ typedef enum s_ttype{
   OPTIONS,
   PATH,
   VAR,
-  PATH_COMMAND
+  PATH_COMMAND,
+  DELIMITER
 } t_ttype;
 
+//linked list
 typedef struct s_list{
   char *content;
   t_ttype type;
@@ -24,6 +26,7 @@ typedef struct s_list{
   struct s_list *back;
 } t_list;
 
+//LCRS tree
 typedef struct s_tree {
   t_list *content;
   struct s_tree *first_child;

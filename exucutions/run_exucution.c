@@ -17,8 +17,19 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
     (void)root;
     if (list->type == HEREDOC)
         here_doc(list,helper);
-    list = list->next;
-    list = list->next;
+   // list = list->next;
+   // list = list->next;
+    char *a[2];
+
+    a[0] = list->content;
+    a[1] = NULL;
+   if (list->type == PATH_COMMAND)
+   {
+     if (execve(list->content,a, helper->envp) == 1)
+        printf("ZAKI ZAMAL \n");
+
+    
+    }
     if (list->type == COMMAND)
     {
         helper->cmd = get_path(helper, list);
