@@ -479,7 +479,8 @@ void token_type(t_list *list)
           list->type = PATH;
       }
   else if(list->back != NULL \
-      && (list->back->type == OUTPUT || list->back->type == APPEND))
+      && (list->back->type == OUTPUT || list->back->type == APPEND ||\
+  list->back->type == INPUT))
       list->type = PATH;
   else if(list->content[0] == '$')
      list->type = VAR;
