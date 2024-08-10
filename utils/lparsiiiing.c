@@ -593,7 +593,7 @@ int symbols_check(t_list *list)
   }
   if(list->type != WORD && list->type != OPTIONS \
       && list->type != COMMAND \
-      && list->type != VAR && list->type != PATH)
+      && list->type != VAR && list->type != PATH && list->type != PATH_COMMAND)
   {
       printf("1\n");
       printf("syntax error\n");
@@ -611,35 +611,35 @@ t_tree *create_tree_node(t_list *list)
     return (NULL);
   n_node->content = list;
   n_node->first_child = NULL;
-  n_node->next_brother = NULL;
+  n_node->next_sibling = NULL;
   return(n_node);
 }
 
 void add_child_to_tree(t_tree *parent, t_tree *child)
 {
-  t_tree *last_bro;
+  t_tree *last_sibling;
 
   if(parent->first_child == NULL)
     parent->first_child = child;
   else {
-    last_bro = parent->first_child;
-    while(last_bro->next_brother != NULL)
-      last_bro = last_bro->next_brother;
-    last_bro->next_brother = child;
+    last_sibling = parent->first_child;
+    while(last_sibling->next_sibling!= NULL)
+      last_sibling = last_sibling->next_sibling;
+    last_sibling->next_sibling = child;
   }
 }
 
-void add_brother_to_child(t_tree *child, t_tree *bro)
+void add_sibling_to_child(t_tree *child, t_tree *sibling)
 {
-  t_tree *l_bro;
+  t_tree *l_sibling;
 
-  if(child->next_brother == NULL)
-    child->next_brother = bro;
+  if(child->next_sibling == NULL)
+    child->next_sibling = sibling;
   else {
-    l_bro = child->next_brother;
-    while(l_bro->next_brother != NULL)
-      l_bro = l_bro->next_brother;
-    l_bro->next_brother = bro;
+    l_sibling = child->next_sibling;
+    while(l_sibling->next_sibling != NULL)
+      l_sibling = l_sibling->next_sibling;
+    l_sibling->next_sibling = sibling;
   }
 }
 
@@ -671,7 +671,7 @@ t_tree *creat_tree(t_list *list)
     else
     {
       if(l_node->content->type != COMMAND && root != l_node)
-        add_brother_to_child(l_node, n_node);
+        add_sibling_to_child(l_node, n_node);
       else
         add_child_to_tree(l_node, n_node);
     }
@@ -696,6 +696,6 @@ void print_tree(t_tree *root, int spaces)
   while(child)
   {
     print_tree(child, spaces + 1);
-    child = child->next_brother;
+    child = child->next_sibling;
   }
 }

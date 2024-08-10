@@ -28,7 +28,7 @@ void creat_linked_list(t_list **list, char **tokens);
 int symbols_check(t_list *list);
 t_tree *create_tree_node(t_list *list);
 void add_child_to_tree(t_tree *parent, t_tree *child);
-void add_brother_to_child(t_tree *child, t_tree *bro);
+void add_sibling_to_child(t_tree *child, t_tree *sibling);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
 
