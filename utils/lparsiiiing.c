@@ -484,7 +484,8 @@ void token_type(t_list *list)
       list->type = PATH;
   else if(list->content[0] == '$')
      list->type = VAR;
-  else if(list)
+  else if(list->back != NULL && list->back->type == HEREDOC)
+    list->type = DELIMITER;
   else
   {
     path = ft_strjoin("/usr/bin/",list->content);
@@ -595,7 +596,9 @@ int symbols_check(t_list *list)
   }
   if(list->type != WORD && list->type != OPTIONS \
       && list->type != COMMAND \
-      && list->type != VAR && list->type != PATH && list->type != PATH_COMMAND)
+      && list->type != VAR && list->type != PATH \
+      && list->type != PATH_COMMAND \
+      && list->type != DELIMITER)
   {
       printf("1\n");
       printf("syntax error\n");

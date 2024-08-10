@@ -18,7 +18,6 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
         return ;
     if (list->type == HEREDOC)
         here_doc(list,helper);
-<<<<<<< HEAD
    // list = list->next;
    // list = list->next;
     char *a[2];
@@ -32,10 +31,8 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
 
     
     }
-=======
     // list = list->next;
     // list = list->next;
->>>>>>> d8fcebd95108ba5e1891f12b316f8629366de3c7
     if (list->type == COMMAND)
     {
         helper->cmd = get_path(helper, list);
