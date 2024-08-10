@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"libft.h": "c",
-		"exuc.h": "c",
-		"wait.h": "c",
-		"minishell.h": "c"
-	}
-}
