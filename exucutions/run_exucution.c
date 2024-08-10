@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/10 03:47:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/10 22:22:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,20 @@ void find_command(t_list *list, t_tree *root, t_helper *helper)
         return ;
     if (list->type == HEREDOC)
         here_doc(list,helper);
-<<<<<<< HEAD
    // list = list->next;
    // list = list->next;
-    char *a[2];
+//     char *a[2];
 
-    a[0] = list->content;
-    a[1] = NULL;
-   if (list->type == PATH_COMMAND)
-   {
-     if (execve(list->content,a, helper->envp) == 1)
-        printf("ZAKI ZAMAL \n");
+//     a[0] = list->content;
+//     a[1] = NULL;
+//    if (list->type == PATH_COMMAND)
+//    {
+//      if (execve(list->content,a, helper->envp) == 1)
+//         printf("ZAKI ZAMAL \n");
 
     
-    }
-=======
-    // list = list->next;
-    // list = list->next;
->>>>>>> d8fcebd95108ba5e1891f12b316f8629366de3c7
-    if (list->type == COMMAND)
+//     }
+    if (list->type == COMMAND || list->type == PATH_COMMAND)
     {
         helper->cmd = get_path(helper, list);
         helper->option = get_options(helper, list);
