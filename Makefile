@@ -12,7 +12,8 @@ src = ./utils/Minishell.c \
       exucutions/here_doc.c \
       exucutions/helper_fun.c \
       bulutins/ft_env.c \
-      bulutins/ft_pwd.c
+      bulutins/ft_pwd.c \
+	  exucutions/execute_cmd.c 
 
 obj = $(src:.c=.o)
 

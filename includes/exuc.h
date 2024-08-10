@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/09 06:54:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/10 03:38:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		check_if_uppercase(char *line);
 char	*check_if_env(char *line);
 int		ft_env(char **env);
 int		ft_pwd(void);
+void	execute_command(char *command,char **arg,char **env);
 
 
 
