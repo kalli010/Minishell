@@ -31,6 +31,7 @@ typedef struct s_tree {
   t_list *content;
   struct s_tree *first_child;
   struct s_tree *next_sibling;
+  int i;
 } t_tree;
 
 typedef struct helper

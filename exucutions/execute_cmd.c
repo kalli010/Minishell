@@ -12,21 +12,19 @@
 
 #include <minishell.h>
 
-void execute_command(char *command,char **arg,char **env)
+void	execute_command(char *command, char **arg, char **env)
 {
 	pid_t pid;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(command, arg,env) == -1)
+		if (execve(command, arg, env) == -1)
 		{
 			perror("error on execve :");
 			exit(EXIT_FAILURE);
 		}
-		
 	}
 	else
 		wait(NULL);
-
 }

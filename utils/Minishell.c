@@ -28,9 +28,9 @@ void ft_minishell(char *line,char **env)
   if (symbols_check(list))
     return;
   root = creat_tree(list);
-  print_tree(root,0);
+  // print_tree(root,0);
   helper = init_helper(env);
-  find_command(list,root,helper);
+  find_command(root,helper);
   free(list);
   free(helper);
   return;

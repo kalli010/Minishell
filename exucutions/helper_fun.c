@@ -12,9 +12,8 @@
 
 #include <minishell.h>
 
-int check_upper(char c)
+int	check_upper(char c)
 {
-	
 	if (c >= 'A' && c <= 'Z')
 		return (1);
 	return (0);
