@@ -27,6 +27,7 @@ int		ft_pwd(void);
 void	execute_command(char *command,char **arg,char **env);
 void 	redirect_output(t_tree *root,t_helper *helper);
 void	execute(t_tree *root, t_helper *helper);
+int     count_arg(t_list *list);
 
 
 
