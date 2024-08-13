@@ -12,10 +12,11 @@
 
 #include <minishell.h>
 
-void	redirect_output(t_tree *root,t_helper *helper)
+void	redirect_output(t_tree *root, t_helper *helper)
 {
 	char	*file;
 	int		fd;
+
 	file = root->first_child->next_sibling->content->content;
 	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/13 11:20:13 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:21:24 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*get_path(t_helper *helper, t_list *list)
 
 	if (list->type == COMMAND)
 		path = get_cmd_path(helper, list);
-	else if (list->type == PATH_COMMAND)
+	if (list->type == PATH_COMMAND)
 		path = get_path_of_cpath(helper, list);
 	return (path);
 }
@@ -83,7 +83,10 @@ char	**get_options(t_helper *helper, t_list *list)
 
 	count = count_arg(list);
 	if (get_path(helper, list) == NULL)
+	{
+		printf("%s: command not found \n", list->content);
 		return (NULL);
+	}
 	op = (char **)malloc((count + 2) * sizeof(char *));
 	if (!op)
 		return (NULL);

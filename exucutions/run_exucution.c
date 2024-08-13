@@ -22,7 +22,7 @@
 //     {
 //         tmp = root;
 //         while (tmp->first_child->content->type != COMMAND
-	// && tmp->first_child->i == 0)
+// && tmp->first_child->i == 0)
 //             tmp = tmp->first_child;
 //         if(tmp->first_child->content->type == COMMAND)
 //         {
@@ -63,7 +63,7 @@ void	find_command(t_tree *root, t_helper *helper)
 		return ;
 	if (root->content->type == OUTPUT)
 	{
-        redirect_output(root,helper);
+		redirect_output(root, helper);
 	}
 	if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
 	{
