@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/12 05:03:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/14 08:47:53 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,7 @@ int	here_doc(t_tree *root, t_helper *helper)
 	here = (t_here_doc *)malloc(sizeof(t_here_doc));
 	if (!here)
 		return (0);
-	// if (root->next_sibling && root->next_sibling->content
-		&& root->next_sibling->content->content)
-	// {
 	here->del = ft_strdup("EOF");
-	// }
 	if (pipe(pipe_fd) == -1)
 	{
 		free(here->del);
