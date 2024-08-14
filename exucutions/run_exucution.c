@@ -12,46 +12,10 @@
 
 #include <minishell.h>
 
-// void execute()
-// {
-//     t_tree  *tmp;
-//     int c;
-//     c = 0;
-
-//     while(c == 0)
-//     {
-//         tmp = root;
-//         while (tmp->first_child->content->type != COMMAND
-// && tmp->first_child->i == 0)
-//             tmp = tmp->first_child;
-//         if(tmp->first_child->content->type == COMMAND)
-//         {
-//             if(tmp->content->typ == READERR )
-//                 x = red(tmp->first_child,tmp->first_child->next_sibling);
-//             tmp->i = 1;
-//             if(tmp == root)
-//                 c = 1;
-//         }
-//         if(tmp->first_child->i == 1)
-
-//             if(tmp->content->type == PIPE)
-//                 x = pipix(x, tmp->first_child->next_sibling);
-//             tmp->i = 1;
-//             if(tmp == root)
-//                 c = 1;
-//         }
-//     }
-
-void execute_pipe(t_tree *right)
-{
-    printf("first child is == %s\n", right->first_child->content->content);
-    printf("next sibling is == %s\n", right->first_child->next_sibling->content->content);
-}
 
 
 void	execute(t_tree *root, t_helper *helper)
 {
-	(void)root;
 	helper->cmd = get_path(helper, root->content);
 	helper->option = get_options(helper, root->content);
 	if (!helper->cmd && !helper->option)
@@ -62,6 +26,39 @@ void	execute(t_tree *root, t_helper *helper)
 	execute_command(helper->cmd, helper->option, helper->envp);
 	free(helper->cmd);
 	free_array(helper->option);
+}
+
+
+
+void execute_pipe(t_tree *root, t_helper *helper)
+{
+    int fd[2];
+    pid_t pid;
+	// printf("first child is == %s\n", root->first_child->content->content);
+	// printf("next sibling is == %s\n", root->first_child->next_sibling->content->content);
+
+    if (pipe(fd) == -1)
+        return;
+
+    pid = fork();
+    if (pid == -1)
+        return ;
+    if (pid == 0)
+    {
+        dup2(fd[1], STDOUT_FILENO);
+        close(fd[0]);
+        close(fd[1]);
+        execute(root->first_child, helper);
+    }
+    else
+    {
+        dup2(fd[0], STDIN_FILENO);
+        close(fd[1]);
+        close(fd[0]);
+        waitpid(pid, NULL, 0);
+        execute(root->first_child->next_sibling, helper);
+    }
+	execute_pipe(root->first_child,helper);
 }
 
 void	find_command(t_tree *root, t_helper *helper)
@@ -87,7 +84,7 @@ void	find_command(t_tree *root, t_helper *helper)
 	}
 	if (root->content->type == PIPE)
 	{
-		execute_pipe(root);
+		execute_pipe(root,helper);
 	}
 	find_command(root->first_child, helper);
 	find_command(root->next_sibling, helper);

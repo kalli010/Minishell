@@ -17,14 +17,10 @@ void	execute_command(char *command, char **arg, char **env)
 	pid_t pid;
 
 	pid = fork();
-	if (pid == 0)
-	{
-		if (execve(command, arg, env) == -1)
-		{
-			perror("error on execve :");
-			exit(EXIT_FAILURE);
-		}
-	}
+    if (pid == -1)
+        return ;
+    if (pid == 0)
+		execve(command, arg, env);	
 	else
-		wait(NULL);
+		waitpid(pid,NULL,0);
 }
