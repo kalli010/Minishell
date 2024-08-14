@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/12 05:03:23 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/14 11:46:25 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@
 //         }
 //     }
 
+void execute_pipe(t_tree *right)
+{
+    printf("first child is == %s\n", right->first_child->content->content);
+    printf("next sibling is == %s\n", right->first_child->next_sibling->content->content);
+}
+
+
 void	execute(t_tree *root, t_helper *helper)
 {
 	(void)root;
@@ -61,17 +68,26 @@ void	find_command(t_tree *root, t_helper *helper)
 {
 	if (!root)
 		return ;
+	  if ((root->content->type == COMMAND || root->content->type == PATH_COMMAND) &&
+        (root->first_child == NULL || root->first_child->content == NULL || 
+        root->first_child->content->type == OPTIONS))
+    {
+		if (root->next_sibling != NULL)
+			return ;
+        execute(root, helper);
+        return;
+    }
 	if (root->content->type == OUTPUT)
 	{
 		redirect_output(root, helper);
 	}
-	if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
-	{
-		execute(root, helper);
-	}
 	if (root->content->type == HEREDOC)
 	{
 		here_doc(root, helper);
+	}
+	if (root->content->type == PIPE)
+	{
+		execute_pipe(root);
 	}
 	find_command(root->first_child, helper);
 	find_command(root->next_sibling, helper);
