@@ -73,6 +73,8 @@ void check_p_r(char *str, int *i, int *s)
       *i = *i + 1;
     }
   }
+  else if(str[0] == 40 || str[0] == 41)
+      *s = *s + 2;
 }
 
 int check_p_r2(char *str,int *i)
@@ -115,6 +117,8 @@ int check_p_r2(char *str,int *i)
       return(0);
     }
   }
+  else if(str[0] == 40 || str[0] == 41)
+      return(1);
   return(-1);
 }
 
@@ -216,14 +220,14 @@ int echo_token_count(char *str)
       }
       else
       {
-        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
         {
           while(str[i] != '\0' && str[i] != ' ')
             i++;
         }
         else
         {
-          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ')
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ' && str[i] != 40 && str[i] != 41)
           {
             if(str[i] == 34 || str[i] == 39)
             {
@@ -234,7 +238,7 @@ int echo_token_count(char *str)
           }
         }
       }
-      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
         i--;
       if(str[i] == '\0')
         i--;
@@ -298,7 +302,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
           i++;
       else
       {
-        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&')
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&' || str[i] == 40 || str[i] == 41)
         {
           x = -1;
           while(str[i] != '\0' && str[i] != ' ')
@@ -306,7 +310,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
         }
         else
         {
-          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ')
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ' && str[i] != 40 && str[i] != 41)
           {
             if(str[i] == 34 || str[i] == 39)
             {
@@ -320,7 +324,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
       tokens[j] = ft_substr(str, s, i - s);
       j++;
       x++;
-      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
         i--;
       if(str[i] == '\0')
         i--;
@@ -654,6 +658,110 @@ void add_sibling_to_child(t_tree *child, t_tree *sibling)
   }
 }
 
+int check_paranthesis(t_list *list)
+{
+  int c;
+
+  c = 0;
+  while(list)
+  {
+    if(list->content[0] == 40 || list->content[0] == 41)
+    {
+      c++;
+      return(c);
+    }
+    list = list->next;
+  }
+  return(0);
+}
+
+int check_paranthesis_error(t_list *list)
+{
+  int p;
+  t_list *node;
+
+  node = list
+  p = 0;
+  while(node)
+  {
+    if(node->content[0] == 40)
+      p++;
+    node = node->next;
+  }
+  while(list)
+  {
+    if(list->content[0] == 41)
+      p--;
+    list = list->next;
+  }
+  return(p);
+}
+
+t_tree *creat_tree_with_parenthesis(t_list *list)
+{
+  t_tree *root;
+  t_tree *n_node;
+
+  n_node = NULL;
+  root = NULL;
+  if(check_paranthesis_error(list))
+  {
+    printf("Error check paranthesis.\n");
+    return(NULL);
+  }
+  while(list)
+  {
+    if(list->content[0] == 41)
+      return(root);
+    else if(list->content[0] == 40)
+      n_node = creat_tree_with_parenthesis(list->next);
+    else
+      n_node = create_tree_node(list);
+    if(root == NULL)
+      root = n_node;
+    else if( n_node->content->type == PIPE \
+        || n_node->content->type == OR \
+        || n_node->content->type == AND \
+        || n_node->content->type == OUTPUT \
+        || n_node->content->type == HEREDOC \
+        || n_node->content->type == INPUT \
+        || n_node->content->type == APPEND)
+    {
+      add_child_to_tree(n_node, root);
+      root = n_node;
+    }
+    else
+    {
+      if(l_node->content->type != COMMAND && root != l_node)
+        add_sibling_to_child(l_node, n_node);
+      else
+        add_child_to_tree(l_node, n_node);
+    }
+    if(n_node->content->type == OR || n_node->content->type == AND)
+    {
+      
+      l_node = creat_tree(list->next);
+      if(l_node->content->type == OR || l_node->content->type == AND)
+      {
+        root = l_node;
+        while(l_node->first_child->first_child->first_child != NULL)
+          l_node = l_node->first_child;
+        add_child_to_tree(n_node, l_node->first_child);
+        add_sibling_to_child(n_node, l_node->first_child->next_sibling);
+        l_node->first_child->next_sibling->next_sibling = NULL;
+        l_node->first_child->next_sibling = NULL;
+        l_node->first_child = n_node;
+      }
+      else
+        add_child_to_tree(n_node, l_node);
+      return(root);
+    }
+    l_node = n_node;
+    list = list->next;
+  }
+  return(root);
+  }
+}
 
 t_tree *creat_tree(t_list *list)
 {

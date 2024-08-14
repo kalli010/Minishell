@@ -37,5 +37,7 @@ void add_child_to_tree(t_tree *parent, t_tree *child);
 void add_sibling_to_child(t_tree *child, t_tree *sibling);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
+int check_paranthesis(t_list *list);
+t_tree *creat_tree_with_parenthesis(t_list *list);
 
 #endif

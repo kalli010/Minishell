@@ -28,7 +28,10 @@ void ft_minishell(char *line,char **env)
   creat_linked_list(&list, tokens);
   if (symbols_check(list))
     return;
-  root = creat_tree(list);
+  if(check_parenthesis(list))
+    root = creat_tree_with_parenthesis(list);
+  else
+    root = creat_tree(list);
   print_tree(root,0);
   helper = init_helper(env);
   find_command(root,helper);
