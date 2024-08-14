@@ -16,7 +16,7 @@ void ft_minishell(char *line,char **env)
   char **tokens;
   char *cmd;
  t_tree *root;
-  t_helper *helper;
+  //t_helper *helper;
   (void)env;
   list = NULL;
   if(quotes_check(line))
@@ -28,7 +28,7 @@ void ft_minishell(char *line,char **env)
   if (symbols_check(list))
     return;
   root = creat_tree(list);
-  // print_tree(root,0);
+  print_tree(root,0);
   helper = init_helper(env);
   find_command(root,helper);
   free(list);

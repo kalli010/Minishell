@@ -200,14 +200,14 @@ int echo_token_count(char *str)
       }
       else
       {
-        if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
         {
           while(str[i] != '\0' && str[i] != ' ')
             i++;
         }
         else
         {
-          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>')
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ')
           {
             if(str[i] == 34 || str[i] == 39)
             {
@@ -218,7 +218,7 @@ int echo_token_count(char *str)
           }
         }
       }
-      if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
         i--;
       if(str[i] == '\0')
         i--;
@@ -282,7 +282,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
           i++;
       else
       {
-        if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+        if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&')
         {
           x = -1;
           while(str[i] != '\0' && str[i] != ' ')
@@ -290,7 +290,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
         }
         else
         {
-          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' )
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ')
           {
             if(str[i] == 34 || str[i] == 39)
             {
@@ -304,7 +304,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
       tokens[j] = ft_substr(str, s, i - s);
       j++;
       x++;
-      if(str[i] == '|' || str[i] == '<' || str[i] == '>')
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&')
         i--;
       if(str[i] == '\0')
         i--;
@@ -322,40 +322,32 @@ void create_tokens(char *str, char **tokens)
 
   j = 0;
   i = -1;
-  //if(echo_check(str))
-  //{
-  //  printf("11111111111111111111111\n");
-  //  //echo_create_tokens(str, tokens);
-  //}
-  //else 
-  //{
-    while(str[++i])
+  while(str[++i])
+  {
+    if(str[i] != ' ')
     {
-      if(str[i] != ' ')
+      s = i;
+      while(str[i] != '\0' && str[i] != ' ')
       {
-        s = i;
-        while(str[i] != '\0' && str[i] != ' ')
+        if(str[i] == 34 || str[i] == 39)
         {
-          if(str[i] == 34 || str[i] == 39)
-          {
-            q = str[i];
-            while(str[++i] != q);
-          }
-          i++;
+          q = str[i];
+          while(str[++i] != q);
         }
-        if(!ft_strncmp(&str[s], "echo", 4) || !ft_strncmp(&str[s], "\"echo\"", 6))
-        {
-          echo_create_tokens(&str[s], tokens, j);
-          return;
-        }
-        tokens[j] = ft_substr(str, s, i - s);
-        j++;
-        if(str[i] == '\0')
-          i--;
+        i++;
       }
+      if(!ft_strncmp(&str[s], "echo", 4) || !ft_strncmp(&str[s], "\"echo\"", 6))
+      {
+        echo_create_tokens(&str[s], tokens, j);
+        return;
+      }
+      tokens[j] = ft_substr(str, s, i - s);
+      j++;
+      if(str[i] == '\0')
+        i--;
     }
-    tokens[j] = NULL;
-  //}
+  }
+  tokens[j] = NULL;
 }
 
 int check_command(char **str)
@@ -426,10 +418,7 @@ char **tokenizer(char *str)
   int tc;
   int i;
 
-  //if(echo_check(str))
-  //  tc = echo_token_count(str);
-  //else
-    tc = token_count(str);
+  tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
   i = check_command(tokens);
@@ -649,6 +638,7 @@ void add_sibling_to_child(t_tree *child, t_tree *sibling)
   }
 }
 
+
 t_tree *creat_tree(t_list *list)
 {
   t_tree *root;
@@ -681,6 +671,22 @@ t_tree *creat_tree(t_list *list)
       else
         add_child_to_tree(l_node, n_node);
     }
+    if(n_node->content->type == OR || n_node->content->type == AND)
+    {
+      
+      l_node = creat_tree(list->next);
+      if(l_node->content->type == OR || l_node->content->type == AND)
+      {
+        add_child_to_tree(n_node, l_node->first_child);
+        n_node->next_sibling = l_node->first_child->next_sibling;
+        l_node->first_child->next_sibling = NULL;
+        l_node->first_child = n_node;
+        root = l_node;
+      }
+      else
+        add_child_to_tree(n_node, l_node);
+      return(root);
+    }
     l_node = n_node;
     list = list->next;
   }
@@ -701,7 +707,7 @@ void print_tree(t_tree *root, int spaces)
   child = root->first_child;
   while(child)
   {
-    print_tree(child, spaces + 1);
+    print_tree(child, spaces + 2);
     child = child->next_sibling;
   }
 }
