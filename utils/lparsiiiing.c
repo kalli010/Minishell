@@ -65,6 +65,14 @@ void check_p_r(char *str, int *i, int *s)
       *i = *i + 1;
     }
   }
+  else if(str[0] == '&')
+  {
+    if(str[0 + 1] == '&')
+    {
+      *s = *s + 2;
+      *i = *i + 1;
+    }
+  }
 }
 
 int check_p_r2(char *str,int *i)
@@ -94,6 +102,14 @@ int check_p_r2(char *str,int *i)
     if(str[0 + 1] != '<')
       return(1);
     else
+    {
+      *i = *i + 1;
+      return(0);
+    }
+  }
+  else if(str[0] == '&')
+  {
+    if(str[0 + 1] == '&')
     {
       *i = *i + 1;
       return(0);
@@ -677,11 +693,15 @@ t_tree *creat_tree(t_list *list)
       l_node = creat_tree(list->next);
       if(l_node->content->type == OR || l_node->content->type == AND)
       {
-        add_child_to_tree(n_node, l_node->first_child);
-        n_node->next_sibling = l_node->first_child->next_sibling;
-        l_node->first_child->next_sibling = NULL;
-        l_node->first_child = n_node;
         root = l_node;
+        while(l_node->first_child->first_child != NULL)
+          l_node = l_node->first_child;
+        add_child_to_tree(n_node, l_node->first_child);
+        add_sibling_to_child(n_node, l_node->first_child->next_sibling);
+        l_node->first_child->next_sibling = NULL;
+        l_node->first_child = NULL;
+        l_node->first_child = n_node;
+        //root = l_node;
       }
       else
         add_child_to_tree(n_node, l_node);
