@@ -694,14 +694,13 @@ t_tree *creat_tree(t_list *list)
       if(l_node->content->type == OR || l_node->content->type == AND)
       {
         root = l_node;
-        while(l_node->first_child->first_child != NULL)
+        while(l_node->first_child->first_child->first_child != NULL)
           l_node = l_node->first_child;
         add_child_to_tree(n_node, l_node->first_child);
         add_sibling_to_child(n_node, l_node->first_child->next_sibling);
+        l_node->first_child->next_sibling->next_sibling = NULL;
         l_node->first_child->next_sibling = NULL;
-        l_node->first_child = NULL;
         l_node->first_child = n_node;
-        //root = l_node;
       }
       else
         add_child_to_tree(n_node, l_node);
