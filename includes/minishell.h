@@ -35,9 +35,9 @@ int symbols_check(t_list *list);
 t_tree *create_tree_node(t_list *list);
 void add_child_to_tree(t_tree *parent, t_tree *child);
 void add_sibling_to_child(t_tree *child, t_tree *sibling);
+int check_parenthesis_error(t_list *list);
+int check_parenthesis(t_list *list);
+t_tree *creat_tree_with_parenthesis(t_list *list);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
-int check_paranthesis(t_list *list);
-t_tree *creat_tree_with_parenthesis(t_list *list);
-
 #endif
