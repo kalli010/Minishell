@@ -700,27 +700,15 @@ int check_parenthesis_error(t_list *list)
 t_tree *creat_tree_with_parenthesis(t_list *list)
 {
   t_tree *root;
-  t_tree *n_node;
+  t_tree *s_tree;
   t_tree *l_node;
 
   l_node = NULL;
-  n_node = NULL;
+  s_tree = NULL;
   root = NULL;
   while(list)
   {
-    if(list->content[0] == 41)
-      return(root);
-    else if(list->content[0] == 40)
-    {
-      n_node = creat_tree_with_parenthesis(list->next);
-      list = list->next;
-    }
-    else
-    {
-      root = creat_tree(list);
-      while(list->content[0] != 41)
-        list = list->next;
-    }
+    
   }
   return(root);
 }
@@ -736,17 +724,17 @@ t_tree *creat_tree(t_list *list)
   root = NULL;
   while(list)
   {
-    if(list->content[0] == 41)
+    if(list->content[0] == 41 || list->content[0] == 40)
       return(root);
     n_node = create_tree_node(list);
     if(root == NULL)
       root = n_node;
-    else if( n_node->content->type == PIPE \
-        || n_node->content->type == OR \
-        || n_node->content->type == AND \
-        || n_node->content->type == OUTPUT \
-        || n_node->content->type == HEREDOC \
-        || n_node->content->type == INPUT \
+    else if( n_node->content->type == PIPE 
+        || n_node->content->type == OR 
+        || n_node->content->type == AND 
+        || n_node->content->type == OUTPUT 
+        || n_node->content->type == HEREDOC 
+        || n_node->content->type == INPUT 
         || n_node->content->type == APPEND)
     {
       add_child_to_tree(n_node, root);
@@ -763,7 +751,7 @@ t_tree *creat_tree(t_list *list)
     {
       
       l_node = creat_tree(list->next);
-      if(l_node->content->type == OR || l_node->content->type == AND)
+      if(l_node != NULL && (l_node->content->type == OR || l_node->content->type == AND))
       {
         root = l_node;
         while(l_node->first_child->first_child->first_child != NULL)
