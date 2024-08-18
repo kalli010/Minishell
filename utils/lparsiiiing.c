@@ -704,18 +704,89 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
   t_tree *root;
   t_tree *s_tree;
   t_tree *l_node;
+  t_tree *r_tree;
   int i;
-  t_tree *t_tree;
 
-  t_tree = NULL;
-  i = 1;
+  r_tree = NULL;
   l_node = NULL;
   s_tree = NULL;
   root = NULL;
+  i = 0;
   while(list)
   {
-    
+    if(list->content[0] == 41)
+    {
+      list = list->next;
+      i++;
+    }
+    if(list != NULL && (list->content[0] == 40 || i < 0))
+    {
+      if(list->content[0] == 40)
+      {
+        list = list->next;
+        i--;
+      }
+      s_tree = creat_tree(list);
+      while(list->content[0] != 41)
+      {
+        if(list->content[0] == 40)
+          break;
+        list = list->next;
+      }
+    }
+    if(i < 0)
+    {
+      if(r_tree == NULL)
+        r_tree = s_tree;
+      else if(s_tree != NULL && s_tree->first_child != NULL &&\
+          s_tree->first_child->next_sibling == NULL)
+      {
+        add_sibling_to_child(r_tree, s_tree->first_child);
+        s_tree->first_child = r_tree;
+        r_tree = s_tree;
+      }
+      else if(s_tree != NULL && s_tree->first_child != NULL &&\
+          s_tree->first_child->next_sibling != NULL)
+        add_child_to_tree(r_tree, s_tree);
+      else if(s_tree != NULL)
+      {
+        add_child_to_tree(s_tree, r_tree);
+        r_tree = s_tree;
+      }
+      
+    }
+    else
+    {
+      if(list == NULL)
+        add_child_to_tree(root, r_tree);
+      else
+      {
+        if(root != NULL)
+          add_child_to_tree(root, r_tree);
+        l_node = creat_tree(list);
+        if(root == NULL)
+        {
+          if(l_node != NULL && r_tree != NULL)
+          {
+            add_sibling_to_child(r_tree, l_node->first_child);
+            l_node->first_child = r_tree;
+          }
+          root = l_node;
+        }
+        else
+        {
+          add_sibling_to_child(root, l_node->first_child);
+          l_node->first_child = root;
+          root = l_node;
+        }
+        while(list != NULL && list->content[0] != 40)
+          list = list->next;
+        r_tree = NULL;
+      }
+    }
   }
+  if(root == NULL)
+    root = r_tree;
   return(root);
 }
 
