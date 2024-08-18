@@ -633,7 +633,9 @@ t_tree *create_tree_node(t_list *list)
 void add_child_to_tree(t_tree *parent, t_tree *child)
 {
   t_tree *last_sibling;
-
+  
+  if(parent == NULL)
+    return;
   if(parent->first_child == NULL)
     parent->first_child = child;
   else {
@@ -703,39 +705,16 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
   t_tree *s_tree;
   t_tree *l_node;
   int i;
+  t_tree *t_tree;
 
-  i = 0;
+  t_tree = NULL;
+  i = 1;
   l_node = NULL;
   s_tree = NULL;
   root = NULL;
   while(list)
   {
-    if(list->content[0] == 41)
-      list = list->next;
-    else if(list->content[0] == 40)
-      s_tree = creat_tree(list->next);
-    else
-    {
-      l_node = creat_tree(list);
-      i = 1;
-    }
-    if(root == NULL && s_tree != NULL)
-      root = s_tree;
-    else if(i == 1)
-    {
-      add_child_to_tree(l_node, root);
-      root = l_node;
-    }
-    if(i == 0)
-    {
-      while(list->content[0] != 41)
-        list = list->next;
-    }
-    else {
-      while(list->content[0] != 40)
-        list = list->next;
-    }
-    i = 0;
+    
   }
   return(root);
 }
