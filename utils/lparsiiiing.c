@@ -616,53 +616,175 @@ int symbols_check(t_list *list)
   return(0);
 }
 
-void var_dquotes(t_list **list)
+void ft_cpy(char **n_list, char *str)
+{
+  int i;
+  int j;
+
+  j = ft_strlen(*n_list);
+  i = -1;
+  while(str[++i])
+    (*n_list)[j++] = str[i];
+  (*n_list)[j] = '\0';
+}
+
+char *get_new_list(char *fstr, char *var, char *tstr)
+{
+  char *n_list;
+  int len;
+
+  n_list = NULL;
+  len = ft_strlen(fstr) + ft_strlen(var) + ft_strlen(tstr);
+  n_list = (char *)malloc(sizeof(char) * (len + 1));
+  ft_cpy(&n_list, fstr);
+  ft_cpy(&n_list, var);
+  ft_cpy(&n_list, tstr);
+  return(n_list);
+}
+
+void var_dquotes(t_list **list, char **env)
 {
   char *fstr;
   char *sstr;
   char *tstr;
+  char *var;
   int len;
+  int s;
 
+  s = 0;
   len = 0;
   while((*list)->content[len] && (*list)->content[len++] != '$');
   fstr = ft_substr((*list)->content, 0, len);
+  s = len;
   while((*list)->content[len] && (*list)->content[len++] != '"');
-  
+  sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
+  s = len;
+  while((*list)->content[len++]);
+  tstr = ft_substr((*list)->content, s, len - s);
+  if(sstr)
+    var = getenv(sstr);
+  else {
+    var = "";
+  }
+  free(sstr);
+  free((*list)->content);
+  (*list)->content = get_new_list(fstr, var, tstr);
+  free(fstr);
+  free(tstr);
 }
 
 void var_squotes(t_list **list)
 {
-  
+  (void)list;
 }
 
-void var_quotes(t_list **list)
+int count_words(char *str)
 {
-  
+  int i;
+  int c;
+  int in_word;
+  char q;
+
+  i = -1;
+  c = 0;
+  in_word = 0;
+  while(str[++i])
+  {
+    if(str[i] == '"' || str[i] == '\'')
+    {
+      q = str[i];
+      while(str[++i] != q);
+    }
+    if(str[i] == ' ')
+      in_word = 0;
+    else if(str[i] != ' ' && in_word == 0)
+    {
+      c++;
+      in_word = 1;
+    }
+    i++;
+  }
+  return(c);
+}
+
+void get_words(int &i, int &end, char *str)
+{
+  while(str[*i] && str[*i] == ' ')
+    *i++;
+  *end = *i;
+  while(str[*end] && str[*end] != ' ')
+  {
+    if(str[*end] == '"')
+    *end++;
+  }
+}
+
+char **var_split(char *str)
+{
+  char **list;
+  int i;
+  char q;
+  int c;
+  int end;
+    }
+
+  end = 0;
+  c = count_words(str);
+  i = 0;
+  list = NULL;
+  list = (char **)malloc(sizeof(char *) * (c + 1));
+  c = 0;
+  while(str[i])
+  {
+    get_words(&i, &end, str);
+  }
+}
+
+void var_quotes(t_list **list, char **env)
+{
+  char **n_list;
+
+  n_list = NULL;
+  var_dquotes(list, env);
+  n_list = var_split((*list)->content);
 }
 
 void expander(t_list *list)
 {
   int i;
 
-  while(list)
+  i = 0;
+  while(list->content[i])
   {
-    i = 0;
-    while(list->content[i])
+    if(list->content[i] == '"')
     {
-      if(list->content[i] == '"')
+      while(list->content[++i] && list->content[0] != '$')
       {
-        var_dquotes(&list);
+        if(list->content[i] == '"')
+          break;
+      }
+      if(list->content[i] == '$')
+      {
+        var_dquotes(&list, env);
         break;
       }
-      else if(list->content[i] == '\'')
-      {  
+    }
+    else if(list->content[i] == '\'')
+    {
+      while(list->content[++i] && list->content[0] != '$')
+      {
+        if(list->content[i] == '\'')
+          break
+      }
+      if(list->content[i] == '$')
+      {
         var_squotes(&list);
         break;
       }
-      i++;
     }
-    var_quotes(&list);
-    list = list->next;
+    else if(list->content[i] == '$')
+      var_quotes(&list, env);
+    i++;
   }
 }
 
