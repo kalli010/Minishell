@@ -33,6 +33,7 @@ void ft_minishell(char *line,char **env)
     printf("Error check paranthesis.\n");
     return;
   }
+  expander(list);
   if(check_parenthesis(list))
     root = creat_tree_with_parenthesis(list);
   else

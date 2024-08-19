@@ -616,6 +616,56 @@ int symbols_check(t_list *list)
   return(0);
 }
 
+void var_dquotes(t_list **list)
+{
+  char *fstr;
+  char *sstr;
+  char *tstr;
+  int len;
+
+  len = 0;
+  while((*list)->content[len] && (*list)->content[len++] != '$');
+  fstr = ft_substr((*list)->content, 0, len);
+  while((*list)->content[len] && (*list)->content[len++] != '"');
+  
+}
+
+void var_squotes(t_list **list)
+{
+  
+}
+
+void var_quotes(t_list **list)
+{
+  
+}
+
+void expander(t_list *list)
+{
+  int i;
+
+  while(list)
+  {
+    i = 0;
+    while(list->content[i])
+    {
+      if(list->content[i] == '"')
+      {
+        var_dquotes(&list);
+        break;
+      }
+      else if(list->content[i] == '\'')
+      {  
+        var_squotes(&list);
+        break;
+      }
+      i++;
+    }
+    var_quotes(&list);
+    list = list->next;
+  }
+}
+
 t_tree *create_tree_node(t_list *list)
 {
   t_tree *n_node;
