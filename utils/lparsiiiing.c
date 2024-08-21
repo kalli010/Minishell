@@ -849,6 +849,72 @@ void check_expander(t_list **list)
     *list = (*list)->back;
 }
 
+void set_var(t_list *list, char **env)
+{
+  char *var;
+  char *value;
+  int len;
+  int s;
+  char q;
+  char *new_var;
+
+  len = 0;
+  s = 0;
+  while(list->content[len] != '=')
+    len++;
+  var = ft_substr(list->content, 0, len);
+  s = len++;
+  if(list->content[len] == '"' || list->content[len] == '\'')
+  {
+    q = list->content[len];
+    s = len++;
+    while(list->content[++len] != q)
+      len++;
+  }
+  else
+    while(list->content[len]);
+  value = ft_substr(list->content, s, len - s);
+  s = -1;
+  while(env[++s] != NULL)
+  {
+    if(ft_strncmp(env[s], var, ft_strlen(var)) && env[s][ft_strlen(var)] == '=')
+    {
+      new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
+      new_var[0] = '\0';
+      ft_cpy(new_var, var);
+      ft_cpy(new_var, "=");
+      ft_cpy(new_var, value);
+      env[s] = new_var;
+      return;
+    }
+  }
+}
+
+void check_var(t_list *list, char **env)
+{
+  int i;
+
+  while(list)
+  {
+    i = -1;
+    while(list->content[++i])
+    {
+      if(list->content[i] == '=')
+      {
+        if(list->back == NULL || \
+          (list->back->type != COMMAND &&\
+      list->back->type != OPTIONS &&\
+      list->back->type != PATH &&\
+      list->back->type != VAR &&\
+      list->back->type != PATH_COMMAND))
+        list->type = SET_VAR;
+        set_var(list, env);
+      }
+    }
+    list = list->next;
+  }
+}
+
 t_tree *create_tree_node(t_list *list)
 {
   t_tree *n_node;

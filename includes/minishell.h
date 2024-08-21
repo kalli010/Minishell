@@ -32,6 +32,8 @@ char **tokenizer(char *str);
 void token_type(t_list *list);
 void creat_linked_list(t_list **list, char **tokens);
 int symbols_check(t_list *list);
+void set_var(t_list *list, char **env);
+void check_var(t_list *list, char **env);
 void check_expander(t_list **list);
 t_tree *create_tree_node(t_list *list);
 void add_child_to_tree(t_tree *parent, t_tree *child);

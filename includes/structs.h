@@ -14,6 +14,7 @@ typedef enum s_ttype{
   OPTIONS,
   PATH,
   VAR,
+  SET_VAR,
   PATH_COMMAND,
   DELIMITER
 } t_ttype;

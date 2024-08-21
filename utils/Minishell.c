@@ -10,6 +10,7 @@ t_helper *init_helper(char **env)
   helper->option = NULL;
   return (helper);
 }
+
 void ft_minishell(char *line,char **env)
 {
   t_list *list;
@@ -33,6 +34,7 @@ void ft_minishell(char *line,char **env)
     printf("Error check paranthesis.\n");
     return;
   }
+  check_var(list, env);
   check_expander(&list);
   if(check_parenthesis(list))
     root = creat_tree_with_parenthesis(list);
