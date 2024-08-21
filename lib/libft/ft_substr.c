@@ -22,7 +22,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	slen = ft_strlen(s);
 	i = 0;
-	if (start >= slen)
+	if(len == 0)
+    return(NULL);
+  if (start >= slen)
 		return (ft_strdup(""));
 	if (len > slen - start)
 		len = slen - start;

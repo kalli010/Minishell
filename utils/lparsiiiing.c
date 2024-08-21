@@ -616,16 +616,18 @@ int symbols_check(t_list *list)
   return(0);
 }
 
-void ft_cpy(char **n_list, char *str)
+void ft_cpy(char *n_list, char *str)
 {
   int i;
   int j;
 
-  j = ft_strlen(*n_list);
+  if(str == NULL)
+    return;
+  j = ft_strlen(n_list);
   i = -1;
   while(str[++i])
-    (*n_list)[j++] = str[i];
-  (*n_list)[j] = '\0';
+    n_list[j++] = str[i];
+  n_list[j] = '\0';
 }
 
 char *get_new_list(char *fstr, char *var, char *tstr)
@@ -636,13 +638,14 @@ char *get_new_list(char *fstr, char *var, char *tstr)
   n_list = NULL;
   len = ft_strlen(fstr) + ft_strlen(var) + ft_strlen(tstr);
   n_list = (char *)malloc(sizeof(char) * (len + 1));
-  ft_cpy(&n_list, fstr);
-  ft_cpy(&n_list, var);
-  ft_cpy(&n_list, tstr);
+  n_list[0] = '\0';
+  ft_cpy(n_list, fstr);
+  ft_cpy(n_list, var);
+  ft_cpy(n_list, tstr);
   return(n_list);
 }
 
-void var_dquotes(t_list **list, char **env)
+void var_dquotes(t_list **list)
 {
   char *fstr;
   char *sstr;
@@ -653,13 +656,16 @@ void var_dquotes(t_list **list, char **env)
 
   s = 0;
   len = 0;
-  while((*list)->content[len] && (*list)->content[len++] != '$');
+  while((*list)->content[len] && (*list)->content[len] != '$')
+    len++;
   fstr = ft_substr((*list)->content, 0, len);
   s = len;
-  while((*list)->content[len] && (*list)->content[len++] != '"');
+  while((*list)->content[len] && (*list)->content[len] != '"')
+    len++;
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
   s = len;
-  while((*list)->content[len++]);
+  while((*list)->content[len])
+    len++;
   tstr = ft_substr((*list)->content, s, len - s);
   if(sstr)
     var = getenv(sstr);
@@ -702,20 +708,25 @@ int count_words(char *str)
       c++;
       in_word = 1;
     }
-    i++;
   }
   return(c);
 }
 
-void get_words(int &i, int &end, char *str)
+void get_words(int *i, int *end, char *str)
 {
+  char q;
+
   while(str[*i] && str[*i] == ' ')
-    *i++;
+    (*i)++;
   *end = *i;
   while(str[*end] && str[*end] != ' ')
   {
-    if(str[*end] == '"')
-    *end++;
+    (*end)++;
+    if(str[*end] == '"' || str[*end] == '\'')
+    {
+      q = str[*end];
+      while(str[++(*end)] != q);
+    }
   }
 }
 
@@ -723,69 +734,119 @@ char **var_split(char *str)
 {
   char **list;
   int i;
-  char q;
   int c;
   int end;
-    }
 
   end = 0;
   c = count_words(str);
   i = 0;
-  list = NULL;
   list = (char **)malloc(sizeof(char *) * (c + 1));
   c = 0;
   while(str[i])
   {
     get_words(&i, &end, str);
+    list[c++] = ft_substr(str, i, end - i);
+    i = end;
   }
+  list[c] = NULL;
+  return(list);
 }
 
-void var_quotes(t_list **list, char **env)
+void var_quotes(t_list **list)
 {
-  char **n_list;
+  char **array;
+  t_list *n_list;
+  t_list *tmp;
+  t_list *back;
 
-  n_list = NULL;
-  var_dquotes(list, env);
-  n_list = var_split((*list)->content);
+  var_dquotes(list);
+  array = var_split((*list)->content);
+  creat_linked_list(&n_list, array);
+  tmp = (*list)->next;
+  back = (*list)->back;
+  if((*list)->back != NULL)
+    (*list)->back->next = NULL;
+  free((*list)->content);
+  free((*list));
+  if(back != NULL)
+  {
+    (*list) = back;
+    while(n_list)
+    {
+      ft_lstadd_back(list, n_list);
+      n_list = n_list->next;
+    }
+  }
+  else {
+    (*list) = n_list;
+  }
+  ft_lstadd_back(list, tmp);
 }
 
-void expander(t_list *list)
+void expander(t_list **list)
 {
   int i;
 
   i = 0;
-  while(list->content[i])
+  while((*list)->content[i])
   {
-    if(list->content[i] == '"')
+    if((*list)->content[i] == '"')
     {
-      while(list->content[++i] && list->content[0] != '$')
+      while((*list)->content[++i] && (*list)->content[i] != '$')
       {
-        if(list->content[i] == '"')
+        if((*list)->content[i] == '"')
           break;
       }
-      if(list->content[i] == '$')
+      if((*list)->content[i] == '$')
       {
-        var_dquotes(&list, env);
+        var_dquotes(list);
         break;
       }
     }
-    else if(list->content[i] == '\'')
+    else if((*list)->content[i] == '\'')
     {
-      while(list->content[++i] && list->content[0] != '$')
+      while((*list)->content[++i] && (*list)->content[i] != '$')
       {
-        if(list->content[i] == '\'')
-          break
+        if((*list)->content[i] == '\'')
+          break;
       }
-      if(list->content[i] == '$')
+      if((*list)->content[i] == '$')
       {
-        var_squotes(&list);
+        var_squotes(list);
         break;
       }
     }
-    else if(list->content[i] == '$')
-      var_quotes(&list, env);
+    else if((*list)->content[i] == '$')
+    {
+      var_quotes(list);
+      break;
+    }
     i++;
   }
+}
+
+void check_expander(t_list **list)
+{
+  int i;
+  t_list *tmp;
+
+  while(*list)
+  {
+    i = -1;
+    while((*list)->content[++i])
+    {
+      if((*list)->content[i] == '$')
+      {
+        expander(list);
+        break;
+      }
+    }
+    tmp = *list;
+    (*list) = (*list)->next;
+  }
+  *list = tmp;
+  while((*list)->back != NULL)
+    *list = (*list)->back;
 }
 
 t_tree *create_tree_node(t_list *list)
