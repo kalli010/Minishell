@@ -436,17 +436,17 @@ char **tokenizer(char *str)
 {
   char **tokens;
   int tc;
-  int i;
+  //int i;
 
   tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
-  i = check_command(tokens);
-  while(i != -1)
-  {
-    remove_quotes(tokens[i]);
-    i = check_command(tokens);
-  }
+  //i = check_command(tokens);
+  //while(i != -1)
+  //{
+  //  remove_quotes(tokens[i]);
+  //  i = check_command(tokens);
+  //}
   return(tokens);
 }
 
@@ -842,10 +842,11 @@ void check_expander(t_list **list)
       }
     }
     tmp = *list;
-    (*list) = (*list)->next;
+    if(*list != NULL)
+      (*list) = (*list)->next;
   }
   *list = tmp;
-  while((*list)->back != NULL)
+  while((*list) && (*list)->back != NULL)
     *list = (*list)->back;
 }
 
@@ -868,12 +869,12 @@ void set_var(t_list *list, char **env)
   {
     q = list->content[len];
     s = len++;
-    while(list->content[++len] != q)
+    while(list->content[len] != q)
       len++;
   }
   else
-    while(list->content[len]);
-  value = ft_substr(list->content, s, len - s);
+    while(list->content[len++]);
+  value = ft_substr(list->content, s + 1, len - (s + 1));
   s = -1;
   while(env[++s] != NULL)
   {
