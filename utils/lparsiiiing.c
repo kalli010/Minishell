@@ -645,7 +645,29 @@ char *get_new_list(char *fstr, char *var, char *tstr)
   return(n_list);
 }
 
-void var_dquotes(t_list **list)
+char *ft_getenv(char **env, char *str)
+{
+  int s;
+  int i;
+  char *new_var;
+
+  s = -1;
+  new_var = NULL;
+  while(env[++s])
+  {
+    if(!ft_strncmp(env[s], str, ft_strlen(str)) && env[s][ft_strlen(str)] == '=')
+    {
+      i = ft_strlen(str);
+      while(env[s][++i]);
+      new_var = (char *)malloc(sizeof(char) * (i + 1));
+      new_var[0] = '\0';
+      ft_cpy(new_var, &env[s][ft_strlen(str) + 1]);
+    }
+  }
+  return(new_var);
+}
+
+void var_dquotes(char **env, t_list **list)
 {
   char *fstr;
   char *sstr;
@@ -668,7 +690,7 @@ void var_dquotes(t_list **list)
     len++;
   tstr = ft_substr((*list)->content, s, len - s);
   if(sstr)
-    var = getenv(sstr);
+    var = ft_getenv(env, sstr);
   else {
     var = "";
   }
@@ -752,14 +774,14 @@ char **var_split(char *str)
   return(list);
 }
 
-void var_quotes(t_list **list)
+void var_quotes(char **env, t_list **list)
 {
   char **array;
   t_list *n_list;
   t_list *tmp;
   t_list *back;
 
-  var_dquotes(list);
+  var_dquotes(env, list);
   array = var_split((*list)->content);
   creat_linked_list(&n_list, array);
   tmp = (*list)->next;
@@ -771,11 +793,7 @@ void var_quotes(t_list **list)
   if(back != NULL)
   {
     (*list) = back;
-    while(n_list)
-    {
-      ft_lstadd_back(list, n_list);
-      n_list = n_list->next;
-    }
+    ft_lstadd_back(list, n_list);
   }
   else {
     (*list) = n_list;
@@ -783,7 +801,7 @@ void var_quotes(t_list **list)
   ft_lstadd_back(list, tmp);
 }
 
-void expander(t_list **list)
+void expander(char **env, t_list **list)
 {
   int i;
 
@@ -799,7 +817,7 @@ void expander(t_list **list)
       }
       if((*list)->content[i] == '$')
       {
-        var_dquotes(list);
+        var_dquotes(env, list);
         break;
       }
     }
@@ -818,14 +836,14 @@ void expander(t_list **list)
     }
     else if((*list)->content[i] == '$')
     {
-      var_quotes(list);
+      var_quotes(env, list);
       break;
     }
     i++;
   }
 }
 
-void check_expander(t_list **list)
+void check_expander(char **env, t_list **list)
 {
   int i;
   t_list *tmp;
@@ -837,7 +855,7 @@ void check_expander(t_list **list)
     {
       if((*list)->content[i] == '$')
       {
-        expander(list);
+        expander(env, list);
         break;
       }
     }
@@ -878,17 +896,25 @@ void set_var(t_list *list, char **env)
   s = -1;
   while(env[++s] != NULL)
   {
-    if(ft_strncmp(env[s], var, ft_strlen(var)) && env[s][ft_strlen(var)] == '=')
+    if(!ft_strncmp(env[s], var, ft_strlen(var)) && env[s][ft_strlen(var)] == '=')
     {
       new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
       new_var[0] = '\0';
       ft_cpy(new_var, var);
       ft_cpy(new_var, "=");
       ft_cpy(new_var, value);
+      free(env[s]);
       env[s] = new_var;
       return;
     }
   }
+  new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
+  new_var[0] = '\0';
+  ft_cpy(new_var, var);
+  ft_cpy(new_var, "=");
+  ft_cpy(new_var, value);
+  env[s] = new_var;
+  env[s + 1] = NULL;
 }
 
 void check_var(t_list *list, char **env)
@@ -910,6 +936,7 @@ void check_var(t_list *list, char **env)
       list->back->type != PATH_COMMAND))
         list->type = SET_VAR;
         set_var(list, env);
+        break;
       }
     }
     list = list->next;
