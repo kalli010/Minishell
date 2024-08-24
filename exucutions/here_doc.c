@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/14 08:47:53 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/23 21:40:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	check_if_uppercase(char *line)
 	return (0);
 }
 
-char	*check_if_env(char *line)
+char	*check_if_env(char **env,char *line)
 {
 	char	*path_env;
 
 	if (check_if_uppercase(line))
 	{
-		path_env = getenv(line + 1);
+		path_env = ft_getenv(env,line + 1);
 		if (path_env != NULL)
 			return (path_env);
 	}
@@ -68,7 +68,7 @@ int	here_doc(t_tree *root, t_helper *helper)
 		if (ft_strncmp(line, here->del, ft_strlen(here->del)) == 0
 			&& ft_strlen(line) == ft_strlen(here->del))
 			break ;
-		env_path = check_if_env(line);
+		env_path = check_if_env(helper->envp,line);
 		if (env_path != NULL)
 			write(pipe_fd[1], env_path, ft_strlen(env_path));
 		else

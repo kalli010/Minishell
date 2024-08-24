@@ -44,4 +44,6 @@ t_tree *creat_subtree(t_list **list);
 t_tree *creat_tree_with_parenthesis(t_list *list);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
+char *ft_getenv(char **env, char *str);
+
 #endif
