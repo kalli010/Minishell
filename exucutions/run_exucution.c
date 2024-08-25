@@ -6,7 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/24 03:34:18 by ayel-mou         ###   ########.fr       */
+=======
+/*   Updated: 2024/08/24 22:29:46 by ayel-mou         ###   ########.fr       */
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,30 +37,46 @@ void	execute(t_tree *root, t_helper *helper)
 void execute_pipe(t_tree *root, t_helper *helper)
 {
     int fd[2];
-    pid_t pid;
+    pid_t r_fork;
+	// pid_t l_fork;
 	// printf("first child is == %s\n", root->first_child->content->content);
 	// printf("next sibling is == %s\n", root->first_child->next_sibling->content->content);
     if (pipe(fd) == -1)
+<<<<<<< HEAD
         return;
     pid = fork();
     if (pid == -1)
+=======
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
         return ;
-    if (pid == 0)
+
+    r_fork = fork();
+    if (r_fork == -1)
+        return ;
+	// if (r_fork == 0)
+	// {
+		
+	// }
+    if (r_fork == 0)
     {
         dup2(fd[1], STDOUT_FILENO);
         close(fd[0]);
         close(fd[1]);
+		if (root->first_child->content->type == PIPE)
+			execute_pipe(root->first_child,helper);
         execute(root->first_child, helper);
+		exit(EXIT_SUCCESS);
     }
     else
     {
         dup2(fd[0], STDIN_FILENO);
         close(fd[1]);
         close(fd[0]);
-        waitpid(pid, NULL, 0);
-        execute(root->first_child->next_sibling, helper);
+		waitpid(r_fork, NULL, 0);
+		execute(root->first_child->next_sibling, helper);
+		//exit(EXIT_SUCCESS);
     }
-	execute_pipe(root->first_child,helper);
+	// execute_pipe(root->first_child,helper);
 }
 
 void	find_command(t_tree *root, t_helper *helper)

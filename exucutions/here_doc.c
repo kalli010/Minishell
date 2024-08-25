@@ -6,7 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/23 21:40:02 by ayel-mou         ###   ########.fr       */
+=======
+/*   Updated: 2024/08/24 05:43:58 by ayel-mou         ###   ########.fr       */
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +64,18 @@ int	here_doc(t_tree *root, t_helper *helper)
 		free(here);
 		return (0);
 	}
-	while (1)
+	line = readline("> ");
+	while (line)
 	{
 		line = readline("> ");
+<<<<<<< HEAD
 		if (ft_strncmp(line, here->del, ft_strlen(here->del)) == 0
 			&& ft_strlen(line) == ft_strlen(here->del))
 			break ;
+=======
+		if (!ft_strncmp(line, here->del, ft_strlen(here->del)))
+			break;  ;
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
 		env_path = check_if_env(helper->envp,line);
 		if (env_path != NULL)
 			write(pipe_fd[1], env_path, ft_strlen(env_path));
