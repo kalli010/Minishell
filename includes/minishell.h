@@ -26,7 +26,7 @@ int echo_token_count(char *str);
 int token_count(char *str);
 void echo_create_tokens(char *str, char **tokens, int j);
 void create_tokens(char *str, char **tokens);
-void remove_quotes(char *tokens);
+void remove_quotes(t_list *list);
 int check_command(char **str);
 char **tokenizer(char *str);
 void token_type(t_list *list);
@@ -44,4 +44,6 @@ t_tree *creat_subtree(t_list **list);
 t_tree *creat_tree_with_parenthesis(t_list *list);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
+char *ft_getenv(char **env, char *str);
+
 #endif
