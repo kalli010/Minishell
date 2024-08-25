@@ -7,14 +7,14 @@ LIBFT = $(LIBFT_SRC)/libft.a
 
 src = ./utils/Minishell.c \
       ./utils/lparsiiiing.c \
-     exucutions/run_exucution.c \
-     exucutions/get_path.c \
-     exucutions/here_doc.c \
-     exucutions/helper_fun.c \
+     execute_all/run_execute.c \
+     execute_all/get_path.c \
+     execute_all/here_doc.c \
+     execute_all/helper_fun.c \
      bulutins/ft_env.c \
      bulutins/ft_pwd.c \
-	  exucutions/execute_cmd.c \
-	  exucutions/redirect.c \
+	  execute_all/execute_cmd.c \
+	  execute_all/redirect.c \
 
 obj = $(src:.c=.o)
 

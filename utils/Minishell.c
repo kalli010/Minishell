@@ -19,7 +19,6 @@ void ft_minishell(char *line,char **env)
   t_tree *root;
   t_helper *helper;
 
-
   list = NULL;
   if(quotes_check(line))
       return;
@@ -34,8 +33,8 @@ void ft_minishell(char *line,char **env)
     printf("Error check paranthesis.\n");
     return;
   }
-  //check_var(list, env);
-  //check_expander(env, &list);
+  // check_var(list, env);
+  // check_expander(env, &list);
   if(check_parenthesis(list))
     root = creat_tree_with_parenthesis(list);
   else
