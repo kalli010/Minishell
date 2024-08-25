@@ -26,7 +26,7 @@ int echo_token_count(char *str);
 int token_count(char *str);
 void echo_create_tokens(char *str, char **tokens, int j);
 void create_tokens(char *str, char **tokens);
-void remove_quotes(char *tokens);
+void remove_quotes(t_list *list);
 int check_command(char **str);
 char **tokenizer(char *str);
 void token_type(t_list *list);

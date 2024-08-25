@@ -310,7 +310,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
         }
         else
         {
-          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != ' ' && str[i] != 40 && str[i] != 41)
+          while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != 40 && str[i] != 41)
           {
             if(str[i] == 34 || str[i] == 39)
             {
@@ -370,90 +370,19 @@ void create_tokens(char *str, char **tokens)
   tokens[j] = NULL;
 }
 
-int check_command(char **str)
-{
-  int i;
-  char *path;
-  char *dest;
-  int j;
-
-  dest = NULL;
-  if(*str == NULL)
-    return(-1);
-  j = -1;
-  while(str[++j])
-  {
-    i = 0;
-    if(str[j][0] == '"')
-    {
-      if(str[j][1] == '$')
-        return(0);
-      i++;
-      while(str[j][i] != '"')
-        i++;
-      ft_strlcpy(&dest,&str[j][1],i);
-      path = ft_strjoin("/usr/bin/",dest);
-      if(!(access(path, F_OK)))
-      {
-        free(path);
-        free(dest);
-        return(j);
-      }
-      free(path);
-      free(dest);
-    }
-  }
-  return(-1);
-}
-
-void remove_quotes(char *tokens)
-{
-  int j;
-  char q;
-
-  j = -1;
-  while(tokens[++j])
-  {
-    if(tokens[j] == '"')
-    {
-      q = tokens[j];
-      tokens[j] = tokens[j + 1];
-      while(tokens[j + 1] != q)
-      {
-        tokens[j] = tokens[j + 1];
-        j++;
-      }
-      j++;
-      while(tokens[++j])
-        tokens[j - 2] = tokens[j];
-      tokens[j - 2] = '\0';
-      j = -1;
-    }
-  }
-}
-
 char **tokenizer(char *str)
 {
   char **tokens;
   int tc;
-  //int i;
 
   tc = token_count(str);
   tokens = (char **)malloc(sizeof(char *) * (tc + 1));
   create_tokens(str, tokens);
-  //i = check_command(tokens);
-  //while(i != -1)
-  //{
-  //  remove_quotes(tokens[i]);
-  //  i = check_command(tokens);
-  //}
   return(tokens);
 }
 
 void token_type(t_list *list)
 {
-  char *path;
-
   while(list->next != NULL)
     list = list->next;
   if(list->content[0] == '|' && list->content[1] == '|' && list->content[2] == '\0')
@@ -497,13 +426,12 @@ void token_type(t_list *list)
     list->type = DELIMITER;
   else
   {
-    path = ft_strjoin("/usr/bin/",list->content);
-    if(!access(path, F_OK))
+    //path = ft_strjoin("/usr/bin/",list->content);
+    //if(!access(path, F_OK))
+    //    list->type = COMMAND;
+    //else
         list->type = COMMAND;
-    
-    else
-        list->type = COMMAND;
-    free(path);
+    //free(path);
   }
 }
 
@@ -943,6 +871,36 @@ void check_var(t_list *list, char **env)
   }
 }
 
+void remove_quotes(t_list *list)
+{
+  int j;
+  char q;
+
+  while(list)
+  {
+    j = -1;
+    while(list->content[++j])
+    {
+      if(list->content[j] == '"')
+      {
+        q = list->content[j];
+        list->content[j] = list->content[j + 1];
+        while(list->content[j + 1] != q)
+        {
+          list->content[j] = list->content[j + 1];
+          j++;
+        }
+        j++;
+        while(list->content[++j])
+          list->content[j - 2] = list->content[j];
+        list->content[j - 2] = '\0';
+        j = -1;
+      }
+    }
+    list = list->next;
+  }
+}
+
 t_tree *create_tree_node(t_list *list)
 {
   t_tree *n_node;
@@ -1209,5 +1167,15 @@ void print_tree(t_tree *root, int spaces)
   {
     print_tree(child, spaces + 2);
     child = child->next_sibling;
+  }
+}
+
+void export(t_list *list, char **env)
+{
+  list = list->next;
+  while(list || list->type != OPTIONS)
+  {
+    set_var(list, env)
+    list = list->next;
   }
 }

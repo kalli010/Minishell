@@ -6,7 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/08/24 03:34:18 by ayel-mou         ###   ########.fr       */
+=======
 /*   Updated: 2024/08/24 22:29:46 by ayel-mou         ###   ########.fr       */
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +41,13 @@ void execute_pipe(t_tree *root, t_helper *helper)
 	// pid_t l_fork;
 	// printf("first child is == %s\n", root->first_child->content->content);
 	// printf("next sibling is == %s\n", root->first_child->next_sibling->content->content);
-
     if (pipe(fd) == -1)
+<<<<<<< HEAD
+        return;
+    pid = fork();
+    if (pid == -1)
+=======
+>>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
         return ;
 
     r_fork = fork();

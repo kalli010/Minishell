@@ -15,7 +15,6 @@
 void	execute_command(char *command, char **arg, char **env)
 {
 	pid_t pid;
-
 	pid = fork();
     if (pid == -1)
         return ;

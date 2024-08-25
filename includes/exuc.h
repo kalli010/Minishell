@@ -13,7 +13,6 @@
 #ifndef EXUC_H
 # define EXUC_H
 #include <minishell.h>
-
 char	*get_path(t_helper *help,t_list *list);
 int		find_command(t_tree *root, t_helper *helper);
 char	**get_options(t_helper *helper, t_list *list);
