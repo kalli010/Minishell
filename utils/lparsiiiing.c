@@ -1169,3 +1169,13 @@ void print_tree(t_tree *root, int spaces)
     child = child->next_sibling;
   }
 }
+
+void export(t_list *list, char **env)
+{
+  list = list->next;
+  while(list || list->type != OPTIONS)
+  {
+    set_var(list, env)
+    list = list->next;
+  }
+}
