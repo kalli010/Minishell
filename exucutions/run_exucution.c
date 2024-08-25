@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/14 11:46:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/24 03:34:18 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,8 @@ void execute_pipe(t_tree *root, t_helper *helper)
     pid_t pid;
 	// printf("first child is == %s\n", root->first_child->content->content);
 	// printf("next sibling is == %s\n", root->first_child->next_sibling->content->content);
-
     if (pipe(fd) == -1)
         return;
-
     pid = fork();
     if (pid == -1)
         return ;
@@ -74,9 +72,13 @@ void	find_command(t_tree *root, t_helper *helper)
         execute(root, helper);
         return;
     }
-	if (root->content->type == OUTPUT)
+	if (root->content->type == OUTPUT || root->content->type == APPEND)
 	{
 		redirect_output(root, helper);
+	}
+	if (root->content->type == INPUT)
+	{
+		redirect_input(root, helper);
 	}
 	if (root->content->type == HEREDOC)
 	{
@@ -86,6 +88,6 @@ void	find_command(t_tree *root, t_helper *helper)
 	{
 		execute_pipe(root,helper);
 	}
-	find_command(root->first_child, helper);
-	find_command(root->next_sibling, helper);
+	// find_command(root->first_child, helper);
+	// find_command(root->next_sibling, helper);
 }
