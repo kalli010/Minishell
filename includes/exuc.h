@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/25 18:53:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 05:44:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int		execute(t_tree *root, t_helper *helper);
 int     count_arg(t_list *list);
 int		redirect_input(t_tree *root, t_helper *helper);
 int		execute_pipe(t_tree *root, t_helper *helper);
+int 	ft_echo(t_list *list);
 
 
 

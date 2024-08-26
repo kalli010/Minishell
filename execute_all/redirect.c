@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/25 19:10:36 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 05:06:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ int	redirect_input(t_tree *root, t_helper *helper)
 	pid = fork();
 	if (pid == 0)
 	{
-		fd = open(file, O_WRONLY, 0644);
+		fd = open(file, O_WRONLY);
 		if (fd == -1)
 			errors(0, fd);
 		if (dup2(fd, STDIN_FILENO) == -1)
 			errors(1, fd);
-		execute(root->first_child, helper);
+		if (root->first_child->content->type == COMMAND)
+			execute(root->first_child, helper);
 		close(fd);
 		exit(EXIT_SUCCESS);
 	}
@@ -59,36 +60,42 @@ int	redirect_output(t_tree *root, t_helper *helper)
 {
 	char	*file;
 	int		fd;
-	pid_t	pid;
-	int status;
+	// pid_t	pid;
+	// int status;
 	
-	status = 0;
-	printf(" check redirect -->   %s \n",root->first_child->content->content);
+	// status = 0;
+	dprintf( 2 ," check redirect -->   %s \n",root->first_child->content->content);
 	if (root->first_child->content->type != COMMAND)
+	{
+		dprintf( 2 ," fasfdasfdsfdsf \n");
 		find_command(root->first_child,helper);
-	
+	}
 	else
 	{
-			pid = fork();
-			if (pid == 0)
-			{
-				file = root->first_child->next_sibling->content->content;
-				if (root->content->type == APPEND)
-					fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				else
-					fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (fd == -1)
-					errors(0, fd);
-				if (dup2(fd, STDOUT_FILENO) == -1)
-					errors(1, fd);
-				execute(root->first_child, helper);
-				close(fd);
-				exit(EXIT_SUCCESS);
-			}
+		// pid = fork();
+		// if (pid == 0)
+		// {
+			file = root->first_child->next_sibling->content->content;
+			if (root->content->type == APPEND)
+				fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			else
-				waitpid(pid, &status, 0);
+				fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1)
+				errors(0, fd);
+			if (dup2(fd, STDOUT_FILENO) == -1)
+				errors(1, fd);
+			// if (root->first_child->content->type == COMMAND)
+				// execute(root->first_child, helper);
+			// find_command(root->first_child,helper);
+			close(fd);
+			exit(EXIT_SUCCESS);
+		// }
+		// else
+		// 	waitpid(pid, &status, 0);
 	}
-	if (WIFEXITED(status))
-        return (WEXITSTATUS(status));
+	printf("azbi  --> \n");
+	// if (WIFEXITED(status))
+    //     return (WEXITSTATUS(status));
 	return (1);
 }
+

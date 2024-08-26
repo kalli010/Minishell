@@ -911,7 +911,6 @@ t_tree *create_tree_node(t_list *list)
   n_node->content = list;
   n_node->first_child = NULL;
   n_node->next_sibling = NULL;
-  n_node->i = 0;
   return(n_node);
 }
 
@@ -1175,7 +1174,7 @@ void export(t_list *list, char **env)
   list = list->next;
   while(list || list->type != OPTIONS)
   {
-    set_var(list, env)
+    set_var(list, env);
     list = list->next;
   }
 }

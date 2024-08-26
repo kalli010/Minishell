@@ -6,25 +6,54 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/25 20:48:56 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 05:43:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
-int	execute_right_pipe(t_tree *root, t_helper *helper)
+int	wait_for_finished(pid_t l_fork, pid_t r_fork)
 {
 	int	status;
 
+	waitpid(l_fork, &status, 0);
+	waitpid(r_fork, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (EXIT_FAILURE);
 }
-int	execute_left_pipe(t_tree *root, t_helper *helper)
+
+int	right_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 {
 	int	status;
 
+	if (pid == 0)
+	{
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		find_command(root, helper);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (EXIT_FAILURE);
+}
+
+int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
+{
+	int	status;
+
+	if (pid == 0)
+	{
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		find_command(root, helper);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (EXIT_FAILURE);
@@ -33,37 +62,50 @@ int	execute_left_pipe(t_tree *root, t_helper *helper)
 int	execute_pipe(t_tree *root, t_helper *helper)
 {
 	int		fd[2];
+	int		status;
 	pid_t	r_fork;
 	pid_t	l_fork;
-	int		status;
 
-	// printf("first child is == %s\n", root->first_child->content->content);
-	// printf("next sibling is == %s\n",root->first_child->next_sibling->content->content);
 	if (pipe(fd) == -1)
 		return (perror("pipe"), EXIT_FAILURE);
-	r_fork = fork();
-	if (r_fork < 0)
-		return (perror("fork "), EXIT_FAILURE);
-	if (root->first_child)
+	if (root->first_child && root->first_child->next_sibling)
 	{
-		if (root->first_child->next_sibling)
+		l_fork = fork();
+		if (l_fork < 0)
+			return (perror("fork"), EXIT_FAILURE);
+		if (l_fork == 0)
+		{
+			if (root->first_child->content->type == APPEND)
+			{
+				dprintf(2," pipi 3liya %s \n",root->first_child->content->content);
+				redirect_output(root->first_child,helper); 
+			}
+			left_pipe(fd, l_fork, root->first_child, helper);
+		}
+		r_fork = fork();
+		if (r_fork < 0)
+			return (perror("fork"), EXIT_FAILURE);
+		if (r_fork == 0)
 		{
 			
+			right_pipe(fd, r_fork, root->first_child->next_sibling, helper);
 		}
-		l_fork =  fork();
-		if (l_fork = 0)
-			execute_left_pipe(root->first_child->next_sibling,helper);
-		else
-			waitpid(l_fork,&status,0);
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		return (EXIT_FAILURE);
+		close(fd[0]);
+		close(fd[1]);
+		status = wait_for_finished(l_fork, r_fork);
+		return (status);
 	}
+	return (EXIT_FAILURE);
 }
+
 int	find_command(t_tree *root, t_helper *helper)
 {
 	if (!root)
 		return (EXIT_FAILURE);
+	if (!ft_strncmp("echo",root->content->content,sizeof(root->content->content)))
+	{
+		
+	}
 	if ((root->content->type == COMMAND || root->content->type == PATH_COMMAND)
 		&& (root->first_child == NULL || root->first_child->content == NULL
 			|| root->first_child->content->type == OPTIONS))

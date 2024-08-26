@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/25 20:41:29 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 02:17:34 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ int	execute(t_tree *root, t_helper *helper)
 	if (pid == -1)
 		return (perror("fork"), (EXIT_FAILURE));
 	if (pid == 0)
+	{
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
 			return (perror("fork"), (EXIT_FAILURE));
+	}
 	else
 		waitpid(pid, &status, 0);
 	free(helper->cmd);
