@@ -6,17 +6,16 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/26 05:53:54 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 07:02:24 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
 int	check_option(char *str)
 {
 	int	i;
-
+	
 	if (!ft_strncmp(str, "-n", 2))
 	{
 		i = 2;
@@ -28,9 +27,10 @@ int	check_option(char *str)
 	return (false);
 }
 
+
 void	print_arg(char **arg, int start)
 {
-	int i;
+	int	i;
 
 	i = start;
 	while (arg[i])
@@ -44,17 +44,25 @@ void	print_arg(char **arg, int start)
 
 int	execute_echo(char **arg)
 {
-	int		check_n;
-	int		start;
-
+	int	check_n;
+	int	start;
+	int j;
 	check_n = false;
 	start = 1;
 	if (arg[1] != NULL)
 	{
-		if (check_option(arg[1]) == true)
+		j = 1;
+		while (arg[j]  !=  NULL)
 		{
-			check_n = true;
-			start = 2;
+
+			if (check_option(arg[j]) == true)
+			{
+				check_n = true;
+				start++;
+			}
+			else
+				break;
+			j++;
 		}
 		print_arg(arg, start);
 	}
@@ -63,7 +71,7 @@ int	execute_echo(char **arg)
 	return (EXIT_SUCCESS);
 }
 
-int ft_echo(t_list *list)
+int	ft_echo(t_list *list)
 {
 	int		i;
 	int		count;
