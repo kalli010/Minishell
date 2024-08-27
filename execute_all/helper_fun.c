@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/13 11:20:18 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:48:18 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	free_array(char **arr)
 	int	i;
 
 	i = 0;
+	if (arr == NULL)
+		return ;
 	while (arr[i] != NULL)
 	{
 		free(arr[i]);

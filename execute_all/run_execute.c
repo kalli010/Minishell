@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/26 05:43:51 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 21:53:04 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,11 @@ int	execute_pipe(t_tree *root, t_helper *helper)
 			return (perror("fork"), EXIT_FAILURE);
 		if (l_fork == 0)
 		{
-			if (root->first_child->content->type == APPEND)
-			{
-				dprintf(2," pipi 3liya %s \n",root->first_child->content->content);
-				redirect_output(root->first_child,helper); 
-			}
+			// if (root->first_child->content->type == APPEND)
+			// {
+			// 	dprintf(2," pipi 3liya %s \n",root->first_child->content->content);
+			// 	redirect_output(root->first_child,helper); 
+			// }
 			left_pipe(fd, l_fork, root->first_child, helper);
 		}
 		r_fork = fork();
@@ -102,10 +102,10 @@ int	find_command(t_tree *root, t_helper *helper)
 {
 	if (!root)
 		return (EXIT_FAILURE);
-	if (!ft_strncmp("echo",root->content->content,sizeof(root->content->content)))
-	{
+	// if (!ft_strncmp("echo",root->content->content,sizeof(root->content->content)))
+	// {
 		
-	}
+	// }
 	if ((root->content->type == COMMAND || root->content->type == PATH_COMMAND)
 		&& (root->first_child == NULL || root->first_child->content == NULL
 			|| root->first_child->content->type == OPTIONS))
@@ -118,7 +118,9 @@ int	find_command(t_tree *root, t_helper *helper)
 	if (root->content->type == OUTPUT || root->content->type == APPEND)
 		return (redirect_output(root, helper));
 	if (root->content->type == INPUT)
+	{
 		return (redirect_input(root, helper));
+	}
 	if (root->content->type == HEREDOC)
 		return (here_doc(root, helper));
 	if (root->content->type == PIPE)

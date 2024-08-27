@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 20:45:43 by zelkalai          #+#    #+#             */
-/*   Updated: 2023/11/17 22:35:19 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:30:16 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_check(long num, char *str, int len)
 {
 	int	i;
 
-	i = 0;
 	if (num == 0)
 		str[0] = '0';
 	else if (num < 0)

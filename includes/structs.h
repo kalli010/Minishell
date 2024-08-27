@@ -41,14 +41,12 @@ typedef struct helper
     char  **option;
 } t_helper;
 
-
 typedef struct heredoc
 {
   int fd;
   char *del;
 
 } t_here_doc;
-
 
 typedef struct s_free{
   

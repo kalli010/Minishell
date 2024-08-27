@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/13 12:21:24 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/26 23:42:55 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 	dir = get_envp(helper->envp);
 	if (dir == NULL)
 		return (NULL);
+	path = NULL;
 	while (dir[i] != NULL)
 	{
 		temp = ft_strjoin(dir[i], "/");
@@ -46,9 +47,11 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 			return (path);
 		}
 		free(path);
+		path = NULL;
 		i++;
 	}
-	return (NULL);
+	free_array(dir);
+	return (path);
 }
 
 char	*get_path_of_cpath(t_helper *helper, t_list *list)
@@ -68,9 +71,10 @@ char	*get_path(t_helper *helper, t_list *list)
 {
 	char	*path;
 
+	path = NULL;
 	if (list->type == COMMAND)
 		path = get_cmd_path(helper, list);
-	if (list->type == PATH_COMMAND)
+	else if (list->type == PATH_COMMAND)
 		path = get_path_of_cpath(helper, list);
 	return (path);
 }
@@ -82,9 +86,9 @@ char	**get_options(t_helper *helper, t_list *list)
 	char	**op;
 
 	count = count_arg(list);
-	if (get_path(helper, list) == NULL)
+	if (count < 1)
 	{
-		printf("%s: command not found \n", list->content);
+		op = NULL;
 		return (NULL);
 	}
 	op = (char **)malloc((count + 2) * sizeof(char *));

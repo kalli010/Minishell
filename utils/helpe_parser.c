@@ -1,35 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   helpe_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 10:02:40 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/08/26 23:36:59 by ayel-mou         ###   ########.fr       */
+/*   Created: 2024/08/26 22:55:57 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/08/26 22:56:23 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <minishell.h>
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
+int	parser_error_status(void)
 {
-	size_t		i;
-	char		*d;
-	const char	*s;
-
-	if (dest == NULL || src == NULL)
-		return (NULL);
-	d = (char *)dest;
-	s = (const char *)src;
-	if (dest == src)
-		return (dest);
-	i = 0;
-	while (i < n)
-	{
-		d[i] = s[i];
-		i++;
-	}
-	return (dest);
+	ft_putstr_fd("syntax error near unexpected token `\n' \n", 2);
+	exit(EXIT_PARSER);
 }
-
