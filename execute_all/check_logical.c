@@ -1,27 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   check_logical.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/26 06:06:24 by ayel-mou         ###   ########.fr       */
+/*   Created: 2024/08/25 20:33:17 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/08/25 20:34:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	ft_pwd(t_list *list)
+int	check_and_or(t_tree *root,t_helper *helper)
 {
-	char	buff[4096];
-
-	(void)list;
-	if (getcwd(buff, sizeof(buff)) != NULL)
-	{
-		printf("%s \n", buff);
-		return (EXIT_SUCCESS);
-	}
-	else
-		return (EXIT_FAILURE);
+	
 }

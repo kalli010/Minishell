@@ -16,6 +16,7 @@
 # include <exuc.h>
 # include <libft.h>
 
+#define EXIT_PARSER (2)
 //parsing
 int quotes_check(char *str);
 void check_p_r(char *str, int *i, int *s);
