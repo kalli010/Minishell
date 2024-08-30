@@ -36,10 +36,7 @@ void ft_minishell(char *line,char **env)
   }
   //check_var(list, env);
   //check_expander(env, &list);
-<<<<<<< HEAD
   remove_quotes(list);
-=======
->>>>>>> fcfee4cc5cb5357f3b8fa325250676f2d5115b4d
   if(check_parenthesis(list))
     root = creat_tree_with_parenthesis(list);
   else
