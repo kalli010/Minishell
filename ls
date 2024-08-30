@@ -1,0 +1,9 @@
+bulutins
+execute_all
+exucutions
+includes
+lib
+ls
+Makefile
+minishell
+utils

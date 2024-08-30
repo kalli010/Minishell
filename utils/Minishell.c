@@ -27,6 +27,8 @@ void ft_minishell(char *line,char **env)
   free(line);
   tokens = tokenizer(cmd);
   creat_linked_list(&list, tokens);
+  if(check_input_herdoc(list))
+    creat_linked_list_for_inp_herd(&list);
   if (symbols_check(list))
     return;
   if(check_parenthesis_error(list))
@@ -37,7 +39,6 @@ void ft_minishell(char *line,char **env)
   check_var(list, env);
   check_expander(env, &list);
   remove_quotes(list);
-
   if(check_parenthesis(list))
     root = creat_tree_with_parenthesis(list);
   else

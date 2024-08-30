@@ -32,6 +32,8 @@ int check_command(char **str);
 char **tokenizer(char *str);
 void token_type(t_list *list);
 void creat_linked_list(t_list **list, char **tokens);
+int check_input_herdoc(t_list *lins);
+void creat_linked_list_for_inp_herd(t_list **list);
 int symbols_check(t_list *list);
 void set_var(t_list *list, char **env);
 void check_var(t_list *list, char **env);
