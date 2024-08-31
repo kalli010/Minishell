@@ -335,8 +335,8 @@ void echo_create_tokens(char *str, char **tokens, int j)
             }
             i++;
           }
-          if(str[i] == ' ')
-            while(str[--i] == ' ');
+          while(str[--i] == ' ');
+          i++;
         }
         
       }
