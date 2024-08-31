@@ -1,11 +1,10 @@
-*.o
+
+*/*.o
+
+lib/libft/*.a
 
 ll
 
 minishell
 
-Makefile
 
-utils/Minishell.c
-
-includes/minishell.h
