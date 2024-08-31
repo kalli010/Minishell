@@ -336,6 +336,10 @@ void echo_create_tokens(char *str, char **tokens, int j)
             i++;
           }
         }
+        if(str[i] == ' ')
+        {
+          while(str[--i] == ' ');
+        }
       }
       tokens[j] = ft_substr(str, s, i - s);
       j++;
@@ -469,7 +473,7 @@ int check_red(t_list *list)
 {
   while(list)
   {
-    if(list->type == OUTPUT)
+    if(list->type == OUTPUT || list->type == INPUT)
       return(1);
     list = list->next;
   }
@@ -485,10 +489,10 @@ void create_list_with_red(t_list **list)
   tmp = *list;
   while(tmp)
   {
-    if(tmp->type == OUTPUT)
+    if(tmp->type == OUTPUT || tmp->type == INPUT)
     {
       start = tmp;
-      while(tmp->next != NULL && (tmp->next->type == OUTPUT \
+      while(tmp->next != NULL && (tmp->next->type == OUTPUT || tmp->next->type == INPUT\
         || tmp->next->type == PATH))
         tmp = tmp->next;
       if(start->next != tmp)
