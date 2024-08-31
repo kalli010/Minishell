@@ -17,7 +17,7 @@ void ft_minishell(char *line,char **env)
   char **tokens;
   char *cmd;
   t_tree *root;
-  t_helper *helper;
+  //t_helper *helper;
 
   (void)env;
   list = NULL;
@@ -50,7 +50,6 @@ void ft_minishell(char *line,char **env)
   // find_command(root,helper);
   // free(list);
   // free(helper);
-  //
   return;
 }
 
