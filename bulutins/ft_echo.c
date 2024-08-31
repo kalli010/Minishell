@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 09:39:30 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/31 23:42:37 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ int	ft_echo(t_list *list)
 		while (list && list->type == OPTIONS)
 		{
 			op[i++] = ft_strdup(list->content);
-			printf("echo --> op  %s\n",op[i - 1]);
 			list = list->next;
 		}
 		op[i] = NULL;
