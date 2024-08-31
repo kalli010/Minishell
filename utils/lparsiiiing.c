@@ -341,8 +341,6 @@ void echo_create_tokens(char *str, char **tokens, int j)
         
       }
       tokens[j] = ft_substr(str, s, i - s);
-      if(str[i] != '\0' && str[i] != ' ')
-        i++;
       j++;
       x++;
       if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
