@@ -335,11 +335,10 @@ void echo_create_tokens(char *str, char **tokens, int j)
             }
             i++;
           }
+          if(str[i] == ' ')
+            while(str[--i] == ' ');
         }
-        if(str[i] == ' ')
-        {
-          while(str[--i] == ' ');
-        }
+        
       }
       tokens[j] = ft_substr(str, s, i - s);
       if(str[i] != '\0' && str[i] != ' ')
