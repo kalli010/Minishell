@@ -27,13 +27,10 @@ void ft_minishell(char *line,char **env, char **envp)
   free(line);
   tokens = tokenizer(cmd);
   creat_linked_list(&list, tokens);
-<<<<<<< HEAD
   if(check_red(list))
     create_list_with_red(&list);
-=======
   if(check_input_herdoc(list))
     creat_linked_list_for_inp_herd(&list);
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
   if (symbols_check(list))
     return;
   if(check_parenthesis_error(list))

@@ -483,28 +483,17 @@ void creat_linked_list(t_list **list, char **tokens)
   free(tokens);
 }
 
-<<<<<<< HEAD
 int check_red(t_list *list)
 {
   while(list)
   {
     if(list->type == OUTPUT)
-=======
-int check_input_herdoc(t_list *list)
-{
-  if(list != NULL && list->type == INPUT)
-    return(1);
-  while(list)
-  {
-    if(list->type == HEREDOC)
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
       return(1);
     list = list->next;
   }
   return(0);
 }
 
-<<<<<<< HEAD
 void create_list_with_red(t_list **list)
 {
   t_list *tmp;
@@ -535,7 +524,9 @@ void create_list_with_red(t_list **list)
       }
     }
     tmp = tmp->next;
-=======
+  }
+}
+
 void creat_linked_list_for_inp_herd(t_list **list)
 {
   t_list *start;
@@ -566,7 +557,6 @@ void creat_linked_list_for_inp_herd(t_list **list)
     start->next = *list;
     (*list)->back = start;
     *list = n_list;
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
   }
 }
 

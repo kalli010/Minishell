@@ -32,13 +32,10 @@ int check_command(char **str);
 char **tokenizer(char *str);
 void token_type(t_list *list);
 void creat_linked_list(t_list **list, char **tokens);
-<<<<<<< HEAD
 int check_red(t_list *list);
 void create_list_with_red(t_list **list);
-=======
 int check_input_herdoc(t_list *lins);
 void creat_linked_list_for_inp_herd(t_list **list);
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
 int symbols_check(t_list *list);
 void set_var(t_list *list, char **env);
 void check_var(t_list *list, char **env);
@@ -53,10 +50,5 @@ t_tree *creat_tree_with_parenthesis(t_list *list);
 t_tree *creat_tree(t_list *list);
 void print_tree(t_tree *root, int spaces);
 char *ft_getenv(char **env, char *str);
-<<<<<<< HEAD
-int export(t_list *list, char **env);
-#endif
-=======
 
 #endif
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
