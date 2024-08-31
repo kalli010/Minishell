@@ -1,5 +1,5 @@
 Makefile
 
-./utils/Minishell.c
+/utils/Minishell.c
 
-./includes/minishell.h
+/includes/minishell.h
