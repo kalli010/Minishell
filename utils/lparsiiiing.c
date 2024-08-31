@@ -448,6 +448,50 @@ void creat_linked_list(t_list **list, char **tokens)
   free(tokens);
 }
 
+int check_red(t_list *list)
+{
+  while(list)
+  {
+    if(list->type == OUTPUT)
+      return(1);
+    list = list->next;
+  }
+  return(0);
+}
+
+void create_list_with_red(t_list **list)
+{
+  t_list *tmp;
+  t_list *start;
+  t_list *node;
+
+  tmp = *list;
+  while(tmp)
+  {
+    if(tmp->type == OUTPUT)
+    {
+      start = tmp;
+      while(tmp->next != NULL && (tmp->next->type == OUTPUT \
+        || tmp->next->type == PATH))
+        tmp = tmp->next;
+      if(start->next != tmp)
+      {
+        node = start->next->next;
+        start->next->back = tmp->back;
+        start->next->next = tmp->next;
+        tmp->back->next = start->next;
+        if(tmp->next != NULL)
+          tmp->next->back = start->next;
+        tmp->back = start;
+        tmp->next = node;
+        node->back = tmp;
+        start->next = tmp;
+      }
+    }
+    tmp = tmp->next;
+  }
+}
+
 int symbols_check(t_list *list)
 {
   if(list == NULL)
@@ -1169,7 +1213,7 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-void export(t_list *list, char **env)
+int export(t_list *list, char **env)
 {
   list = list->next;
   while(list || list->type != OPTIONS)
@@ -1177,4 +1221,5 @@ void export(t_list *list, char **env)
     set_var(list, env);
     list = list->next;
   }
+  return(EXIT_SUCCESS);
 }
