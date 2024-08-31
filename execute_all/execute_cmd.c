@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/27 01:40:18 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/31 02:05:22 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ int	execute(t_tree *root, t_helper *helper)
 	helper->option = get_options(helper, root->content);
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		return (EXIT_FAILURE);
-	}
+		return (perror("fork"), (EXIT_FAILURE));
 	if (pid == 0)
 	{
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
@@ -70,6 +67,8 @@ int	execute(t_tree *root, t_helper *helper)
 		free_array(helper->option);
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
+		else
+			return (EXIT_FAILURE);
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

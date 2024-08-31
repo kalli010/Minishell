@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/26 07:02:24 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/29 23:28:27 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	check_option(char *str)
 {
 	int	i;
-	
+
 	if (!ft_strncmp(str, "-n", 2))
 	{
 		i = 2;
@@ -26,7 +26,6 @@ int	check_option(char *str)
 	}
 	return (false);
 }
-
 
 void	print_arg(char **arg, int start)
 {
@@ -46,22 +45,22 @@ int	execute_echo(char **arg)
 {
 	int	check_n;
 	int	start;
-	int j;
+	int	j;
+
 	check_n = false;
 	start = 1;
 	if (arg[1] != NULL)
 	{
 		j = 1;
-		while (arg[j]  !=  NULL)
+		while (arg[j] != NULL)
 		{
-
 			if (check_option(arg[j]) == true)
 			{
 				check_n = true;
 				start++;
 			}
 			else
-				break;
+				break ;
 			j++;
 		}
 		print_arg(arg, start);

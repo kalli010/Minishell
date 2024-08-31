@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/26 23:42:55 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/27 02:30:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 			free_array(dir);
 			return (path);
 		}
-		free(path);
-		path = NULL;
+		(free(path), path = NULL);
 		i++;
 	}
 	free_array(dir);

@@ -6,13 +6,14 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/27 01:39:05 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/30 01:08:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXUC_H
 # define EXUC_H
 #include <minishell.h>
+#include <dirent.h>
 
 #define P_DNIED (126)
 #define SUCCESS (0)
@@ -28,6 +29,9 @@ int		check_if_uppercase(char *line);
 char	*check_if_env(char **env,char *line);
 int		ft_env(char **env);
 int		ft_pwd(t_list *list);
+int		is_builtins(t_list *list);
+int		run_builtins(t_list *list, t_helper *helper);
+int		ft_cd(t_list *list);
 // int		execute_command(char *command,char **arg,char **env);
 int 	redirect_output(t_tree *root,t_helper *helper);
 int		execute(t_tree *root, t_helper *helper);
@@ -35,6 +39,7 @@ int     count_arg(t_list *list);
 int		redirect_input(t_tree *root, t_helper *helper);
 int		execute_pipe(t_tree *root, t_helper *helper);
 int 	ft_echo(t_list *list);
+int		check_and_or(t_tree *root, t_helper *helper);
 
 
 

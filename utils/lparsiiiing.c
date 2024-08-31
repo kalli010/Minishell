@@ -451,7 +451,25 @@ void token_type(t_list *list)
     //free(path);
   }
 }
+void	ft_lstadd_back2(t_list **lst, t_list *new)
+{
+	t_list	*p;
 
+	if (lst == NULL || new == NULL)
+	{
+		return ;
+	}
+	if (*lst == NULL)
+	{
+		*lst = new;
+    return ;
+	}
+	p = *lst;
+	while (p->next != NULL)
+		p = p->next;
+  new->back = p;
+  p->next = new;
+}
 void creat_linked_list(t_list **list, char **tokens)
 {
   int i;
@@ -459,7 +477,7 @@ void creat_linked_list(t_list **list, char **tokens)
   i = -1;
   while(tokens[++i])
   {
-    ft_lstadd_back(list, ft_lstnew(tokens[i]));
+    ft_lstadd_back2(list, ft_lstnew(tokens[i]));
     token_type(*list);
   }
   free(tokens);
