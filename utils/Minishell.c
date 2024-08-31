@@ -46,10 +46,10 @@ void ft_minishell(char *line,char **env)
   else
     root = creat_tree(list);
   //print_tree(root,0);
-  helper = init_helper(env);
-  find_command(root,helper);
-  free(list);
-  free(helper);
+  // helper = init_helper(env);
+  // find_command(root,helper);
+  // free(list);
+  // free(helper);
   return;
 }
 
