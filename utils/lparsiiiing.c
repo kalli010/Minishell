@@ -451,25 +451,7 @@ void token_type(t_list *list)
     //free(path);
   }
 }
-void	ft_lstadd_back2(t_list **lst, t_list *new)
-{
-	t_list	*p;
 
-	if (lst == NULL || new == NULL)
-	{
-		return ;
-	}
-	if (*lst == NULL)
-	{
-		*lst = new;
-    return ;
-	}
-	p = *lst;
-	while (p->next != NULL)
-		p = p->next;
-  new->back = p;
-  p->next = new;
-}
 void creat_linked_list(t_list **list, char **tokens)
 {
   int i;
@@ -477,7 +459,7 @@ void creat_linked_list(t_list **list, char **tokens)
   i = -1;
   while(tokens[++i])
   {
-    ft_lstadd_back2(list, ft_lstnew(tokens[i]));
+    ft_lstadd_back(list, ft_lstnew(tokens[i]));
     token_type(*list);
   }
   free(tokens);
@@ -525,6 +507,19 @@ void create_list_with_red(t_list **list)
     }
     tmp = tmp->next;
   }
+}
+
+int check_input_herdoc(t_list *list)
+{
+  if(list != NULL && list->type == INPUT)
+    return(1);
+  while(list)
+  {
+    if(list->type == HEREDOC)
+      return(1);
+    list = list->next;
+  }
+  return(0);
 }
 
 void creat_linked_list_for_inp_herd(t_list **list)
@@ -1309,7 +1304,7 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-int export(t_list *list, char **env)
+void export(t_list *list, char **env)
 {
   list = list->next;
   while(list || list->type != OPTIONS)
@@ -1317,9 +1312,4 @@ int export(t_list *list, char **env)
     set_var(list, env);
     list = list->next;
   }
-<<<<<<< HEAD
-  return(EXIT_SUCCESS);
 }
-=======
-}
->>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
