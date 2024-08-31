@@ -19,6 +19,21 @@ typedef enum s_ttype{
   DELIMITER
 } t_ttype;
 
+// typedef struct widls
+// {
+//   struct dirent *entry;
+//   DIR *dirc;
+//   char *buff;
+
+// } wild_t;
+
+typedef struct heredoc
+{
+  int fd;
+  char *del;
+
+} t_here_doc;
+
 //linked list
 typedef struct s_list{
   char *content;
@@ -39,14 +54,11 @@ typedef struct helper
     char **envp;
     char  *cmd;
     char  **option;
+    int   e_status;
+    t_here_doc here_doc;
 } t_helper;
 
-typedef struct heredoc
-{
-  int fd;
-  char *del;
 
-} t_here_doc;
 
 typedef struct s_free{
   

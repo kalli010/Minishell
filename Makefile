@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/08/28 23:04:40 by ayel-mou          #+#    #+#              #
+#    Updated: 2024/08/31 02:34:06 by ayel-mou         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -g -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -g #-fsanitize=address -g3
 
 
 LIBFT_SRC = ./lib/libft/
@@ -18,6 +30,9 @@ src = ./utils/Minishell.c \
 	  execute_all/execute_cmd.c \
 	  execute_all/redirect.c \
 	bulutins/ft_echo.c \
+	execute_all/run_builtins.c \
+	bulutins/ft_cd.c \
+	bonus/check_logical.c \
 
 obj = $(src:.c=.o)
 
@@ -68,5 +83,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re compile
-
 

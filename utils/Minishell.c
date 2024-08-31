@@ -17,9 +17,9 @@ void ft_minishell(char *line,char **env, char **envp)
   char **tokens;
   char *cmd;
   t_tree *root;
-  //t_helper *helper;
+  t_helper *helper;
 
-  (void)env;
+  // (void)env;
   list = NULL;
   if(quotes_check(line))
       return;
@@ -27,8 +27,13 @@ void ft_minishell(char *line,char **env, char **envp)
   free(line);
   tokens = tokenizer(cmd);
   creat_linked_list(&list, tokens);
+<<<<<<< HEAD
   if(check_red(list))
     create_list_with_red(&list);
+=======
+  if(check_input_herdoc(list))
+    creat_linked_list_for_inp_herd(&list);
+>>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
   if (symbols_check(list))
     return;
   if(check_parenthesis_error(list))
@@ -44,10 +49,10 @@ void ft_minishell(char *line,char **env, char **envp)
   else
     root = creat_tree(list);
   print_tree(root,0);
-  //helper = init_helper(env);
-  //find_command(root,helper);
-  //free(list);
-  //free(helper);
+  helper = init_helper(env);
+  find_command(root,helper);
+  free(list);
+  free(helper);
   return;
 }
 

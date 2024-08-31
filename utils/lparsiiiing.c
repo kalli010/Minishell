@@ -308,6 +308,22 @@ void echo_create_tokens(char *str, char **tokens, int j)
           while(str[i] != '\0' && str[i] != ' ')
             i++;
         }
+        else if(str[i] == '-')
+        {
+          while(str[++i] == 'n' || str[i] == '"' || str[i] == '\'');
+          if(str[i] != ' ')
+          {
+            while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != 40 && str[i] != 41)
+            {
+              if(str[i] == 34 || str[i] == 39)
+              {
+                q = str[i];
+                while(str[++i] != q);
+              }
+              i++;
+            }
+          }
+        }
         else
         {
           while(str[i] != '\0' && str[i] != '|' && str[i] != '<' && str[i] != '>' && str[i] != '&' && str[i] != 40 && str[i] != 41)
@@ -401,7 +417,8 @@ void token_type(t_list *list)
       list->type = INPUT;
   else if(list->content[0] == '-' || ft_strncmp(list->content, "--", 2) == 0\
     || (list->back != NULL && \
-      (list->back->type == COMMAND || list->back->type == OPTIONS)))
+      (list->back->type == COMMAND || list->back->type == OPTIONS \
+      || list->back->type == PATH_COMMAND)))
     list->type = OPTIONS;
   else if(list->content[0] == '/' || list->content[0] == '~' \
       || !ft_strncmp(list->content, "./", 2))
@@ -434,7 +451,25 @@ void token_type(t_list *list)
     //free(path);
   }
 }
+void	ft_lstadd_back2(t_list **lst, t_list *new)
+{
+	t_list	*p;
 
+	if (lst == NULL || new == NULL)
+	{
+		return ;
+	}
+	if (*lst == NULL)
+	{
+		*lst = new;
+    return ;
+	}
+	p = *lst;
+	while (p->next != NULL)
+		p = p->next;
+  new->back = p;
+  p->next = new;
+}
 void creat_linked_list(t_list **list, char **tokens)
 {
   int i;
@@ -442,23 +477,34 @@ void creat_linked_list(t_list **list, char **tokens)
   i = -1;
   while(tokens[++i])
   {
-    ft_lstadd_back(list, ft_lstnew(tokens[i]));
+    ft_lstadd_back2(list, ft_lstnew(tokens[i]));
     token_type(*list);
   }
   free(tokens);
 }
 
+<<<<<<< HEAD
 int check_red(t_list *list)
 {
   while(list)
   {
     if(list->type == OUTPUT)
+=======
+int check_input_herdoc(t_list *list)
+{
+  if(list != NULL && list->type == INPUT)
+    return(1);
+  while(list)
+  {
+    if(list->type == HEREDOC)
+>>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
       return(1);
     list = list->next;
   }
   return(0);
 }
 
+<<<<<<< HEAD
 void create_list_with_red(t_list **list)
 {
   t_list *tmp;
@@ -489,6 +535,38 @@ void create_list_with_red(t_list **list)
       }
     }
     tmp = tmp->next;
+=======
+void creat_linked_list_for_inp_herd(t_list **list)
+{
+  t_list *start;
+  t_list *end;
+  t_list *tmp;
+  t_list *n_list;
+
+  n_list = *list;
+  tmp = *list;
+  if((*list)->type == INPUT)
+  {
+    start =(*list)->next->next;
+    end = start;
+    while(end != NULL && end->type != PIPE && end->type != OR \
+      && end->type != AND && end->type != OUTPUT \
+      && end->type != INPUT && end->type != APPEND \
+      && end->type != HEREDOC)
+      end = end->next;
+    while(tmp->next != start)
+      tmp = tmp->next;
+    tmp->next = end;
+    if(end != NULL)
+      end->back = tmp;
+    start->back = NULL;
+    n_list = start;
+    while(start->next != end)
+      start = start->next;
+    start->next = *list;
+    (*list)->back = start;
+    *list = n_list;
+>>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5
   }
 }
 
@@ -513,20 +591,22 @@ int symbols_check(t_list *list)
     {
       if(list->type == PIPE && list->back->type != WORD \
         && list->back->type != COMMAND && list->back->type != OPTIONS \
-        && list->back->type != VAR && list->back->type != PATH)
+        && list->back->type != VAR && list->back->type != PATH \
+        && list->back->type != SET_VAR && list->back->type != PATH_COMMAND \
+        && list->back->type != DELIMITER)
       {
         printf("9\n");
         printf("syntax error\n");
         return(1);
       }
-      else if((list->type == list->back->type) && \
+      else if(list->back != NULL && (list->type == list->back->type) && \
         (list->type != WORD && list->type != OPTIONS))
       {
         printf("8\n");
         printf("syntax error\n");
         return(1);
       }
-      else if((list->content[0] == '<' && list->back->content[0] == '>') && \
+      else if(list ->back != NULL && (list->content[0] == '<' && list->back->content[0] == '>') && \
         (list->type == INPUT || list->type == HEREDOC) &&\
         (list->back->type == OUTPUT || list->back->type == APPEND))
       {
@@ -550,7 +630,7 @@ int symbols_check(t_list *list)
         printf("syntax error\n");
         return(1);
       }
-      else if(list->content[0] == '<' && list->back->content[0] == '<' && \
+      else if(list->back != NULL && list->content[0] == '<' && list->back->content[0] == '<' && \
         (list->type == INPUT || list->type == HEREDOC) &&\
         (list->back->type == INPUT || list->back->type == HEREDOC))
       {
@@ -925,7 +1005,7 @@ void remove_quotes(t_list *list)
     j = -1;
     while(list->content[++j])
     {
-      if(list->content[j] == '"')
+      if(list->content[j] == '"' || list->content[j] == '\'')
       {
         q = list->content[j];
         list->content[j] = list->content[j + 1];
@@ -1015,13 +1095,27 @@ int check_parenthesis_error(t_list *list)
   while(node)
   {
     if(node->content[0] == 40)
+    {
+      if(node->back != NULL && \
+        ((node->back->type != PIPE && node->back->type != AND \
+        && node->back->type != OR) \
+        || node->next->type != COMMAND))
+        return(1);
       p++;
+    }
     node = node->next;
   }
   while(list)
   {
     if(list->content[0] == 41)
+    {
+      if(list->next != NULL && \
+        ((list->back->type != COMMAND && list->back->type != OPTIONS)\
+        || (list->next->type == COMMAND \
+        || list->next->type == OPTIONS)))
+        return(1);
       p--;
+    }
     list = list->next;
   }
   return(p);
@@ -1098,7 +1192,12 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
       list = list->next;
     }
     if(root != NULL && r_tree != NULL)
-      add_child_to_tree(root, r_tree);
+    {
+      if(root->first_child->next_sibling != NULL)
+        add_child_to_tree(root->first_child->next_sibling, r_tree);
+      else
+        add_child_to_tree(root, r_tree);
+    }
     l_node = creat_tree(list);
     
     if(root == NULL)
@@ -1107,8 +1206,15 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
       {
         if(l_node != NULL && l_node->first_child != NULL)
         {
-          add_sibling_to_child(r_tree, l_node->first_child);
-          l_node->first_child = r_tree;
+          if(l_node->first_child->content->type == COMMAND \
+            || l_node->content == list)
+          {
+            add_sibling_to_child(r_tree, l_node->first_child);
+            l_node->first_child = r_tree;
+          }
+          else {
+            add_child_to_tree(l_node->first_child, r_tree);
+          }
         }
         else if(l_node != NULL)
           add_child_to_tree(l_node, r_tree);
@@ -1221,5 +1327,9 @@ int export(t_list *list, char **env)
     set_var(list, env);
     list = list->next;
   }
+<<<<<<< HEAD
   return(EXIT_SUCCESS);
 }
+=======
+}
+>>>>>>> ab0f6b07574f32a63885a1f61749f96c0bca89b5

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/24 05:43:58 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/31 02:23:49 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,55 +30,59 @@ int	check_if_uppercase(char *line)
 	return (0);
 }
 
-char	*check_if_env(char **env,char *line)
+char	*check_if_env(char **env, char *line)
 {
 	char	*path_env;
 
 	if (check_if_uppercase(line))
 	{
-		path_env = ft_getenv(env,line + 1);
+		path_env = ft_getenv(env, line + 1);
 		if (path_env != NULL)
 			return (path_env);
 	}
 	return (NULL);
 }
 
-int	here_doc(t_tree *root, t_helper *helper)
-{
-	t_here_doc	*here;
-	char		*env_path;
-	int			pipe_fd[2];
-	char		*line;
 
-	(void)helper;
-	(void)root;
-	here = (t_here_doc *)malloc(sizeof(t_here_doc));
-	if (!here)
-		return (0);
-	here->del = ft_strdup("EOF");
-	if (pipe(pipe_fd) == -1)
-	{
-		free(here->del);
-		free(here);
-		return (0);
-	}
-	line = readline("> ");
-	while (line)
-	{
-		line = readline("> ");
-		if (!ft_strncmp(line, here->del, ft_strlen(here->del)))
-			break;  ;
-		env_path = check_if_env(helper->envp,line);
-		if (env_path != NULL)
-			write(pipe_fd[1], env_path, ft_strlen(env_path));
-		else
-			write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
-		free(line);
-	}
-	close(pipe_fd[1]);
-	free(line);
-	free(here->del);
-	free(here);
-	return (pipe_fd[0]);
+int here_doc(t_tree *root, t_helper *helper)
+{
+    pid_t pid;
+    int pipefd[2];
+    char *line;
+    char *del;
+    
+    line = NULL;
+    del = root->content->next->content;
+    
+    if (pipe(pipefd) == -1)
+        return (EXIT_FAILURE);
+
+    pid = fork();
+    if (pid < 0)
+        return (EXIT_FAILURE);
+
+    if (pid == 0)
+    {
+        close(pipefd[0]);
+        while (1)
+        {
+            line = readline("> ");
+            if (!line || !ft_strncmp(line, del,sizeof(del)))
+                break;
+            write(pipefd[1], line, ft_strlen(line));
+            write(pipefd[1], "\n", 1);
+            free(line);
+        }
+        close(pipefd[1]);
+        free(line);
+        exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        close(pipefd[1]); 
+        waitpid(pid, NULL, 0);        
+        close(pipefd[0]);
+	    find_command(root->first_child, helper);
+    }
+    return 0;
 }
