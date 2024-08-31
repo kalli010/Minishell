@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 02:23:49 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/31 09:25:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,45 +44,77 @@ char	*check_if_env(char **env, char *line)
 }
 
 
+
+
+
+
 int here_doc(t_tree *root, t_helper *helper)
 {
-    pid_t pid;
-    int pipefd[2];
-    char *line;
-    char *del;
-    
-    line = NULL;
-    del = root->content->next->content;
-    
-    if (pipe(pipefd) == -1)
-        return (EXIT_FAILURE);
+	int		fd;
+	pid_t	pid;
+	int		status;
 
-    pid = fork();
-    if (pid < 0)
-        return (EXIT_FAILURE);
-
-    if (pid == 0)
-    {
-        close(pipefd[0]);
-        while (1)
-        {
-            line = readline("> ");
-            if (!line || !ft_strncmp(line, del,sizeof(del)))
-                break;
-            write(pipefd[1], line, ft_strlen(line));
-            write(pipefd[1], "\n", 1);
-            free(line);
-        }
-        close(pipefd[1]);
-        free(line);
-        exit(EXIT_SUCCESS);
-    }
-    else
-    {
-        close(pipefd[1]); 
-        waitpid(pid, NULL, 0);        
-        close(pipefd[0]);
-	    find_command(root->first_child, helper);
-    }
-    return 0;
+	status = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		fd = open(".tmp_file", O_RDONLY, 0644);
+		if (fd == -1)
+			// errors(0, fd);
+		if (dup2(fd, STDIN_FILENO) == -1)
+			// errors(1, fd);
+		close(fd);
+		find_command(root->first_child, helper);
+		exit(EXIT_SUCCESS);
+	}
+	else
+		waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (EXIT_FAILURE);
+    
 }
+    
+
+// int here_doc(t_tree *root, t_helper *helper)
+// {
+//     pid_t pid;
+//     int pipefd[2];
+//     char *line;
+//     char *del;
+    
+//     line = NULL;
+//     del = root->content->next->content;
+    
+//     if (pipe(pipefd) == -1)
+//         return (EXIT_FAILURE);
+
+//     pid = fork();
+//     if (pid < 0)
+//         return (EXIT_FAILURE);
+
+//     if (pid == 0)
+//     {
+//         close(pipefd[0]);
+//         while (1)
+//         {
+//             line = readline("> ");
+//             if (!line || !ft_strncmp(line, del,sizeof(del)))
+//                 break;
+//             write(pipefd[1], line, ft_strlen(line));
+//             write(pipefd[1], "\n", 1);
+//             free(line);
+//         }
+//         close(pipefd[1]);
+//         free(line);
+//         exit(EXIT_SUCCESS);
+//     }
+//     else
+//     {
+//         close(pipefd[1]); 
+//         waitpid(pid, NULL, 0);        
+//         close(pipefd[0]);
+// 	    find_command(root->first_child, helper);
+//     }
+//     return 0;
+// }

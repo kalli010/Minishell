@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:05:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/28 03:22:28 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/08/31 08:33:29 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int	ft_env(char **env)
 		printf("%s\n", env[i]);
 		i++;
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
