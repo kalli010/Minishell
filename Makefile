@@ -6,7 +6,7 @@
 #    By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/28 23:04:40 by ayel-mou          #+#    #+#              #
-#    Updated: 2024/08/31 02:34:06 by ayel-mou         ###   ########.fr        #
+#    Updated: 2024/08/31 05:47:13 by ayel-mou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ src = ./utils/Minishell.c \
 	execute_all/run_builtins.c \
 	bulutins/ft_cd.c \
 	bonus/check_logical.c \
-
+#
 obj = $(src:.c=.o)
 
 all: $(NAME)
