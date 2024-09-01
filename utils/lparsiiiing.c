@@ -593,7 +593,6 @@ void recreat_linked_list(t_list **list)
       }
     }
   }
-  printf("1\n");
   *list = new_linked_list;
 }
 
