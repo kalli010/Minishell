@@ -493,71 +493,107 @@ void create_list_with_red(t_list **list)
     if(tmp->type == OUTPUT || tmp->type == INPUT)
     {
       start = tmp;
-      while(tmp->next != NULL && (tmp->next->type == OUTPUT || tmp->next->type == INPUT\
+      while(tmp->next != NULL && (tmp->next->type == start->type\
         || tmp->next->type == PATH))
         tmp = tmp->next;
-      if(start->next != tmp)
+      if(tmp->next->type == COMMAND)
       {
-        node = start->next->next;
-        start->next->back = tmp->back;
-        start->next->next = tmp->next;
-        tmp->back->next = start->next;
-        if(tmp->next != NULL)
-          tmp->next->back = start->next;
-        tmp->back = start;
-        tmp->next = node;
-        node->back = tmp;
-        start->next = tmp;
+        if(start->next != tmp)
+        {
+          node = start->next->next;
+          start->next->back = tmp->back;
+          start->next->next = tmp->next;
+          tmp->back->next = start->next;
+          if(tmp->next != NULL)
+            tmp->next->back = start->next;
+          tmp->back = start;
+          tmp->next = node;
+          node->back = tmp;
+          start->next = tmp;
+        }
       }
     }
     tmp = tmp->next;
   }
 }
 
-int check_input_herdoc(t_list *list)
+int check_string_start(t_list *list)
 {
-  if(list != NULL && list->type == INPUT)
-    return(1);
   while(list)
   {
-    if(list->type == HEREDOC)
-      return(1);
+    if(list->type == INPUT || list->type == OUTPUT || list->type == HEREDOC || list->type == APPEND)
+    {
+      if(list->next != NULL && list->next->next != NULL && list->next->next->type == COMMAND)
+        return(1);
+    }
     list = list->next;
   }
   return(0);
 }
 
-void creat_linked_list_for_inp_herd(t_list **list)
+void recreat_linked_list(t_list **list)
 {
   t_list *start;
   t_list *end;
   t_list *tmp;
   t_list *n_list;
+  t_list **n_while;
+  t_list *new_linked_list;
 
-  n_list = *list;
-  tmp = *list;
-  if((*list)->type == INPUT)
+  n_while = list;
+  new_linked_list = *n_while;
+  while(n_while)
   {
-    start =(*list)->next->next;
-    end = start;
-    while(end != NULL && end->type != PIPE && end->type != OR \
-      && end->type != AND && end->type != OUTPUT \
-      && end->type != INPUT && end->type != APPEND \
-      && end->type != HEREDOC)
-      end = end->next;
-    while(tmp->next != start)
-      tmp = tmp->next;
-    tmp->next = end;
-    if(end != NULL)
-      end->back = tmp;
-    start->back = NULL;
-    n_list = start;
-    while(start->next != end)
+    n_list = *n_while;
+    tmp = *n_while;
+    start =(*n_while)->next->next;
+    while(start != NULL && (start->type == tmp->type && start->type == PATH))
       start = start->next;
-    start->next = *list;
-    (*list)->back = start;
-    *list = n_list;
+    if(start != NULL && start->type == COMMAND)
+    {
+      end = start->next;
+      while(end != NULL && end->type == OPTIONS)
+        end = end->next;
+      
+      while(tmp->next != start)
+        tmp = tmp->next;
+      tmp->next = end;
+      if(end != NULL)
+        end->back = tmp;
+      
+      start->back = (*n_while)->back;
+      n_list = *n_while;
+      if((*n_while)->back != NULL)
+        (*n_while)->back->next = start;
+      *n_while = n_list;
+      n_list = start;
+      while(start != NULL && start->next != end)
+        start = start->next;
+      if(start != NULL)
+        start->next = *n_while;
+      (*n_while)->back = start;
+      if(start->back == NULL)
+        *n_while = n_list;
+      if(end != NULL && (end->type == INPUT || end->type == OUTPUT || end->type == HEREDOC || end->type == APPEND))
+      {
+        while(*n_while != end)
+          n_while = &((*n_while)->next);
+      }
+      else 
+        n_while = NULL;
+    }
+    else {
+      if(start->type == INPUT || start->type == OUTPUT || start->type == HEREDOC || start->type == APPEND)
+      {
+        while(*n_while != start)
+          n_while = &((*n_while)->next);
+      }
+      else {
+        n_while = NULL;
+      }
+    }
   }
+  *list = new_linked_list;
 }
 
 int symbols_check(t_list *list)
