@@ -562,8 +562,10 @@ void recreat_linked_list(t_list **list)
         end->back = tmp;
       start->back = (*n_while)->back;
       n_list = *n_while;
-      if((*n_while)->back != NULL)
+      if ((*n_while)->back != NULL)
         (*n_while)->back->next = start;
+      //if(n_list != NULL)
+      //  n_list->next = start;
       *n_while = n_list;
       n_list = start;
       while(start != NULL && start->next != end)
