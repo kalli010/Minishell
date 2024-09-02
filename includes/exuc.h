@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 02:53:35 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 04:45:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		ft_pwd(t_list *list);
 int		is_builtins(t_tree *root);
 int		run_builtins(t_tree *root, t_helper *helper);
 int		ft_cd(t_list *list);
-int		ft_exit(t_tree *root,t_helper *helper);
+unsigned char ft_exit(t_tree *root,t_helper *helper);
 int 	redirect_output(t_tree *root,t_helper *helper);
 int		execute(t_tree *root, t_helper *helper);
 int     count_arg(t_list *list);
@@ -62,7 +62,7 @@ int		redirect_input(t_tree *root, t_helper *helper);
 int		execute_pipe(t_tree *root, t_helper *helper);
 int 	ft_echo(t_list *list);
 int		check_and_or(t_tree *root, t_helper *helper);
-
+void 	my_free(t_helper *helper);
 
 
 

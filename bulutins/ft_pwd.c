@@ -18,8 +18,8 @@ int	ft_pwd(t_list *list)
 
 	if (count_arg(list) > 0)
 	{
-		write(1,"please enter pwd  with no options\n",35);
-		return(EXIT_FAILURE);
+		write(1, "please enter pwd  with no options\n", 35);
+		return (EXIT_FAILURE);
 	}
 	if (getcwd(buff, sizeof(buff)) != NULL)
 	{

@@ -19,13 +19,6 @@ typedef enum s_ttype{
   DELIMITER
 } t_ttype;
 
-// typedef struct widls
-// {
-//   struct dirent *entry;
-//   DIR *dirc;
-//   char *buff;
-
-// } wild_t;
 
 typedef struct heredoc
 {

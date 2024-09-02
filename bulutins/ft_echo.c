@@ -6,13 +6,13 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 01:53:38 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 04:05:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	check_option(char *str)
+static int	check_option(char *str)
 {
 	int	i;
 
@@ -27,7 +27,7 @@ int	check_option(char *str)
 	return (false);
 }
 
-void	print_arg(char **arg, int start)
+static void	print_arg(char **arg, int start)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ void	print_arg(char **arg, int start)
 	}
 }
 
-int	execute_echo(char **arg)
+static int	execute_echo(char **arg)
 {
 	int	check_n;
 	int	start;

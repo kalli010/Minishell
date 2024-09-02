@@ -6,29 +6,20 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 02:29:59 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 04:17:59 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
-
-
-int ft_cd(t_list *list)
+static int	cd_erros(void)
 {
-	char	*file;
-	// DIR		*dir;
-    // struct	dirent *entry;
-	if (list->next == NULL)
-	{
-		if (chdir("~") == -1)
-			printf("error");
-		printf("%s\n",getcwd(NULL,0));
-		return (EXIT_SUCCESS);
-	}
-	file =  list->next->content;
-	printf("file is ->> %s \n ",file);
-	chdir(file);
+	write(2, "minishell : cd : too many arguments\n", 37);
+	return (EXIT_FAILURE);
+}
+int	ft_cd(t_list *list)
+{
+	if (count_arg(list) > 1)
+		return (cd_erros());
 	return (EXIT_SUCCESS);
 }

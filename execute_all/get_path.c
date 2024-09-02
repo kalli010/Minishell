@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 06:59:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 04:39:16 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*get_path_of_cpath(t_helper *helper, t_list *list)
 	char	**dir;
 
 	dir = get_envp(helper->envp);
-	if (access(list->content, F_OK) == 0)
+	if (access(list->content, F_OK |X_OK) == 0)
 	{
 		free_array(dir);
 		return (ft_strdup(list->content));
