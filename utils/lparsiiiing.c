@@ -470,6 +470,74 @@ void creat_linked_list(t_list **list, char **tokens)
   free(tokens);
 }
 
+int check_red_with_cmd(t_list *list)
+{
+  while(list)
+  {
+    if(list->type == INPUT || list->type == OUTPUT || list->type == HEREDOC || list->type == APPEND)
+    {
+      if(list->next != NULL && list->next->next != NULL && list->next->next->type == COMMAND)
+        return(1);
+    }
+    list = list->next;
+  }
+  return(0);
+}
+
+void free_list(t_list *list)
+{
+  t_list *tmp;
+  
+  if(list == NULL)
+    return;
+  tmp = list;
+  while(list)
+  {
+    list = list->next;
+    free(tmp->content);
+    free(tmp);
+    tmp = list;
+  }
+}
+
+t_list *recreate_linked_list(t_list *list)
+{
+  t_list *n_list;
+  t_list *tmp;
+  t_list *start;
+
+  n_list = NULL;
+  while(list)
+  {
+    if(list->type == INPUT || list->type == OUTPUT)
+    {
+      tmp = list->next;
+      while(tmp && (tmp->type == PATH || tmp->type == list->type))
+        tmp = tmp->next;
+      if(tmp && tmp->type == COMMAND)
+      {
+        start = tmp;
+        while(tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
+        {
+          ft_lstadd_back(&n_list, ft_lstnew(tmp->content));
+          token_type(n_list);
+          tmp = tmp->next;
+        }
+        start->back->next = tmp;
+      }
+      ft_lstadd_back(&n_list, ft_lstnew(list->content));
+      token_type(n_list);
+    }
+    else {
+      ft_lstadd_back(&n_list, ft_lstnew(list->content));
+      token_type(n_list);
+    }
+    list = list->next;
+  }
+  free_list(list);
+  return(n_list);
+}
+
 int check_red(t_list *list)
 {
   while(list)
@@ -496,7 +564,7 @@ void create_list_with_red(t_list **list)
       while(tmp->next != NULL && (tmp->next->type == start->type\
         || tmp->next->type == PATH))
         tmp = tmp->next;
-      if(tmp->next->type == COMMAND)
+      if(tmp != NULL)
       {
         if(start->next != tmp)
         {
@@ -515,87 +583,6 @@ void create_list_with_red(t_list **list)
     }
     tmp = tmp->next;
   }
-}
-
-int check_string_start(t_list *list)
-{
-  while(list)
-  {
-    if(list->type == INPUT || list->type == OUTPUT || list->type == HEREDOC || list->type == APPEND)
-    {
-      if(list->next != NULL && list->next->next != NULL && list->next->next->type == COMMAND)
-        return(1);
-    }
-    list = list->next;
-  }
-  return(0);
-}
-
-void recreat_linked_list(t_list **list)
-{
-  t_list *start;
-  t_list *end;
-  t_list *tmp;
-  t_list *n_list;
-  t_list **n_while;
-  t_list *new_linked_list;
-
-  n_while = list;
-  new_linked_list = *n_while;
-  while(n_while)
-  {
-    n_list = *n_while;
-    tmp = *n_while;
-    start =(*n_while)->next->next;
-    while(start != NULL && (start->type == tmp->type && start->type == PATH))
-      start = start->next;
-    if(start != NULL && start->type == COMMAND)
-    {
-      end = start->next;
-      while(end != NULL && end->type == OPTIONS)
-        end = end->next;
-      
-      while(tmp->next != start)
-        tmp = tmp->next;
-      tmp->next = end;
-      if(end != NULL)
-        end->back = tmp;
-      start->back = (*n_while)->back;
-      n_list = *n_while;
-      if ((*n_while)->back != NULL)
-        (*n_while)->back->next = start;
-      //if(n_list != NULL)
-      //  n_list->next = start;
-      *n_while = n_list;
-      n_list = start;
-      while(start != NULL && start->next != end)
-        start = start->next;
-      if(start != NULL)
-        start->next = *n_while;
-      (*n_while)->back = start;
-      if(start->back == NULL)
-        *n_while = n_list;
-      if(end != NULL && (end->type == INPUT || end->type == OUTPUT || end->type == HEREDOC || end->type == APPEND))
-      {
-        while(*n_while != end)
-          n_while = &((*n_while)->next);
-      }
-      else 
-        n_while = NULL;
-    }
-    else 
-    {
-      if(start->type == INPUT || start->type == OUTPUT || start->type == HEREDOC || start->type == APPEND)
-      {
-        while(*n_while != start)
-          n_while = &((*n_while)->next);
-      }
-      else {
-        n_while = NULL;
-      }
-    }
-  }
-  *list = new_linked_list;
 }
 
 int symbols_check(t_list *list)
