@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 00:48:54 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 02:03:17 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	run_builtins(t_tree *root, t_helper *helper)
 	// else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
 	// 	return (ft_unset(root->content));
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
-		return (ft_exit(root));
+		return (ft_exit(root,helper));
 	else
 		return (EXIT_FAILURE);
 }

@@ -5,7 +5,8 @@ utils/Minishell.c
 includes/minishell.h
 
 */*.o
-
+*.nfs
+*/*.nfs
 lib/libft/*.a
 lib/libft/*.o
 

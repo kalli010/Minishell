@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 23:42:37 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 01:53:38 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	print_arg(char **arg, int start)
 	{
 		ft_putstr_fd(arg[i], STDOUT_FILENO);
 		if (arg[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
+			ft_putchar_fd('a', STDOUT_FILENO);
 		i++;
 	}
 }
