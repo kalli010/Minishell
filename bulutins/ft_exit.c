@@ -6,25 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 04:47:17 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 06:52:40 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-void free_list(t_list *list)
-{
-	t_list *tmp;
-	
-	while (list != NULL)
-	{
-		tmp  = list;
-		list =  list->next;
-		if (tmp->content != NULL)
-			free(tmp->content);
-		free(tmp);
-	}
-}
 
 static int	ft_all_isdigit(char *data)
 {
@@ -40,7 +26,7 @@ static int	ft_all_isdigit(char *data)
 	return (1);
 }
 
-static int	exit_erros(int status)
+static int	exit_errors(int status)
 {
 	if (status == 1)
 	{
@@ -58,20 +44,17 @@ unsigned char	ft_exit(t_tree *root, t_helper *helper)
 {
 	unsigned char status;
 
-	status =  helper->exit_status;
+	status =  exit_stat;
 	printf("exit\n");
 	if (count_arg(root->content) > 1)
-		return (exit_erros(1));
-	if (root->content->next && root->content->next->content
-		&& !ft_all_isdigit(root->content->next->content))
-		return (exit_erros(0));
-	else
-	{
-		if (root->content->type == OPTIONS)
-			status = ft_atoi(root->content->next->content);
-		free_list(root->content);
-		my_free(helper);
-		
-	}
+		return (exit_errors(1));
+	if (root->content->next && root->content->next->content)
+    {
+        if (!ft_all_isdigit(root->content->next->content))
+            return (exit_errors(0));
+        status = ft_atoi(root->content->next->content);
+    }
+	free_list(root->content);
+	my_free(helper);
 	exit(status);
 }

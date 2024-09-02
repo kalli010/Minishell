@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 05:28:11 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 06:33:11 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,15 @@ static int finsh_status(pid_t pid)
 	
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
+	{
+		exit_stat = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
+	}
+	else if (WIFSIGNALED(status))
+	{
+		exit_stat = WTERMSIG(status) + 128;		
+		return (WTERMSIG(status) + 128);
+	}
 	return (EXIT_FAILURE);
 }
 
@@ -80,14 +88,14 @@ int execute(t_tree *root, t_helper *helper)
     {
         if (execve(helper->cmd, helper->option, helper->envp) == -1)
             status = check_cmd(helper->cmd, root->content->content, helper->option);
-		return (status);
+		exit(status);
     }
     else
     {
         free(helper->cmd);
         free_array(helper->option);
         status = finsh_status(pid);
-    } 
+    }
     return (status);
 }
 

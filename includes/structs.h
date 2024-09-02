@@ -20,6 +20,8 @@ typedef enum s_ttype{
 } t_ttype;
 
 
+extern int exit_stat;
+
 typedef struct heredoc
 {
   int fd;
@@ -47,11 +49,8 @@ typedef struct helper
     char **envp;
     char  *cmd;
     char  **option;
-    int   exit_status;
     t_here_doc here_doc;
 } t_helper;
-
-
 
 typedef struct s_free{
   
