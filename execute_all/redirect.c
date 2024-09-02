@@ -6,12 +6,29 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/30 04:20:34 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 07:13:25 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+static int redirect_finished(pid_t pid)
+{
+	int status;
+	
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+	{
+		exit_stat = WEXITSTATUS(status);
+		return (WEXITSTATUS(status));
+	}
+	else if (WIFSIGNALED(status))
+	{
+		exit_stat = WTERMSIG(status) + 128;		
+		return (WTERMSIG(status) + 128);
+	}
+	return (EXIT_FAILURE);
+}
 void	errors(int status, int fd)
 {
 	if (status == 0)
@@ -49,10 +66,8 @@ int	redirect_input(t_tree *root, t_helper *helper)
 		exit(EXIT_SUCCESS);
 	}
 	else
-		waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (EXIT_FAILURE);
+		status = redirect_finished(pid);
+	return (status);
 }
 
 int	open_fd(char *file, int append)
@@ -88,10 +103,6 @@ int	redirect_output(t_tree *root, t_helper *helper)
 		exit(EXIT_SUCCESS);
 	}
 	else
-		waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		status = redirect_finished(pid);
+	return (status);
 }
