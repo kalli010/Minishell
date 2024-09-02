@@ -6,11 +6,26 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 09:25:03 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 08:24:58 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+static void	error(int status, int fd)
+{
+	if (status == 0)
+	{
+		perror("open error ");
+		exit(EXIT_FAILURE);
+	}
+	if (status == 1)
+	{
+		perror("dup2 error");
+		close(fd);
+		exit(EXIT_FAILURE);
+	}
+}
 
 int	check_if_uppercase(char *line)
 {
@@ -43,12 +58,7 @@ char	*check_if_env(char **env, char *line)
 	return (NULL);
 }
 
-
-
-
-
-
-int here_doc(t_tree *root, t_helper *helper)
+int	here_doc(t_tree *root, t_helper *helper)
 {
 	int		fd;
 	pid_t	pid;
@@ -60,10 +70,9 @@ int here_doc(t_tree *root, t_helper *helper)
 	{
 		fd = open(".tmp_file", O_RDONLY, 0644);
 		if (fd == -1)
-			// errors(0, fd);
+			error(0, fd);
 		if (dup2(fd, STDIN_FILENO) == -1)
-			// errors(1, fd);
-		close(fd);
+			error(1, fd);
 		find_command(root->first_child, helper);
 		exit(EXIT_SUCCESS);
 	}
@@ -72,9 +81,7 @@ int here_doc(t_tree *root, t_helper *helper)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (EXIT_FAILURE);
-    
 }
-    
 
 // int here_doc(t_tree *root, t_helper *helper)
 // {
@@ -82,10 +89,10 @@ int here_doc(t_tree *root, t_helper *helper)
 //     int pipefd[2];
 //     char *line;
 //     char *del;
-    
+
 //     line = NULL;
 //     del = root->content->next->content;
-    
+
 //     if (pipe(pipefd) == -1)
 //         return (EXIT_FAILURE);
 
@@ -100,7 +107,7 @@ int here_doc(t_tree *root, t_helper *helper)
 //         {
 //             line = readline("> ");
 //             if (!line || !ft_strncmp(line, del,sizeof(del)))
-//                 break;
+//                 break ;
 //             write(pipefd[1], line, ft_strlen(line));
 //             write(pipefd[1], "\n", 1);
 //             free(line);
@@ -111,10 +118,10 @@ int here_doc(t_tree *root, t_helper *helper)
 //     }
 //     else
 //     {
-//         close(pipefd[1]); 
-//         waitpid(pid, NULL, 0);        
+//         close(pipefd[1]);
+//         waitpid(pid, NULL, 0);
 //         close(pipefd[0]);
-// 	    find_command(root->first_child, helper);
+// 		 find_command(root->first_child, helper);
 //     }
-//     return 0;
+//     return (0);
 // }

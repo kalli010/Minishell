@@ -58,7 +58,7 @@ char	*get_path_of_cpath(t_helper *helper, t_list *list)
 	char	**dir;
 
 	dir = get_envp(helper->envp);
-	if (access(list->content, F_OK |X_OK) == 0)
+	if (access(list->content, F_OK | X_OK) == 0)
 	{
 		free_array(dir);
 		return (ft_strdup(list->content));

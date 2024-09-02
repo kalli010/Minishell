@@ -6,16 +6,16 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 07:13:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 08:23:24 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int redirect_finished(pid_t pid)
+static int	redirect_finished(pid_t pid)
 {
-	int status;
-	
+	int	status;
+
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
@@ -24,11 +24,12 @@ static int redirect_finished(pid_t pid)
 	}
 	else if (WIFSIGNALED(status))
 	{
-		exit_stat = WTERMSIG(status) + 128;		
+		exit_stat = WTERMSIG(status) + 128;
 		return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);
 }
+
 void	errors(int status, int fd)
 {
 	if (status == 0)
@@ -91,7 +92,7 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	int		fd;
 	pid_t	pid;
 	int		status;
-	
+
 	file = root->content->next->content;
 	status = 0;
 	pid = fork();

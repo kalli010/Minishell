@@ -46,6 +46,6 @@ int	run_builtins(t_tree *root, t_helper *helper)
 	// else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
 	// 	return (ft_unset(root->content));
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
-		ft_exit(root,helper);
+		ft_exit(root, helper);
 	return (EXIT_FAILURE);
 }

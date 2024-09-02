@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 04:55:01 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 06:47:47 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 08:22:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	wait_for_finished(pid_t l_fork, pid_t r_fork)
 	}
 	else if (WIFSIGNALED(status))
 	{
-		exit_stat = WTERMSIG(status) + 128;		
+		exit_stat = WTERMSIG(status) + 128;
 		return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);
@@ -45,7 +45,7 @@ static int	right_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 	}
 	else
 	{
-		waitpid(pid,&status,0);
+		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			exit_stat = WEXITSTATUS(status);
@@ -53,11 +53,11 @@ static int	right_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 		}
 		else if (WIFSIGNALED(status))
 		{
-			exit_stat = WTERMSIG(status) + 128;		
+			exit_stat = WTERMSIG(status) + 128;
 			return (WTERMSIG(status) + 128);
 		}
 	}
-	return (EXIT_FAILURE);;
+	return (EXIT_FAILURE);
 }
 
 static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
@@ -74,7 +74,7 @@ static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 	}
 	else
 	{
-		waitpid(pid,&status,0);
+		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			exit_stat = WEXITSTATUS(status);
@@ -82,7 +82,7 @@ static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 		}
 		else if (WIFSIGNALED(status))
 		{
-			exit_stat = WTERMSIG(status) + 128;		
+			exit_stat = WTERMSIG(status) + 128;
 			return (WTERMSIG(status) + 128);
 		}
 	}

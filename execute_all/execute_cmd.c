@@ -12,10 +12,10 @@
 
 #include <minishell.h>
 
-static int finsh_status(pid_t pid)
-{	
-	int status;
-	
+static int	finsh_status(pid_t pid)
+{
+	int	status;
+
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
@@ -24,7 +24,7 @@ static int finsh_status(pid_t pid)
 	}
 	else if (WIFSIGNALED(status))
 	{
-		exit_stat = WTERMSIG(status) + 128;		
+		exit_stat = WTERMSIG(status) + 128;
 		return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);
@@ -55,11 +55,11 @@ void	exit_path(char *s, int status)
 int	check_cmd(char *cmd, char *s, char **arg)
 {
 	if (access(cmd, F_OK) == -1)
-	{	
+	{
 		exit_path(s, ERROR_C);
 		free(cmd);
 		free_array(arg);
-		return(ERROR_C);
+		return (ERROR_C);
 	}
 	else if (access(cmd, X_OK) == -1)
 	{
@@ -73,29 +73,29 @@ int	check_cmd(char *cmd, char *s, char **arg)
 	return (EXIT_FAILURE);
 }
 
-int execute(t_tree *root, t_helper *helper)
+int	execute(t_tree *root, t_helper *helper)
 {
-    pid_t pid;
-    int status;
+	pid_t	pid;
+	int		status;
 
-    status = 0;
-    helper->cmd = get_path(helper, root->content);
-    helper->option = get_options(helper, root->content); 
-    pid = fork();
-    if (pid == -1)
-        return (perror("fork"),EXIT_FAILURE);
-    if (pid == 0)
-    {
-        if (execve(helper->cmd, helper->option, helper->envp) == -1)
-            status = check_cmd(helper->cmd, root->content->content, helper->option);
+	status = 0;
+	helper->cmd = get_path(helper, root->content);
+	helper->option = get_options(helper, root->content);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), EXIT_FAILURE);
+	if (pid == 0)
+	{
+		if (execve(helper->cmd, helper->option, helper->envp) == -1)
+			status = check_cmd(helper->cmd, root->content->content,
+					helper->option);
 		exit(status);
-    }
-    else
-    {
-        free(helper->cmd);
-        free_array(helper->option);
-        status = finsh_status(pid);
-    }
-    return (status);
+	}
+	else
+	{
+		free(helper->cmd);
+		free_array(helper->option);
+		status = finsh_status(pid);
+	}
+	return (status);
 }
-
