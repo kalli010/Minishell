@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 08:23:24 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 09:38:54 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	redirect_input(t_tree *root, t_helper *helper)
 	pid_t	pid;
 	int		status;
 
-	status = 0;
 	file = root->content->next->content;
 	pid = fork();
 	if (pid == 0)
@@ -94,7 +93,6 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	int		status;
 
 	file = root->content->next->content;
-	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{

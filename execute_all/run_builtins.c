@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 05:55:14 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 09:08:58 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,10 @@ int	run_builtins(t_tree *root, t_helper *helper)
 		return (ft_echo(root->content));
 	else if (!ft_strncmp("cd", root->content->content, sizeof("cd")))
 		return (ft_cd(root->content));
-	// else if (!ft_strncmp("export", root->content->content, sizeof("export")))
-	// 	return (ft_export(root->content));
 	else if (!ft_strncmp("env", root->content->content, sizeof("env")))
 		return (ft_env(helper->envp));
 	else if (!ft_strncmp("pwd", root->content->content, sizeof("pwd")))
 		return (ft_pwd(root->content));
-	// else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
-	// 	return (ft_unset(root->content));
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
 		ft_exit(root, helper);
 	return (EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 04:17:59 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 09:20:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@ int	ft_cd(t_list *list)
 {
 	if (count_arg(list) > 1)
 		return (cd_erros());
+	
 	return (EXIT_SUCCESS);
 }

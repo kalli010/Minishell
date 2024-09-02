@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 06:50:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 08:24:58 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 09:01:58 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,46 +82,3 @@ int	here_doc(t_tree *root, t_helper *helper)
 		return (WEXITSTATUS(status));
 	return (EXIT_FAILURE);
 }
-
-// int here_doc(t_tree *root, t_helper *helper)
-// {
-//     pid_t pid;
-//     int pipefd[2];
-//     char *line;
-//     char *del;
-
-//     line = NULL;
-//     del = root->content->next->content;
-
-//     if (pipe(pipefd) == -1)
-//         return (EXIT_FAILURE);
-
-//     pid = fork();
-//     if (pid < 0)
-//         return (EXIT_FAILURE);
-
-//     if (pid == 0)
-//     {
-//         close(pipefd[0]);
-//         while (1)
-//         {
-//             line = readline("> ");
-//             if (!line || !ft_strncmp(line, del,sizeof(del)))
-//                 break ;
-//             write(pipefd[1], line, ft_strlen(line));
-//             write(pipefd[1], "\n", 1);
-//             free(line);
-//         }
-//         close(pipefd[1]);
-//         free(line);
-//         exit(EXIT_SUCCESS);
-//     }
-//     else
-//     {
-//         close(pipefd[1]);
-//         waitpid(pid, NULL, 0);
-//         close(pipefd[0]);
-// 		 find_command(root->first_child, helper);
-//     }
-//     return (0);
-// }
