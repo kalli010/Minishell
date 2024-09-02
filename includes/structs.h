@@ -54,7 +54,7 @@ typedef struct helper
     char **envp;
     char  *cmd;
     char  **option;
-    int   e_status;
+    int   exit_status;
     t_here_doc here_doc;
 } t_helper;
 

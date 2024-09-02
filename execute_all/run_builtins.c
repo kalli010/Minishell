@@ -6,47 +6,47 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/08/31 03:25:23 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/02 00:48:54 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	is_builtins(t_list *list)
+int	is_builtins(t_tree *root)
 {
-	if (!ft_strncmp("echo", list->content, sizeof("echo")))
+	if (!ft_strncmp("echo", root->content->content, sizeof("echo")))
 		return (true);
-	else if (!ft_strncmp("cd", list->content, sizeof("cd")))
+	else if (!ft_strncmp("cd", root->content->content, sizeof("cd")))
 		return (true);
-	// else if (!ft_strncmp("export", list->content, sizeof("export")))
+	// else if (!ft_strncmp("export", root->content->content, sizeof("export")))
 	// 	return (true);
-	else if (!ft_strncmp("env", list->content, sizeof("env")))
+	else if (!ft_strncmp("env", root->content->content, sizeof("env")))
 		return (true);
-	else if (!ft_strncmp("pwd", list->content, sizeof("pwd")))
+	else if (!ft_strncmp("pwd", root->content->content, sizeof("pwd")))
 		return (true);
-	// else if (!ft_strncmp("unset", list->content, sizeof("unset")))
-	// 	return (ft_unset(list));
-	// else if (!ft_strncmp("exit", list->content, sizeof("exit")))
-	// 	return (ft_unset(list));
+	// else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
+	// 	return (ft_unset(root->content));
+	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
+		return (true);
 	else
 		return (false);
 }
-int	run_builtins(t_list *list, t_helper *helper)
+int	run_builtins(t_tree *root, t_helper *helper)
 {
-	if (!ft_strncmp("echo", list->content, sizeof("echo")))
-		return (ft_echo(list));
-	else if (!ft_strncmp("cd", list->content, sizeof("cd")))
-		return (ft_cd(list));
-	// else if (!ft_strncmp("export", list->content, sizeof("export")))
-	// 	return (ft_export(list));
-	else if (!ft_strncmp("env", list->content, sizeof("env")))
+	if (!ft_strncmp("echo", root->content->content, sizeof("echo")))
+		return (ft_echo(root->content));
+	else if (!ft_strncmp("cd", root->content->content, sizeof("cd")))
+		return (ft_cd(root->content));
+	// else if (!ft_strncmp("export", root->content->content, sizeof("export")))
+	// 	return (ft_export(root->content));
+	else if (!ft_strncmp("env", root->content->content, sizeof("env")))
 		return (ft_env(helper->envp));
-	else if (!ft_strncmp("pwd", list->content, sizeof("pwd")))
-		return (ft_pwd(list));
-	// else if (!ft_strncmp("unset", list->content, sizeof("unset")))
-	// 	return (ft_unset(list));
-	// else if (!ft_strncmp("exit", list->content, sizeof("exit")))
-	// 	return (ft_unset(list));
+	else if (!ft_strncmp("pwd", root->content->content, sizeof("pwd")))
+		return (ft_pwd(root->content));
+	// else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
+	// 	return (ft_unset(root->content));
+	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
+		return (ft_exit(root));
 	else
 		return (EXIT_FAILURE);
 }
