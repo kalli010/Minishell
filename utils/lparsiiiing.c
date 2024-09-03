@@ -457,7 +457,7 @@ void token_type(t_list *list)
   }
 }
 
-void creat_linked_list(t_list **list, char **tokens)
+void creat_linked_list(t_list **list, char **tokens, int t)
 {
   int i;
 
@@ -467,7 +467,8 @@ void creat_linked_list(t_list **list, char **tokens)
     ft_lstadd_back(list, ft_lstnew(tokens[i]));
     token_type(*list);
   }
-  free(tokens);
+  if(!t)
+    free(tokens);
 }
 
 int check_red_with_cmd(t_list *list)
@@ -850,7 +851,7 @@ void var_quotes(char **env, t_list **list)
 
   var_dquotes(env, list);
   array = var_split((*list)->content);
-  creat_linked_list(&n_list, array);
+  creat_linked_list(&n_list, array, 0);
   tmp = (*list)->next;
   back = (*list)->back;
   if((*list)->back != NULL)
@@ -935,7 +936,7 @@ void check_expander(char **env, t_list **list)
     *list = (*list)->back;
 }
 
-void set_var(t_list *list, char **env)
+void set_var(t_list *list, char ***env)
 {
   char *var;
   char *value;
@@ -943,6 +944,7 @@ void set_var(t_list *list, char **env)
   int s;
   char q;
   char *new_var;
+  char **n_env;
 
   len = 0;
   s = 0;
@@ -961,17 +963,17 @@ void set_var(t_list *list, char **env)
     while(list->content[len++]);
   value = ft_substr(list->content, s + 1, len - (s + 1));
   s = -1;
-  while(env[++s] != NULL)
+  while((*env)[++s] != NULL)
   {
-    if(!ft_strncmp(env[s], var, ft_strlen(var)) && env[s][ft_strlen(var)] == '=')
+    if(!ft_strncmp((*env)[s], var, ft_strlen(var)) && (*env)[s][ft_strlen(var)] == '=')
     {
       new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
       new_var[0] = '\0';
       ft_cpy(new_var, var);
       ft_cpy(new_var, "=");
       ft_cpy(new_var, value);
-      free(env[s]);
-      env[s] = new_var;
+      free(*env[s]);
+      (*env)[s] = new_var;
       return;
     }
   }
@@ -980,11 +982,20 @@ void set_var(t_list *list, char **env)
   ft_cpy(new_var, var);
   ft_cpy(new_var, "=");
   ft_cpy(new_var, value);
-  env[s] = new_var;
-  env[s + 1] = NULL;
+  n_env = (char **)malloc(sizeof(char *) * (s + 2));
+  len = -1;
+  while((*env)[++len])
+  {
+    n_env[len] = (*env)[len];
+    free((*env)[len]);
+  }
+  n_env[len] = new_var;
+  n_env[++len] = NULL;
+  free(*env);
+  *env = n_env;
 }
 
-void check_var(t_list *list, char **env)
+void check_var(t_list *list, char ***env, char ***xenv)
 {
   int i;
 
@@ -995,14 +1006,16 @@ void check_var(t_list *list, char **env)
     {
       if(list->content[i] == '=')
       {
-        if(list->back == NULL || \
-          (list->back->type != COMMAND &&\
-      list->back->type != OPTIONS &&\
-      list->back->type != PATH &&\
-      list->back->type != VAR &&\
-      list->back->type != PATH_COMMAND))
-        list->type = SET_VAR;
-        set_var(list, env);
+        if(list->back == NULL && list->next == NULL)
+        {
+          list->type = SET_VAR;
+          set_var(list, xenv);
+        }
+        else if(list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
+        {
+          list->type = SET_VAR;
+          set_var(list, env);
+        }
         break;
       }
     }
@@ -1334,12 +1347,36 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-void export(t_list *list, char **env)
+//void export(t_list *list, char **env)
+//{
+//  list = list->next;
+//  while(list || list->type != OPTIONS)
+//  {
+//    set_var(list, env);
+//    list = list->next;
+//  }
+//}
+
+int env_size(char **str)
 {
-  list = list->next;
-  while(list || list->type != OPTIONS)
-  {
-    set_var(list, env);
-    list = list->next;
-  }
+  int s;
+
+  s = 0;
+  while(str[s])
+    s++;
+  return(s);
+}
+
+char **create_env(char **envp)
+{
+  char **env;
+  int s;
+  int i;
+
+  i = -1;
+  s = env_size(envp);
+  env = (char **)malloc(sizeof(char *) * (s + 1));
+  while(envp[++i])
+    env[i] = ft_substr(envp[i], 0, ft_strlen(envp[i]));
+  return(env);
 }
