@@ -721,7 +721,7 @@ char *ft_getenv(char **env, char *str)
 
   s = -1;
   new_var = NULL;
-  while(env[++s])
+  while(env != NULL && env[++s])
   {
     if(!ft_strncmp(env[s], str, ft_strlen(str)) && env[s][ft_strlen(str)] == '=')
     {
@@ -1361,16 +1361,6 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-//void export(t_list *list, char **env)
-//{
-//  list = list->next;
-//  while(list || list->type != OPTIONS)
-//  {
-//    set_var(list, env);
-//    list = list->next;
-//  }
-//}
-
 int env_size(char **str)
 {
   int s;
@@ -1395,3 +1385,13 @@ char **create_env(char **envp)
   env[i] = NULL;
   return(env);
 }
+
+void export(char **env)
+{
+  int i = -1;
+
+  while(env[++i])
+    printf("%s\n",env[i]);
+}
+
+char **unset(char **env, char *str);
