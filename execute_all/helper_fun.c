@@ -6,25 +6,13 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 08:23:09 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/04 09:47:50 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	free_list(t_list *list)
-{
-	t_list	*tmp;
 
-	while (list != NULL)
-	{
-		tmp = list;
-		list = list->next;
-		if (tmp->content != NULL)
-			free(tmp->content);
-		free(tmp);
-	}
-}
 
 void	my_free(t_helper *helper)
 {
