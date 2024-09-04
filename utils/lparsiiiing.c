@@ -1394,40 +1394,41 @@ void export(char **env)
     printf("%s\n",env[i]);
 }
 
-//char **unset(char **env, char *str)
-//{
-//  int s;
-//  char **new_env;
-//  int size;
-//  int i;
-//
-//  size = env_size(env);
-//  new_env = NULL;
-//  s = 0;
-//  i = 0;
-//  while(*env != NULL && (*env)[s] != NULL)
-//  {
-//    if(!ft_strncmp(&(*env)[s], str, ft_strlen(str)))
-//    {
-//      new_env = (char **)malloc(sizeof(char *) * size);
-//      size = 0;
-//      while(*env && (*env)[size + i])
-//      {
-//        if(size == s)
-//        {
-//          free((*env)[s]);
-//          i = 1;
-//          size++;
-//        }
-//        else
-//        {
-//          new_env[size] = ft_substr((*env)[size + i], 0, ft_strlen((*env)[size + i]));
-//          free((*env)[size + i]);
-//          size++;
-//        }
-//        
-//      }
-//    }
-//    s++;
-//  }
-//}
+char **unset(char **env, char *str)
+{
+  int s;
+  char **new_env;
+  int size;
+  int i;
+
+  size = env_size(env);
+  new_env = NULL;
+  s = 0;
+  i = 0;
+  while(*env != NULL && env[s] != NULL)
+  {
+    if(!ft_strncmp(env[s], str, ft_strlen(str)))
+    {
+      new_env = (char **)malloc(sizeof(char *) * size);
+      size = 0;
+      while(*env && env[size + i])
+      {
+        if(size == s)
+        {
+          free(env[s]);
+          i = 1;
+          size++;
+        }
+        else
+        {
+          new_env[size] = ft_substr(env[size + i], 0, ft_strlen(env[size + i]));
+          free(env[size + i]);
+          size++;
+        }
+        
+      }
+    }
+    s++;
+  }
+  return(new_env);
+}
