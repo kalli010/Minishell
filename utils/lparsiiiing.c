@@ -439,22 +439,15 @@ void token_type(t_list *list)
           list->type = PATH;
       }
   else if(list->back != NULL \
-      && (list->back->type == OUTPUT || list->back->type == APPEND ||\
-  list->back->type == INPUT))
+      && (list->back->type == OUTPUT || list->back->type == APPEND || \
+    list->back->type == INPUT))
       list->type = PATH;
   else if(list->content[0] == '$')
      list->type = VAR;
   else if(list->back != NULL && list->back->type == HEREDOC)
     list->type = DELIMITER;
   else
-  {
-    //path = ft_strjoin("/usr/bin/",list->content);
-    //if(!access(path, F_OK))
-    //    list->type = COMMAND;
-    //else
-        list->type = COMMAND;
-    //free(path);
-  }
+    list->type = COMMAND;
 }
 
 void creat_linked_list(t_list **list, char **tokens, int t)
@@ -960,11 +953,13 @@ void set_var(t_list *list, char ***env)
 
   len = 0;
   s = 0;
-  while(list->content[len] != '=')
+  while(list->content[len] && list->content[len] != '=')
     len++;
   var = ft_substr(list->content, 0, len);
-  s = len++;
-  if(list->content[len] == '"' || list->content[len] == '\'')
+  s = len;
+  if(list->content[len] != '\0')
+    len++;
+  if(list->content[len] && (list->content[len] == '"' || list->content[len] == '\''))
   {
     q = list->content[len];
     s = len++;
@@ -977,7 +972,7 @@ void set_var(t_list *list, char ***env)
   s = 0;
   while(*env != NULL && (*env)[s] != NULL)
   {
-    if(!ft_strncmp((*env)[s], var, ft_strlen(var)) && (*env)[s][ft_strlen(var)] == '=')
+    if(!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
     {
       new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
       new_var[0] = '\0';
@@ -993,6 +988,7 @@ void set_var(t_list *list, char ***env)
   new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
   new_var[0] = '\0';
   ft_cpy(new_var, var);
+  if(list->content[ft_strlen(var)] != '\0')
   ft_cpy(new_var, "=");
   ft_cpy(new_var, value);
   n_env = (char **)malloc(sizeof(char *) * (s + 2));
@@ -1032,6 +1028,11 @@ void check_var(t_list *list, char ***env, char ***xenv)
         }
         break;
       }
+    }
+    if(list->back != NULL && list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
+    {
+      list->type = SET_VAR;
+      set_var(list, env);
     }
     list = list->next;
   }
@@ -1417,7 +1418,6 @@ char **unset(char **env, char *str)
         {
           free(env[s]);
           i = 1;
-          size++;
         }
         else
         {
@@ -1425,8 +1425,10 @@ char **unset(char **env, char *str)
           free(env[size + i]);
           size++;
         }
-        
       }
+      free(env);
+      new_env[size] = NULL;
+      break;
     }
     s++;
   }
