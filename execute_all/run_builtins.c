@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/04 10:21:03 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/05 10:51:39 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	run_builtins(t_tree *root, t_helper *helper)
 	else if (!ft_strncmp("cd", root->content->content, sizeof("cd")))
 		return (ft_cd(root->content));
 	else if (!ft_strncmp("env", root->content->content, sizeof("env")))
-		return (ft_env(helper->envp));
+		return (ft_env(root->content,helper->envp));
 	else if (!ft_strncmp("pwd", root->content->content, sizeof("pwd")))
 		return (ft_pwd(root->content));
 	else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
