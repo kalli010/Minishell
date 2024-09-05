@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 08:18:00 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/05 07:16:28 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	find_command(t_tree *root, t_helper *helper)
 	if (root->first_child && root->first_child->content
 		&& root->first_child->next_sibling
 		&& root->first_child->next_sibling->content
-		&& root->first_child->next_sibling->content->type != COMMAND)
+		&& !ft_strncmp(root->first_child->next_sibling->content->back->back->content, "(",1))
 		return (execute_parenthesis(root, helper));
 	if ((root->content->type == COMMAND || root->content->type == PATH_COMMAND)
 		&& (root->first_child == NULL || root->first_child->content == NULL
@@ -46,7 +46,7 @@ int	find_command(t_tree *root, t_helper *helper)
 		else
 			return (execute(root, helper));
 	}
-	if (root->content->type == OUTPUT || root->content->type == APPEND)
+	if (root->content->type == OUTPUT || root->content->type == APPEND)	
 		return (redirect_output(root, helper));
 	if (root->content->type == INPUT)
 	{

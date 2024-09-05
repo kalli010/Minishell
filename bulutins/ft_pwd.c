@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 03:13:11 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:24:24 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_pwd(t_list *list)
 	}
 	if (getcwd(buff, sizeof(buff)) != NULL)
 	{
-		printf("%s \n", buff);
+		printf("%s\n", buff);
 		return (EXIT_SUCCESS);
 	}
 	else
