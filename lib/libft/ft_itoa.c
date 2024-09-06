@@ -12,21 +12,21 @@
 
 #include "libft.h"
 
-void	ft_check(long num, char *str, int len)
+void	ft_check(long num, char **str, int len)
 {
 	int	i;
 
 	if (num == 0)
-		str[0] = '0';
+		(*str)[0] = '0';
 	else if (num < 0)
 	{
-		str[0] = '-';
+		(*str)[0] = '-';
 		num = -num;
 	}
 	i = len - 1;
 	while (num != 0)
 	{
-		str[i] = (num % 10) + '0';
+		(*str)[i] = (num % 10) + '0';
 		i--;
 		num /= 10;
 	}
@@ -54,6 +54,6 @@ char	*ft_itoa(int n)
 	if (!str)
 		return (NULL);
 	str[len] = '\0';
-	ft_check(num, str, len);
+	ft_check(num, &str, len);
 	return (str);
 }

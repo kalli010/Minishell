@@ -560,7 +560,7 @@ void create_list_with_red(t_list **list)
         tmp = tmp->next;
       if(tmp != NULL)
       {
-        if(start->next != tmp)
+        if(start->next && start->next != tmp)
         {
           node = start->next->next;
           start->next->back = tmp->back;
@@ -1433,4 +1433,191 @@ char **unset(char **env, char *str)
     s++;
   }
   return(new_env);
+}
+
+char *ft_strcpy(char *dest, const char *src)
+{
+  int i = 0;
+
+  while (src[i] != '\0')
+  {
+    dest[i] = src[i];
+    i++;
+  }
+  dest[i] = '\0';
+  return dest;
+}
+
+double check_heredoc(t_list *list)
+{
+  double i;
+
+  i = 0;
+  while(list)
+  {
+    if(list->type == HEREDOC)
+      i++;
+    list = list->next;
+  }
+  return(i);
+}
+
+int open_file(char *redfile, t_list *delimiter)
+{
+  int fd;
+  char *line;
+  
+  fd = open(redfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+  if (fd < 0)
+  {
+    perror("Error creating redfile");
+    return (1);
+  }
+  while (1)
+  {
+    line = readline("> ");
+    if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
+        break;
+    write(fd, line, ft_strlen(line));
+    write(fd, "\n", 1);
+    free(line);
+  }
+  close(fd);
+  return(0);
+}
+//  cat  grep awk  sed  sort  uniq  tr  wc  tee  tail  head  dd bc python 
+int check_command_type(char *content)
+{
+  if(!ft_strncmp(content, "cat", 3) || !ft_strncmp(content, "grep", 4) || \
+  !ft_strncmp(content, "awk", 3) || !ft_strncmp(content, "sed", 3) || \
+  !ft_strncmp(content, "sort", 4) || !ft_strncmp(content, "uniq", 4) || \
+  !ft_strncmp(content, "tr", 2) || !ft_strncmp(content, "wc", 2) || \
+  !ft_strncmp(content, "tee", 3) || !ft_strncmp(content, "tail", 4) || \
+  !ft_strncmp(content, "head", 4) || !ft_strncmp(content, "dd", 2) || \
+  !ft_strncmp(content, "bc", 2) || !ft_strncmp(content, "python", 6))
+    return(1);
+  return(0);
+}
+
+void implementing_heredoc(t_list **list, char **redfile)
+{
+  t_list *back;
+  t_list *next;
+  t_list *tmp;
+  int i;
+
+  i = -1;
+  next = NULL;
+  while(*list)
+  {
+    if((*list)->type == HEREDOC)
+    {
+      back = (*list)->back;
+      while(back->type != COMMAND)
+        back = back->back;
+      next = (*list)->next->next;
+      if(check_command_type(back->content))
+      {
+        while(back->next->type != HEREDOC)
+          back = back->next;
+        back->next = NULL;
+        ft_lstadd_back(&back, ft_lstnew(redfile[++i]));
+        back = back->next;
+        back->type = OPTIONS;
+        tmp = *list;
+        while(*list != next)
+        {
+          *list = (*list)->next;
+          free(tmp->content);
+          free(tmp);
+          tmp = *list;
+        }
+        back->next = *list;
+        if((*list) != NULL)
+          (*list)->back = back;
+        else
+          *list = back;
+      }
+      else
+      {
+        while(back->next->type != HEREDOC)
+          back = back->next;
+        back->next = NULL;
+        tmp = *list;
+        while(*list != next)
+        {
+          *list = (*list)->next;
+          free(tmp->content);
+          free(tmp);
+          tmp = *list;
+        }
+        back->next = *list;
+        if((*list) != NULL)
+          (*list)->back = back;
+        else
+          *list = back;
+      }
+    }
+    if((*list)->next == NULL)
+      break;
+    if(*list != NULL)
+      *list = (*list)->next;
+  }
+  while(*list && (*list)->back)
+    *list = (*list)->back;
+}
+
+char **heredoc(t_list **list, int size)
+{
+  char **redfile;
+  int i;
+  char *nbr;
+  int j;
+  t_list *delimiter;
+
+  delimiter = *list;
+  i = -1;
+  redfile = (char **)malloc(sizeof(char *) * (size + 1));
+  while(++i < size)
+  {
+    redfile[i] = (char *)malloc(sizeof(char) * 10);
+    redfile[i] = ft_strcpy(redfile[i], "redfile");
+    nbr = ft_itoa(i);
+    j = 6;
+    while(*nbr)
+    {
+      redfile[i][++j] = *nbr;
+      nbr++;
+    }
+    redfile[i][++j] = '\0';
+  }
+  redfile[i] = NULL;
+  i = -1;
+  while(delimiter)
+  {
+    if(delimiter->type == HEREDOC)
+    {
+      if(open_file(redfile[++i], delimiter->next))
+        return(NULL);
+    }
+    delimiter = delimiter->next;
+  }
+  implementing_heredoc(list, redfile);
+  return(redfile);
+}
+
+int clean_heredoc(char **redfile)
+{
+  int i;
+
+  i = -1;
+  while(redfile[++i])
+  {
+    if (unlink(redfile[i]) < 0)
+    {
+      printf("Error deleting redfile");
+      return(1);
+    }
+  }
+  return(0);
 }
