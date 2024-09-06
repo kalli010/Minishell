@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/06 15:20:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:27:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,18 @@ void ctr_c(int sig)
 	}
 }
 
-void run_time(int sig)
+void run_time(pid_t pid)
 {
-	if (sig == SIGINT)
+	if (pid == 0)
+	{
+		dprintf(2,"okkkk \n");
 		signal(SIGINT, SIG_DFL);
+	}
 }
 
-void ctr_bslash(int sig)
+
+void signals()
 {
-	if (sig == SIGQUIT)
-	{
-		signal(SIGQUIT,SIG_IGN);
-		
-	}
+	signal(SIGINT,ctr_c);
+	signal(SIGQUIT,SIG_IGN);
 }

@@ -420,6 +420,8 @@ void token_type(t_list *list)
       list->type = OUTPUT;
   else if(list->content[0] == '<' && list->content[1] == '\0')
       list->type = INPUT;
+  else if((list->content[0] == ')' && list->content[1] == '\0') || (list->content[0] == '(' && list->content[1] == '\0'))
+    list->type = PARENTHESIS;
   else if(list->content[0] == '-' || ft_strncmp(list->content, "--", 2) == 0\
     || (list->back != NULL && \
       (list->back->type == COMMAND || list->back->type == OPTIONS \
@@ -668,7 +670,8 @@ int symbols_check(t_list *list)
       && list->type != COMMAND \
       && list->type != VAR && list->type != PATH \
       && list->type != PATH_COMMAND \
-      && list->type != DELIMITER)
+      && list->type != DELIMITER\
+      && list->type != PARENTHESIS)
   {
       printf("1\n");
       printf("syntax error\n");
@@ -1513,10 +1516,10 @@ void implementing_heredoc(t_list **list, char **redfile)
     if((*list)->type == HEREDOC)
     {
       back = (*list)->back;
-      while(back->type != COMMAND)
+      while(back && back->type != COMMAND)
         back = back->back;
       next = (*list)->next->next;
-      if(check_command_type(back->content))
+      if(back && check_command_type(back->content))
       {
         while(back->next->type != HEREDOC)
           back = back->next;
@@ -1540,9 +1543,10 @@ void implementing_heredoc(t_list **list, char **redfile)
       }
       else
       {
-        while(back->next->type != HEREDOC)
+        while(back && back->next->type != HEREDOC)
           back = back->next;
-        back->next = NULL;
+        if(back != NULL)
+          back->next = NULL;
         tmp = *list;
         while(*list != next)
         {
@@ -1551,7 +1555,8 @@ void implementing_heredoc(t_list **list, char **redfile)
           free(tmp);
           tmp = *list;
         }
-        back->next = *list;
+        if(back != NULL)
+          back->next = *list;
         if((*list) != NULL)
           (*list)->back = back;
         else
@@ -1615,7 +1620,7 @@ int clean_heredoc(char **redfile)
   {
     if (unlink(redfile[i]) < 0)
     {
-      printf("Error deleting redfile");
+      printf("Error deleting redfile\n");
       return(1);
     }
   }

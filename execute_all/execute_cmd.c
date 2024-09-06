@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/06 15:05:31 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:17:32 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,17 @@ int	check_cmd(char *cmd, char *s, char **arg)
 
 int	execute(t_tree *root, t_helper *helper)
 {
-	pid_t	pid;
 	int		status;
 
 	status = 0;
 	helper->cmd = get_path(helper, root->content);
 	helper->option = get_options(helper, root->content);
-	pid = fork();
-	if (pid == -1)
+	helper->pid = fork();
+	if (helper->pid == -1)
 		return (perror("fork"), EXIT_FAILURE);
-	if (pid == 0)
+	if (helper->pid == 0)
 	{
-		signal(SIGINT,run_time);
+		run_time(helper->pid);
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
 			status = check_cmd(helper->cmd, root->content->content,
 					helper->option);
@@ -96,7 +95,7 @@ int	execute(t_tree *root, t_helper *helper)
 	{
 		free(helper->cmd);
 		free_array(helper->option);
-		status = finsh_status(pid);
+		status = finsh_status(helper->pid);
 	}
 	return (status);
 }

@@ -16,18 +16,13 @@ typedef enum s_ttype{
   VAR,
   SET_VAR,
   PATH_COMMAND,
-  DELIMITER
+  DELIMITER,
+  PARENTHESIS,
 } t_ttype;
 
 
 extern int exit_stat;
 
-typedef struct heredoc
-{
-  int fd;
-  char *del;
-
-} t_here_doc;
 
 //linked list
 typedef struct s_list{
@@ -49,7 +44,7 @@ typedef struct helper
     char **envp;
     char  *cmd;
     char  **option;
-    t_here_doc here_doc;
+    pid_t	pid;
 } t_helper;
 
 typedef struct s_free{
