@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/05 07:16:28 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/06 20:04:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static int	execute_parenthesis(t_tree *root, t_helper *helper)
 
 static int	check_root(t_tree *root, t_helper *helper)
 {
-	if (root->content->type == HEREDOC)
-		return (here_doc(root, helper));
+	// if (root->content->type == HEREDOC)
+	// 	return (here_doc(root, helper));
 	if (root->content->type == AND || root->content->type == OR)
 		return (check_and_or(root, helper));
 	if (root->content->type == PIPE)
