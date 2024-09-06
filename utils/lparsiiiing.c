@@ -1479,6 +1479,7 @@ int open_file(char *redfile, t_list *delimiter)
   while (1)
   {
     line = readline("> ");
+
     if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
         break;
     write(fd, line, ft_strlen(line));
