@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/05 10:51:17 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:10:27 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ void 	my_free(t_helper *helper);
 void	free_list(t_list *list);
 
 int ft_unset(t_list *list,t_helper *helper);
-
-
-
+void ctr_c(int sig);
+void run_time(int sig);
+void ctr_bslash(int sig);
 
 #endif
