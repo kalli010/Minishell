@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/06 17:27:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/07 08:06:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void run_time(pid_t pid)
 {
 	if (pid == 0)
 	{
-		dprintf(2,"okkkk \n");
 		signal(SIGINT, SIG_DFL);
 	}
 }

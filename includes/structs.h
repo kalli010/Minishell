@@ -21,7 +21,7 @@ typedef enum s_ttype{
 } t_ttype;
 
 
-extern int exit_stat;
+extern int g_exit;
 
 
 //linked list

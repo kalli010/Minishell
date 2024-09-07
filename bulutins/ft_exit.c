@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 06:52:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/07 08:08:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ unsigned char	ft_exit(t_tree *root, t_helper *helper)
 {
 	unsigned char status;
 
-	status =  exit_stat;
+	status =  g_exit;
 	printf("exit\n");
 	if (count_arg(root->content) > 1)
 		return (exit_errors(1));
