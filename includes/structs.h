@@ -1,6 +1,8 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+#include <stdbool.h>
+
 typedef enum s_ttype{
   WORD,
   COMMAND,
@@ -27,6 +29,7 @@ typedef struct helper
     char  **option;
     pid_t	pid;
     int exit_status;
+    bool flag;
 } t_helper;
 
 extern t_helper *g_helper;

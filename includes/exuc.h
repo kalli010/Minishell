@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 13:31:53 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/07 14:21:10 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ void	free_list(t_list *list);
 
 int ft_unset(t_list *list,t_helper *helper);
 void ctr_c(int sig);
-void run_time(pid_t pid);
-void signals();
-void signal_handeler(int i);
+void	signal_handeler(int place);
 
 #endif
