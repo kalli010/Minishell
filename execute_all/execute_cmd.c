@@ -6,31 +6,33 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 08:08:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/07 12:49:35 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+#include <minishell.h>
 
-static int	finsh_status(pid_t pid)
+static int finish_status(pid_t pid)
 {
 	int	status;
 
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		g_exit = WEXITSTATUS(status);
+		g_helper->exit_status = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
 	}
 	else if (WIFSIGNALED(status))
 	{
-		g_exit = WTERMSIG(status) + 128;
-		return (WTERMSIG(status) + 128);
+		g_helper->exit_status = WTERMSIG(status) + 128;
+		if (WTERMSIG(status))
+			return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);
 }
 
-void	exit_path(char *s, int status)
+void exit_path(char *s, int status)
 {
 	if (status == ERROR_C)
 	{
@@ -52,7 +54,7 @@ void	exit_path(char *s, int status)
 	}
 }
 
-int	check_cmd(char *cmd, char *s, char **arg)
+int check_cmd(char *cmd, char *s, char **arg)
 {
 	if (access(cmd, F_OK) == -1)
 	{
@@ -73,7 +75,7 @@ int	check_cmd(char *cmd, char *s, char **arg)
 	return (EXIT_FAILURE);
 }
 
-int	execute(t_tree *root, t_helper *helper)
+int execute(t_tree *root, t_helper *helper)
 {
 	int		status;
 
@@ -85,6 +87,7 @@ int	execute(t_tree *root, t_helper *helper)
 		return (perror("fork"), EXIT_FAILURE);
 	if (helper->pid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
 			status = check_cmd(helper->cmd, root->content->content,
 					helper->option);
@@ -94,7 +97,8 @@ int	execute(t_tree *root, t_helper *helper)
 	{
 		free(helper->cmd);
 		free_array(helper->option);
-		status = finsh_status(helper->pid);
+		status = finish_status(helper->pid);
 	}
-	return (status);
+	return status;
 }
+

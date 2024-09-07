@@ -20,8 +20,17 @@ typedef enum s_ttype{
   PARENTHESIS,
 } t_ttype;
 
+typedef struct helper
+{
+    char **envp;
+    char  *cmd;
+    char  **option;
+    pid_t	pid;
+    int exit_status;
+} t_helper;
 
-extern int g_exit;
+extern t_helper *g_helper;
+
 
 
 //linked list
@@ -39,13 +48,6 @@ typedef struct s_tree {
   struct s_tree *next_sibling;
 } t_tree;
 
-typedef struct helper
-{
-    char **envp;
-    char  *cmd;
-    char  **option;
-    pid_t	pid;
-} t_helper;
 
 typedef struct s_free{
   
