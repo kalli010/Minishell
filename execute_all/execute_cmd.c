@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 07:05:50 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 12:23:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,12 @@ int execute(t_tree *root, t_helper *helper)
 	{
 		signal_handeler(CHILD);
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
+		{
 			status = check_cmd(helper->cmd, root->content->content,
 					helper->option);
-		exit(status);
+			exit(status);	
+		}
+		exit(EXIT_FAILURE);	
 	}
 	else
 	{

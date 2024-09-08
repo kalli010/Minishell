@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 04:55:01 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 07:01:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 13:17:18 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	right_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 		dup2(fd[0], STDIN_FILENO);
 		(close(fd[0]), close(fd[1]));
 		find_command(root, helper);
-		exit(EXIT_SUCCESS);
+		exit(g_exit_status);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper)
 		dup2(fd[1], STDOUT_FILENO);
 		(close(fd[0]), close(fd[1]));
 		find_command(root, helper);
-		exit(EXIT_SUCCESS);
+		exit(g_exit_status);
 	}
 	else
 	{

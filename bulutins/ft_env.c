@@ -6,26 +6,30 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:05:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/05 10:52:03 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 13:21:52 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	ft_env(t_list *list,char **env)
+int ft_env(t_list *list, char **env)
 {
-	int	i;
+    int i;
 
-	i = 0;
-	if (count_arg(list) > 0)
-	{
-		write(1, "please enter env  with no options\n", 35);
-		return (EXIT_FAILURE);
-	}
-	while (env[i])
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
-	return (EXIT_SUCCESS);
+    i = 0;
+
+    if (count_arg(list) > 0)
+    {
+        write(1, "please enter env with no options\n", 34);
+		g_exit_status = 1;
+        return (g_exit_status);
+    }
+    while (env[i])
+    {
+        ft_putstr_fd(env[i], STDOUT_FILENO);
+        ft_putchar_fd('\n', STDOUT_FILENO);
+        i++;
+    }
+    return (EXIT_SUCCESS);
 }
+

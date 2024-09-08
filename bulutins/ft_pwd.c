@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/04 12:24:24 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 13:26:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ int	ft_pwd(t_list *list)
 {
 	char	buff[4096];
 
+	g_exit_status = 1;
 	if (count_arg(list) > 0)
 	{
 		write(1, "please enter pwd  with no options\n", 35);
-		return (EXIT_FAILURE);
+        return (g_exit_status);
 	}
 	if (getcwd(buff, sizeof(buff)) != NULL)
 	{
@@ -27,5 +28,5 @@ int	ft_pwd(t_list *list)
 		return (EXIT_SUCCESS);
 	}
 	else
-		return (EXIT_FAILURE);
+        return (g_exit_status);
 }
