@@ -1265,7 +1265,11 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
         else if(l_node != NULL)
           add_child_to_tree(l_node, r_tree);
       }
-      root = l_node;
+      if(l_node != NULL)
+        root = l_node;
+      else {
+        root = r_tree;
+      }
     }
     else if(l_node != NULL && l_node->first_child != NULL)
     {
@@ -1479,8 +1483,12 @@ int open_file(char *redfile, t_list *delimiter)
   while (1)
   {
     line = readline("> ");
-
-    if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
+    if(delimiter->content[0] == '\0')
+    {
+      if(line[0] == '\0')
+        break;
+    }
+    else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
         break;
     write(fd, line, ft_strlen(line));
     write(fd, "\n", 1);
@@ -1564,7 +1572,7 @@ void implementing_heredoc(t_list **list, char **redfile)
           *list = back;
       }
     }
-    if((*list)->next == NULL)
+    if(*list && (*list)->next == NULL)
       break;
     if(*list != NULL)
       *list = (*list)->next;
