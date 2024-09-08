@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 14:21:10 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 07:02:28 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #define PARENT  777
 #define CHILD  666
 #define IN_HERE_DOC  555
-
+extern int g_exit_status;
 
 char	*get_path(t_helper *help,t_list *list);
 int		find_command(t_tree *root, t_helper *helper);

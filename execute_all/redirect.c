@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 12:36:28 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 07:01:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static int	redirect_finished(pid_t pid)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		g_helper->exit_status = WEXITSTATUS(status);
+		g_exit_status = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
 	}
 	else if (WIFSIGNALED(status))
 	{
-		g_helper->exit_status = WTERMSIG(status) + 128;
+		g_exit_status = WTERMSIG(status) + 128;
 		return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);

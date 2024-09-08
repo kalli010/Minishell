@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 14:47:07 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/08 07:05:50 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ static int finish_status(pid_t pid)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		g_helper->exit_status = WEXITSTATUS(status);
+		g_exit_status = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
 	}
 	else if (WIFSIGNALED(status))
 	{
-		g_helper->flag = true;
-		g_helper->exit_status = WTERMSIG(status) + 128;
+		g_exit_status = WTERMSIG(status) + 128;
 		if (WTERMSIG(status))
 		{	write(1,"\n",1);
 			return (WTERMSIG(status) + 128);
@@ -81,14 +80,15 @@ int check_cmd(char *cmd, char *s, char **arg)
 int execute(t_tree *root, t_helper *helper)
 {
 	int		status;
-
+	pid_t pid;
+	
 	status = 0;
 	helper->cmd = get_path(helper, root->content);
 	helper->option = get_options(helper, root->content);
-	helper->pid = fork();
-	if (helper->pid == -1)
+	pid = fork();
+	if (pid == -1)
 		return (perror("fork"), EXIT_FAILURE);
-	if (helper->pid == 0)
+	if (pid == 0)
 	{
 		signal_handeler(CHILD);
 		if (execve(helper->cmd, helper->option, helper->envp) == -1)
@@ -100,7 +100,7 @@ int execute(t_tree *root, t_helper *helper)
 	{
 		free(helper->cmd);
 		free_array(helper->option);
-		status = finish_status(helper->pid);
+		status = finish_status(pid);
 	}
 	return status;
 }
