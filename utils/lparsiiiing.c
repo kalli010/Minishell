@@ -746,7 +746,9 @@ void var_dquotes(char **xenv, char **env, t_list **list)
     len++;
   fstr = ft_substr((*list)->content, 0, len);
   s = len;
-  while((*list)->content[len] && (*list)->content[len] != '"')
+  if((*list)->content[len] == '$')
+    len++;
+  while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' && (*list)->content[len] != '$')
     len++;
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
   s = len;
@@ -917,23 +919,26 @@ void expander(char **xenv, char **env, t_list **list)
   }
 }
 
+int check_d(char *str)
+{
+  while(*str)
+  {
+    if(*str == '$')
+      return(1);
+    str++;
+  }
+  return(0);
+}
+
 void check_expander(char **xenv, char **env, t_list **list)
 {
-  int i;
   t_list *tmp;
 
   tmp = NULL;
   while(*list)
   {
-    i = -1;
-    while((*list)->content[++i])
-    {
-      if((*list)->content[i] == '$')
-      {
-        expander(xenv, env, list);
-        break;
-      }
-    }
+    while(check_d((*list)->content))
+      expander(xenv, env, list);
     tmp = *list;
     if(*list != NULL)
       (*list) = (*list)->next;
