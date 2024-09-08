@@ -1477,7 +1477,7 @@ int open_file(char *redfile, t_list *delimiter)
   fd = open(redfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
   if (fd < 0)
   {
-    perror("Error creating redfile");
+    perror("Error creating redfile\n");
     return (1);
   }
   while (1)
