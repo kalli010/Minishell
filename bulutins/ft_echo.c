@@ -6,12 +6,27 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/02 04:05:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:48:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+int	count_arg_echo(t_list *list)
+{
+	t_list	*temp_list;
+	int		count;
+
+	count = 0;
+	temp_list = list;
+	temp_list = temp_list->next;
+	while (temp_list && (temp_list->type == OPTIONS || temp_list->type == COMMAND))
+	{
+		count++;
+		temp_list = temp_list->next;
+	}
+	return (count);
+} 
 static int	check_option(char *str)
 {
 	int	i;
@@ -77,7 +92,7 @@ int	ft_echo(t_list *list)
 	char	**op;
 
 	op = NULL;
-	count = count_arg(list);
+	count = count_arg_echo(list);
 	if (!ft_strncmp("echo", list->content, sizeof("echo")))
 	{
 		op = (char **)malloc((count + 2) * sizeof(char *));
@@ -86,7 +101,7 @@ int	ft_echo(t_list *list)
 		op[0] = ft_strdup("echo");
 		list = list->next;
 		i = 1;
-		while (list && list->type == OPTIONS)
+		while (list && (list->type == OPTIONS || list->type == COMMAND))
 		{
 			op[i++] = ft_strdup(list->content);
 			list = list->next;

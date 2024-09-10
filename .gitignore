@@ -1,7 +1,7 @@
 Makefile
 
+utils/minishell.c
 utils/Minishell.c
-
 includes/minishell.h
 
 */*.o

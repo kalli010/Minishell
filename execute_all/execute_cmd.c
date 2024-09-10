@@ -6,11 +6,10 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 12:23:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/10 09:44:27 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
 #include <minishell.h>
 
 static int finish_status(pid_t pid)
