@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 02:24:49 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/10 16:03:31 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:19:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,63 +39,17 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
-static int count_wild(void)
+
+
+    
+char **get_wild(char *str)
 {
-    struct dirent *entry;
     int count;
-    DIR *dirc;
-    char *cur_dir;
 
     count = 0;
-    cur_dir = getcwd(NULL, 0);
-    if (!cur_dir)
-        return (0);
-    dirc = opendir(cur_dir); 
-    if (!dirc)
-    {
-        free(cur_dir);
-        return (0);
-    }
-    entry = readdir(dirc);
-    while (entry != NULL)
-    {
-        count++;
-        entry = readdir(dirc);
-    }
-    closedir(dirc);
-    free(cur_dir);
-    return count;
-}
-
-char **get_all(const char *cur_dir)
-{
-    struct dirent *entry;
-    int count;
-    DIR *dirc;
-    char **wild;
-    int i;
+    /*to do call strstr to get wildcards*/
     
-    i = -1;
-    count = count_wild();
-    if (!count)
-        return NULL;
-    dirc = opendir(cur_dir); 
-    wild = (char **)malloc(sizeof(char *) * (count + 1));
-    if (!wild)
-        return (closedir(dirc),NULL);
-    entry = readdir(dirc);
-    while (entry != NULL)
-    {
-        wild[++i] = ft_strdup(entry->d_name);
-        entry = readdir(dirc);
-    }
-    // free(wild[i]);
-    wild[count] = NULL;
-    closedir(dirc);
-    return wild;
 }
-    
-
 
 
 char **wildcards(char *str)
@@ -113,6 +67,8 @@ char **wildcards(char *str)
         free(cur_dir);
         return (wild);
     }
+    else
+        get_wild(str);
     // if (!cur_dir)
     //     return NULL;
     
