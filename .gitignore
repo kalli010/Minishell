@@ -13,3 +13,5 @@ lib/libft/*.o
 minishell
 
 
+bulutins/a.out
+bulutins/wil.c
