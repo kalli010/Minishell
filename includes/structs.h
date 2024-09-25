@@ -35,6 +35,12 @@ typedef struct helper
 extern t_helper *g_helper;
 
 
+typedef struct s_file
+{
+    char        *file_name;
+    t_ttype     type;
+    struct s_file *next;
+} t_file;
 
 //linked list
 typedef struct s_list{

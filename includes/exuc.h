@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/10 11:58:32 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 01:09:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ char	*get_path(t_helper *help,t_list *list);
 int		find_command(t_tree *root, t_helper *helper);
 char	**get_options(t_helper *helper, t_list *list);
 void	free_array(char **arr);
-int		here_doc(t_tree *root,t_helper *helper);
 int		check_upper(char c);
-int		check_if_uppercase(char *line);
-char	*check_if_env(char **env,char *line);
 int		ft_env(t_list *list,char **env);
 int		ft_pwd(t_list *list);
 int		is_builtins(t_tree *root);
@@ -56,5 +53,9 @@ void	free_list(t_list *list);
 int ft_unset(t_list *list,t_helper *helper);
 void 	ctr_c(int sig);
 void	signal_handeler(int place);
-
+int helper_check_cmd(char *cmd, char *s);
+int check_cmd(char *cmd, char *s, char **arg);
+int is_only_bs(t_tree *root);
+int is_only_slashes(t_tree *root);
+void exit_path(char *s, int status);
 #endif

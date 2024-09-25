@@ -6,32 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/10 09:44:27 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 00:49:47 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-static int finish_status(pid_t pid)
-{
-	int	status;
-
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-	{
-		g_exit_status = WEXITSTATUS(status);
-		return (WEXITSTATUS(status));
-	}
-	else if (WIFSIGNALED(status))
-	{
-		g_exit_status = WTERMSIG(status) + 128;
-		if (WTERMSIG(status))
-		{	write(1,"\n",1);
-			return (WTERMSIG(status) + 128);
-		}
-	}
-	return (EXIT_FAILURE);
-}
 
 void exit_path(char *s, int status)
 {
@@ -55,55 +34,70 @@ void exit_path(char *s, int status)
 	}
 }
 
-int check_cmd(char *cmd, char *s, char **arg)
+static int finish_status(pid_t pid)
 {
-	if (access(cmd, F_OK) == -1)
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
 	{
-		exit_path(s, ERROR_C);
-		free(cmd);
-		free_array(arg);
-		return (ERROR_C);
+		g_exit_status = WEXITSTATUS(status);
+		return (WEXITSTATUS(status));
 	}
-	else if (access(cmd, X_OK) == -1)
+	else if (WIFSIGNALED(status))
 	{
-		exit_path(s, P_DNIED);
-		free(cmd);
-		free_array(arg);
-		return (P_DNIED);
+		g_exit_status = WTERMSIG(status) + 128;
+		if (WTERMSIG(status))
+		{	write(1,"\n",1);
+			return (WTERMSIG(status) + 128);
+		}
 	}
-	free(cmd);
-	free_array(arg);
 	return (EXIT_FAILURE);
+}
+
+int prepare_command(t_tree *root, t_helper *helper)
+{
+    helper->cmd = get_path(helper, root->content);
+    helper->option = get_options(helper, root->content);
+
+    if (!helper->cmd)
+    {
+        exit_path(root->content->content, ERROR_C);
+        g_exit_status = ERROR_C;
+        my_free(helper);
+        return (ERROR_C);
+    }
+    return (0);
 }
 
 int execute(t_tree *root, t_helper *helper)
 {
-	int		status;
-	pid_t pid;
-	
-	status = 0;
-	helper->cmd = get_path(helper, root->content);
-	helper->option = get_options(helper, root->content);
-	pid = fork();
-	if (pid == -1)
-		return (perror("fork"), EXIT_FAILURE);
-	if (pid == 0)
-	{
-		signal_handeler(CHILD);
-		if (execve(helper->cmd, helper->option, helper->envp) == -1)
-		{
-			status = check_cmd(helper->cmd, root->content->content,
-					helper->option);
-			exit(status);	
-		}
-		exit(EXIT_FAILURE);	
-	}
-	else
-	{
-		free(helper->cmd);
-		free_array(helper->option);
-		status = finish_status(pid);
-	}
-	return status;
+    int status;
+    pid_t pid;
+
+    if (prepare_command(root, helper) != 0)
+        return (ERROR_C);
+    pid = fork();
+    if (pid == -1)
+        return (perror("fork"), EXIT_FAILURE);
+    if (pid == 0)
+    {
+        signal_handeler(CHILD);
+        execve(helper->cmd, helper->option, helper->envp);
+        status = check_cmd(helper->cmd, root->content->content, helper->option);
+        g_exit_status = status;
+        exit(status);
+    }
+    else
+    {
+        my_free(helper);
+        status = finish_status(pid);
+        g_exit_status = status;
+    }
+    return status;
 }
+
+
+
+
 

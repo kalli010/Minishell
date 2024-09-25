@@ -6,11 +6,42 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 07:01:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/24 11:50:08 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+// t_file *add_file(t_file **list, char *file_name, t_ttype type)
+// {
+//     t_file *new_file = malloc(sizeof(t_file));
+//     t_file *current;
+
+//     if (!new_file)
+//         return (NULL);
+
+//     new_file->file_name = strdup(file_name);
+//     new_file->type = type;
+//     new_file->next = NULL;
+//     return (*list);
+// }
+
+// t_file *get_files(t_tree *root)
+// {
+//     t_file *file_list = NULL;
+//     t_tree *current = root;
+
+//     while (current && current->first_child && current->first_child->first_child)
+//     {
+//         if (current->content->type == OUTPUT || current->content->type == APPEND)
+//         {
+//             add_file(&file_list,current->content->content, current->content->type);
+//         }
+//         current = current->next_sibling;
+//     }
+//     return (file_list);
+// }
+
 
 static int	redirect_finished(pid_t pid)
 {
@@ -44,6 +75,20 @@ void	errors(int status, int fd)
 		exit(EXIT_FAILURE);
 	}
 }
+int	open_fd(char *file, int append)
+{
+	int	fd;
+
+	if (append)
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		errors(0, fd);
+	if (dup2(fd, STDOUT_FILENO) == -1)
+		errors(1, fd);
+	return (fd);
+}
 
 int	redirect_input(t_tree *root, t_helper *helper)
 {
@@ -70,20 +115,6 @@ int	redirect_input(t_tree *root, t_helper *helper)
 	return (status);
 }
 
-int	open_fd(char *file, int append)
-{
-	int	fd;
-
-	if (append)
-		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		errors(0, fd);
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		errors(1, fd);
-	return (fd);
-}
 
 int	redirect_output(t_tree *root, t_helper *helper)
 {
@@ -92,11 +123,14 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	pid_t	pid;
 	int		status;
 
-	file = root->content->next->content;
+	// t_file *files;
+
+	// files = get_files(root);
+	file =  root->content->next->content;
 	pid = fork();
 	if (pid == 0)
 	{
-		fd = open_fd(file, root->content->type == APPEND);
+		fd = open_fd(file, root->content->next->type== APPEND);
 		find_command(root->first_child, helper);
 		close(fd);
 		exit(EXIT_SUCCESS);

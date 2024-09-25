@@ -6,42 +6,28 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/17 23:52:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 00:56:34 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int is_only_slashes(t_tree *root)
-{
-    char *str;
-    int i;
 
-    str =  root->content->content;
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] != '/')
-            return (0);
-        i++;
-    }
-    return (1);
-}
 
 int check_root_content(t_tree  *root)
 {
-    if (!ft_strncmp(root->content->content,".",sizeof(".")))
+    if (!ft_strncmp(root->content->content,".", sizeof(".")))
     {
-        printf("minishell :.: filename argument required\n");
+        printf("minishell : .: filename argument required\n");
         printf(".: usage: . filename [arguments]\n");
         return (2);
     }
-    if (!ft_strncmp(root->content->content,"!",sizeof("!")))
+    if (!ft_strncmp(root->content->content, "!", sizeof("!")))
     {
-        printf("");
+        printf(""); 
         return (1);
     }
-    if (!ft_strncmp(root->content->content,"..",sizeof("..")))
+    if (!ft_strncmp(root->content->content, "..", sizeof("..")))
     {
         printf("..: command not found\n");
         return (127);
@@ -51,8 +37,11 @@ int check_root_content(t_tree  *root)
         printf("minishell: %s: Is a directory\n", root->content->content);
         return (126);
     }
+    if (is_only_bs(root))
+        return (127);  
     return (0);
 }
+
 
 int flag = 0;
     
@@ -63,7 +52,6 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
 
     if (!root || !root->content)
         return (EXIT_FAILURE);
-    // printf("helooooo\n");
     pid = fork();
     if (pid == 0)
     {
