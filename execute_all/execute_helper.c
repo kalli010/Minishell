@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 00:56:42 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 01:15:54 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int is_only_bs(t_tree *root)
     while (str[i])
     {
         if (str[i] != '\\')
-            return (0);
+            return (EXIT_SUCCESS);
         i++;
     }
     printf("minishell : %s:: command not found\n", str);
-    return (1); 
+    return (EXIT_FAILURE); 
 }
 
 int is_only_slashes(t_tree *root)
@@ -39,10 +39,10 @@ int is_only_slashes(t_tree *root)
     while (str[i])
     {
         if (str[i] != '/')  
-            return (0); 
+            return (EXIT_SUCCESS); 
         i++;
     }
-    return (1); 
+    return (EXIT_FAILURE); 
 }
 
 

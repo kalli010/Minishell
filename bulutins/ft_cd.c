@@ -6,75 +6,114 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/24 22:48:07 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 02:06:14 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-// static int is_directory(const char *dirc)
+
+static int cd_errors(void)
+{
+    g_exit_status = 1;
+    write(2, "minishell : cd : too many arguments\n", 37);
+    return (g_exit_status);
+}
+
+// static void update_pwd(char *old, char *curr, t_helper *helper)
 // {
-//     struct stat dir;
-//     if (stat(dirc,&dir) != 0)
-//         return (0);
-//     return (S_ISDIR(dir.st_mode));
-// }
-// static void  update_pwd(char *old,char *curr)
-// {
-//     char  *old_pwd;
+//     char *old_pwd;
 //     char *curr_pwd;
 
 //     old_pwd = ft_strjoin("OLDPWD=", old);
-//     curr_pwd = ft_strjoin("PWD=",curr);
-    
-    
+//     curr_pwd = ft_strjoin("PWD=", curr);
+//     ft_setenv(helper->envp, old_pwd);
+//     ft_setenv(helper->envp, curr_pwd);
+//     free(old_pwd);
+//     free(curr_pwd);
 // }
 
-static int	cd_errors(void)
+static int is_directory(const char *path)
 {
-	write(2, "minishell : cd : too many arguments\n", 37);
-	return (EXIT_FAILURE);
+    struct stat path_stat;
+    if (stat(path, &path_stat) != 0)
+        return (EXIT_SUCCESS);
+    return (S_ISDIR(path_stat.st_mode)); 
 }
 
-int ft_cd(t_list *list, t_helper *helper)
+char *get_target_path(t_list *list, t_helper *helper)
 {
     char *go_path;
-    char *current_dir;
-    char *new_dir;
-    printf("hello from cd \n");
-    current_dir = getcwd(NULL, 0);
-    if (!list)
-        return (EXIT_FAILURE);
-    
-    if (count_arg(list) != 1 && count_arg(list) != 0)
-        return cd_errors();
-
     list = list->next;
+
     if (!list)
     {
         go_path = ft_getenv(helper->envp, "HOME");
         if (!go_path)
-            return (EXIT_FAILURE); 
+        {
+            write(2, "minishell: cd: HOME not set\n", 28);
+            return (NULL);
+        }
     }
     else
+        go_path = ft_strdup(list->content);
+    return go_path;
+}
 
-        go_path = ft_strdup(list->content); 
+void handle_cd_error(const char *path, int error_type)
+{
+    write(2, "minishell: cd: ", 15);
+    write(2, path, strlen(path));
+
+    if (error_type == 1)
+        write(2, ": No such file or directory\n", 29);
+    else if (error_type == 2)
+        write(2, ": Permission denied\n", 20);
+}
+
+int change_directory(char *go_path)
+{
+    g_exit_status = 0;
+    if (!is_directory(go_path))
+    {
+        handle_cd_error(go_path, 1);
+        free(go_path);
+        g_exit_status = 1;
+        return (g_exit_status);
+    }
     if (chdir(go_path) != 0)
     {
-        write(2, "minishell: cd: ", 15);
-        perror(go_path); 
-        write(2, "\n", 1);
+        handle_cd_error(go_path, 2);
         free(go_path);
-        free(current_dir);
-        return (EXIT_FAILURE);
+        g_exit_status = 1;
+        return (g_exit_status);
     }
-    new_dir = getcwd(NULL, 0); 
-    // update_pwd(current_dir, new_dir, helper);
-
-    free(current_dir);
-    free(new_dir);
     free(go_path);
-    return (EXIT_SUCCESS);
+    return (g_exit_status);
 }
+
+
+int ft_cd(t_list *list, t_helper *helper)
+{
+    
+    if (!list)
+    {
+        g_exit_status = 1;
+        return (g_exit_status);
+    }
+    if (count_arg(list) != 1 && count_arg(list) != 0)
+        return cd_errors();
+
+    char *go_path = get_target_path(list, helper);
+    if (!go_path)
+    {
+        g_exit_status = 1;
+        return (g_exit_status);
+    }
+
+    return (change_directory(go_path));
+}
+
+
 
 

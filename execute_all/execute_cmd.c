@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 00:49:47 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 01:15:15 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int prepare_command(t_tree *root, t_helper *helper)
         my_free(helper);
         return (ERROR_C);
     }
-    return (0);
+    return (EXIT_SUCCESS);
 }
 
 int execute(t_tree *root, t_helper *helper)
