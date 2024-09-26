@@ -470,9 +470,9 @@ int check_red_with_cmd(t_list *list)
 {
   while(list)
   {
-    if(list->type == INPUT || list->type == OUTPUT || list->type == HEREDOC || list->type == APPEND)
+    if(list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
     {
-      if(list->next != NULL && list->next->next != NULL && list->next->next->type == COMMAND)
+      if(list->next != NULL && list->next->next != NULL && (list->next->next->type == COMMAND || list->next->next->type == OPTIONS))
         return(1);
     }
     list = list->next;
@@ -510,7 +510,7 @@ t_list *recreate_linked_list(t_list *list)
       tmp = list->next;
       while(tmp && (tmp->type == PATH || tmp->type == list->type))
         tmp = tmp->next;
-      if(tmp && tmp->type == COMMAND)
+      if(tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
       {
         start = tmp;
         while(tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
@@ -524,7 +524,8 @@ t_list *recreate_linked_list(t_list *list)
       ft_lstadd_back(&n_list, ft_lstnew(list->content));
       token_type(n_list);
     }
-    else {
+    else
+    {
       ft_lstadd_back(&n_list, ft_lstnew(list->content));
       token_type(n_list);
     }
@@ -538,11 +539,30 @@ int check_red(t_list *list)
 {
   while(list)
   {
-    if(list->type == OUTPUT || list->type == INPUT)
+    if(list->type == OUTPUT || list->type == INPUT || list->type == APPEND)
       return(1);
     list = list->next;
   }
   return(0);
+}
+
+void create_list_with_ap(t_list **start, t_list **tmp)
+{
+  t_list *node;
+  t_list *end;
+  t_list *last;
+
+  last = (*tmp)->back;
+  node = (*start)->next;
+  (*start)->next = *tmp;
+  (*tmp)->back = *start;
+  tmp = &(*tmp)->next;
+  end = (*tmp)->next;
+  (*tmp)->next = node;
+  node->back = *tmp;
+  last->next = end;
+  if(end != NULL)
+    end->back = last;
 }
 
 void create_list_with_red(t_list **list)
@@ -554,15 +574,17 @@ void create_list_with_red(t_list **list)
   tmp = *list;
   while(tmp)
   {
-    if(tmp->type == OUTPUT || tmp->type == INPUT)
+    if(tmp->type == OUTPUT || tmp->type == INPUT || tmp->type == APPEND)
     {
       start = tmp;
-      while(tmp->next != NULL && (tmp->next->type == start->type\
+      while(tmp->next != NULL && (tmp->next->type == OUTPUT || tmp->next->type == INPUT || tmp->next->type == APPEND\
         || tmp->next->type == PATH))
         tmp = tmp->next;
-      if(tmp != NULL)
+      if(start->next && start->next != tmp)
       {
-        if(start->next && start->next != tmp)
+        if(tmp->back->type == APPEND)
+          create_list_with_ap(&start->back, &tmp->back);
+        else
         {
           node = start->next->next;
           start->next->back = tmp->back;
@@ -748,7 +770,8 @@ void var_dquotes(char **xenv, char **env, t_list **list)
   s = len;
   if((*list)->content[len] == '$')
     len++;
-  while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' && (*list)->content[len] != '$')
+  while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' \
+    && (*list)->content[len] != '$')
     len++;
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
   s = len;

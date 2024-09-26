@@ -56,3 +56,5 @@ declare -x data1
 (minishell)-> $$USER
 kali  (1)
 
+
+ls > f1 > f2 >> f3
