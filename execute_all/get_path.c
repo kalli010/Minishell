@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 08:31:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 04:46:34 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,3 +106,6 @@ char	**get_options(t_helper *helper, t_list *list)
 	op[i] = NULL;
 	return (op);
 }
+
+
+

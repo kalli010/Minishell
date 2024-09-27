@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/24 11:50:08 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/27 01:47:35 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,9 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	pid_t	pid;
 	int		status;
 
-	// t_file *files;
-
-	// files = get_files(root);
-	file =  root->content->next->content;
+	file = root->content->next->content;
+	if (!ft_strncmp(root->content->content, ">>", 2))
+		root->content->next->type = APPEND;
 	pid = fork();
 	if (pid == 0)
 	{

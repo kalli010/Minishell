@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/10 10:48:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/26 05:52:27 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	count_arg_echo(t_list *list)
 	count = 0;
 	temp_list = list;
 	temp_list = temp_list->next;
-	while (temp_list && (temp_list->type == OPTIONS || temp_list->type == COMMAND))
+	while (temp_list && (temp_list->type == OPTIONS))
 	{
 		count++;
 		temp_list = temp_list->next;
@@ -51,7 +51,7 @@ static void	print_arg(char **arg, int start)
 	{
 		ft_putstr_fd(arg[i], STDOUT_FILENO);
 		if (arg[i + 1])
-			ft_putchar_fd('a', STDOUT_FILENO);
+			ft_putchar_fd(' ', STDOUT_FILENO);
 		i++;
 	}
 }

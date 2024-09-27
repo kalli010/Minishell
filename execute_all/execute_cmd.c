@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 01:15:15 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 04:47:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int finish_status(pid_t pid)
 int prepare_command(t_tree *root, t_helper *helper)
 {
     helper->cmd = get_path(helper, root->content);
-    helper->option = get_options(helper, root->content);
+    helper->option = get_options(helper,root->content);
 
     if (!helper->cmd)
     {

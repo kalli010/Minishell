@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 02:09:55 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/25 04:46:38 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,5 @@ void exit_path(char *s, int status);
 void handle_cd_error(const char *path, int error_type);
 char *get_target_path(t_list *list, t_helper *helper);
 int is_directory(const char *path);
+
 #endif
