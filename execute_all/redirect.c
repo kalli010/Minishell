@@ -6,42 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/27 01:47:35 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/27 01:50:52 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-// t_file *add_file(t_file **list, char *file_name, t_ttype type)
-// {
-//     t_file *new_file = malloc(sizeof(t_file));
-//     t_file *current;
-
-//     if (!new_file)
-//         return (NULL);
-
-//     new_file->file_name = strdup(file_name);
-//     new_file->type = type;
-//     new_file->next = NULL;
-//     return (*list);
-// }
-
-// t_file *get_files(t_tree *root)
-// {
-//     t_file *file_list = NULL;
-//     t_tree *current = root;
-
-//     while (current && current->first_child && current->first_child->first_child)
-//     {
-//         if (current->content->type == OUTPUT || current->content->type == APPEND)
-//         {
-//             add_file(&file_list,current->content->content, current->content->type);
-//         }
-//         current = current->next_sibling;
-//     }
-//     return (file_list);
-// }
-
 
 static int	redirect_finished(pid_t pid)
 {
