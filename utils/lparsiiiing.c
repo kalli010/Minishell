@@ -847,7 +847,7 @@ char *ft_getenv(char **env, char *str)
   return(new_var);
 }
 
-void var_dquotes(char **xenv, char **env, t_list **list)
+void var_dquotes(char **env, t_list **list)
 {
   char *fstr;
   char *sstr;
@@ -873,11 +873,7 @@ void var_dquotes(char **xenv, char **env, t_list **list)
     len++;
   tstr = ft_substr((*list)->content, s, len - s);
   if(sstr)
-  {
     var = ft_getenv(env, sstr);
-    if(var == NULL)
-      var = ft_getenv(xenv, sstr);
-  }
   else {
     var = "";
   }
@@ -935,7 +931,7 @@ char **var_split(char *str)
   return(list);
 }
 
-void var_quotes(char **xenv, char **env, t_list **list)
+void var_quotes(char **env, t_list **list)
 {
   char **array;
   t_list *n_list;
@@ -943,7 +939,7 @@ void var_quotes(char **xenv, char **env, t_list **list)
   t_list *back;
 
   n_list = NULL;
-  var_dquotes(xenv, env, list);
+  var_dquotes(env, list);
   if((*list)->content[0] != '\0')
   {
     array = var_split((*list)->content);
@@ -966,7 +962,7 @@ void var_quotes(char **xenv, char **env, t_list **list)
   }
 }
 
-void expander(char **xenv, char **env, t_list **list)
+void expander(char **env, t_list **list)
 {
   int i;
 
@@ -982,7 +978,7 @@ void expander(char **xenv, char **env, t_list **list)
       }
       if((*list)->content[i] == '$')
       {
-        var_dquotes(xenv, env, list);
+        var_dquotes(env, list);
         break;
       }
     }
@@ -1001,7 +997,7 @@ void expander(char **xenv, char **env, t_list **list)
     }
     else if((*list)->content[i] == '$')
     {
-      var_quotes(xenv, env, list);
+      var_quotes(env, list);
       break;
     }
     i++;
@@ -1019,7 +1015,7 @@ int check_d(char *str)
   return(0);
 }
 
-void check_expander(char **xenv, char **env, t_list **list)
+void check_expander(char **env, t_list **list)
 {
   t_list *tmp;
 
@@ -1027,7 +1023,7 @@ void check_expander(char **xenv, char **env, t_list **list)
   while(*list)
   {
     while(check_d((*list)->content))
-      expander(xenv, env, list);
+      expander(env, list);
     tmp = *list;
     if(*list != NULL)
       (*list) = (*list)->next;
@@ -1102,30 +1098,30 @@ void set_var(t_list *list, char ***env)
   *env = n_env;
 }
 
-void check_var(t_list *list, char ***env, char ***xenv)
+void check_var(t_list *list, char ***env)
 {
   int i;
 
   while(list)
   {
     i = -1;
-    while(list->content[++i])
-    {
-      if(list->content[i] == '=')
-      {
-        if(list->back == NULL && list->next == NULL)
-        {
-          list->type = SET_VAR;
-          set_var(list, xenv);
-        }
-        else if(list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
-        {
-          list->type = SET_VAR;
-          set_var(list, env);
-        }
-        break;
-      }
-    }
+    //while(list->content[++i])
+    //{
+    //  if(list->content[i] == '=')
+    //  {
+    //    if(list->back == NULL && list->next == NULL)
+    //    {
+    //      list->type = SET_VAR;
+    //      set_var(list, xenv);
+    //    }
+    //    else if(list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
+    //    {
+    //      list->type = SET_VAR;
+    //      set_var(list, env);
+    //    }
+    //    break;
+    //  }
+    //}
     if(list->back != NULL && list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
     {
       list->type = SET_VAR;
