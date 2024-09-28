@@ -368,6 +368,7 @@ char *split_tokens(char *tokens)
         }
         str[++len] = tokens[i++];
       }
+      i--;
     }
   }
   str[++len] = '\0';
