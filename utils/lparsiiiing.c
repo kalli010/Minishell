@@ -283,6 +283,98 @@ int token_count(char *str)
   return(c);
 }
 
+int count_words(char *str)
+{
+  int i;
+  int c;
+  int in_word;
+  char q;
+
+  i = -1;
+  c = 0;
+  in_word = 0;
+  while(str[++i])
+  {
+    if(str[i] == '"' || str[i] == '\'')
+    {
+      q = str[i];
+      while(str[++i] != q);
+    }
+    if(str[i] == ' ')
+      in_word = 0;
+    else if(str[i] != ' ' && in_word == 0)
+    {
+      c++;
+      in_word = 1;
+    }
+  }
+  return(c);
+}
+
+char *split_tokens(char *tokens)
+{
+  char *str;
+  int len;
+  int i;
+  int wd;
+  char q;
+
+  wd = count_words(tokens);
+  i = -1;
+  len = 0;
+  while(tokens[++i])
+  {
+    if(tokens[i] == '"' || tokens[i] == '\'')
+    {
+      q = tokens[i];
+      len++;
+      while(tokens[++i] != q)
+        len++;
+    }
+    if(tokens[i] != ' ')
+      len++;
+  }
+  str = (char *)malloc(sizeof(char) * (len + (wd - 1) + 1));
+  i = -1;
+  len = -1;
+  wd = 0;
+  while(tokens[++i])
+  {
+    if(tokens[i] == '"' || tokens[i] == '\'')
+    {
+      q = tokens[i];
+      str[++len] = tokens[i];
+      while(tokens[++i] != q)
+        str[++len] = tokens[i];
+      str[++len] = tokens[i++];
+    }
+    if(tokens[i] == ' ')
+    {
+      wd = 0;
+      str[++len] = ' ';
+      while(tokens[++i] == ' ');
+    }
+    if(tokens[i] != ' ' && wd == 0)
+    {
+      wd = 1;
+      while(tokens[i] != '\0' && tokens[i] != ' ')
+      {
+        if(tokens[i] == '"' || tokens[i] == '\'')
+        {
+          q = tokens[i];
+          str[++len] = tokens[i];
+          while(tokens[++i] != q)
+            str[++len] = tokens[i];
+        }
+        str[++len] = tokens[i++];
+      }
+    }
+  }
+  str[++len] = '\0';
+  free(tokens);
+  return(str);
+}
+
 void echo_create_tokens(char *str, char **tokens, int j)
 {
   int i;
@@ -343,6 +435,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
         
       }
       tokens[j] = ft_substr(str, s, i - s);
+      tokens[j] = split_tokens(tokens[j]);
       j++;
       x++;
       if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
@@ -797,34 +890,6 @@ void var_dquotes(char **xenv, char **env, t_list **list)
 void var_squotes(t_list **list)
 {
   (void)list;
-}
-
-int count_words(char *str)
-{
-  int i;
-  int c;
-  int in_word;
-  char q;
-
-  i = -1;
-  c = 0;
-  in_word = 0;
-  while(str[++i])
-  {
-    if(str[i] == '"' || str[i] == '\'')
-    {
-      q = str[i];
-      while(str[++i] != q);
-    }
-    if(str[i] == ' ')
-      in_word = 0;
-    else if(str[i] != ' ' && in_word == 0)
-    {
-      c++;
-      in_word = 1;
-    }
-  }
-  return(c);
 }
 
 void get_words(int *i, int *end, char *str)

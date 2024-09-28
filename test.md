@@ -58,3 +58,18 @@ kali  (1)
 
 
 ls > f1 > f2 >> f3
+
+
+
+
+echo -nnnnnnnnn      sdfsdf       "1           2"      3     4
+
+
+echo -n 1   2    "3    4"
+
+
+
+echo -nl   1   2    "4   5  6  "
+
+
+echo -nl "1    2"  3
