@@ -1032,17 +1032,17 @@ int check_d(char *str)
 int check_expander(char **env, t_list **list)
 {
   t_list *tmp;
-  int i;
 
-  i = 0;
   tmp = NULL;
   while(*list)
   {
-    i++;
     while(check_d((*list)->content))
     {
       if(expander(env, list))
-        return(i);
+      {
+        (*list)->back->i = 2;
+        break;
+      }
     }
     tmp = *list;
     if(*list != NULL)
