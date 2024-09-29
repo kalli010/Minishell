@@ -6,19 +6,23 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 13:11:27 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 06:30:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 
-
-void	my_free(t_helper *helper)
+void my_free(t_helper *helper)
 {
-	free(helper->cmd);
-	free_array(helper->option);
-	free(helper);
+    if (helper)
+    {
+        free(helper->cmd);
+        helper->cmd = NULL;
+        free_array(helper->option);
+        helper->option = NULL;
+        free(helper);
+    }
 }
 
 int	check_upper(char c)
