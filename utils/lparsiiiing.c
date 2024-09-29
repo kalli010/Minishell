@@ -722,14 +722,14 @@ int symbols_check(t_list *list)
         && list->back->type != COMMAND && list->back->type != OPTIONS \
         && list->back->type != VAR && list->back->type != PATH \
         && list->back->type != SET_VAR && list->back->type != PATH_COMMAND \
-        && list->back->type != DELIMITER)
+        && list->back->type != DELIMITER && list->back->type != PARENTHESIS)
       {
         printf("9\n");
         printf("syntax error\n");
         return(1);
       }
       else if(list->back != NULL && (list->type == list->back->type) && \
-        (list->type != WORD && list->type != OPTIONS))
+        (list->type != WORD && list->type != OPTIONS && list->type != PARENTHESIS))
       {
         printf("8\n");
         printf("syntax error\n");
@@ -907,12 +907,12 @@ void get_words(int *i, int *end, char *str)
   *end = *i;
   while(str[*end] && str[*end] != ' ')
   {
-    (*end)++;
     if(str[*end] == '"' || str[*end] == '\'')
     {
       q = str[*end];
       while(str[++(*end)] != q);
     }
+    (*end)++;
   }
 }
 
@@ -1043,6 +1043,7 @@ int check_expander(char **env, t_list **list)
         (*list)->back->i = 2;
         break;
       }
+      token_type(*list);
     }
     tmp = *list;
     if(*list != NULL)
@@ -1253,10 +1254,12 @@ int check_parenthesis_error(t_list *list)
   {
     if(node->content[0] == 40)
     {
-      if(node->back != NULL && \
-        ((node->back->type != PIPE && node->back->type != AND \
-        && node->back->type != OR) \
-        || node->next->type != COMMAND))
+      if((node->back != NULL && \
+        (node->back->type != PIPE && node->back->type != AND \
+        && node->back->type != OR && node->back->content[0] != 40)) \
+        || (node->next != NULL && node->next->type != COMMAND \
+        && node->next->type != PATH_COMMAND \
+        && node->next->content[0] != 40))
         return(1);
       p++;
     }
@@ -1267,7 +1270,7 @@ int check_parenthesis_error(t_list *list)
     if(list->content[0] == 41)
     {
       if(list->next != NULL && \
-        ((list->back->type != COMMAND && list->back->type != OPTIONS)\
+        ((list->back && list->back->type != COMMAND && list->back->type != OPTIONS && list->back->content[0] != 41)\
         || (list->next->type == COMMAND \
         || list->next->type == OPTIONS)))
         return(1);
