@@ -1226,6 +1226,7 @@ void add_sibling_to_child(t_tree *child, t_tree *sibling)
   }
 }
 
+
 int check_parenthesis(t_list *list)
 {
   int c;
