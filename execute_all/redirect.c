@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/27 01:50:52 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 05:53:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,11 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	int		status;
 
 	file = root->content->next->content;
+	if (root->content->i == 2)
+	{
+		printf("%s ambiguous redirect\n",file);
+		return (EXIT_FAILURE);
+	}
 	if (!ft_strncmp(root->content->content, ">>", 2))
 		root->content->next->type = APPEND;
 	pid = fork();

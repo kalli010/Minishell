@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/26 05:56:37 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 05:55:36 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,32 +43,32 @@ int check_root_content(t_tree  *root)
 }
 
 
-int flag = 0;
+// int flag = 0;
     
-static int execute_parenthesis(t_tree *root, t_helper *helper)
-{
-    pid_t pid;
-    int status;
+// static int execute_parenthesis(t_tree *root, t_helper *helper)
+// {
+//     pid_t pid;
+//     int status;
 
-    if (!root || !root->content)
-        return (EXIT_FAILURE);
-    pid = fork();
-    if (pid == 0)
-    {
-        if (!!find_command(root, helper))
-            exit(EXIT_FAILURE);
-        exit(EXIT_SUCCESS);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) 
-            return WEXITSTATUS(status); 
-        return (EXIT_FAILURE);
-    }
-    return (EXIT_FAILURE);
+//     if (!root || !root->content)
+//         return (EXIT_FAILURE);
+//     pid = fork();
+//     if (pid == 0)
+//     {
+//         if (!!find_command(root, helper))
+//             exit(EXIT_FAILURE);
+//         exit(EXIT_SUCCESS);
+//     }
+//     else if (pid > 0)
+//     {
+//         waitpid(pid, &status, 0);
+//         if (WIFEXITED(status)) 
+//             return WEXITSTATUS(status); 
+//         return (EXIT_FAILURE);
+//     }
+//     return (EXIT_FAILURE);
 
-}
+// }
 
 int	find_command(t_tree *root, t_helper *helper)
 {
@@ -78,11 +78,11 @@ int	find_command(t_tree *root, t_helper *helper)
     g_exit_status = check_root_content(root);
     if (g_exit_status !=  0)
         return (g_exit_status);
-    if (root->content->type == AND && flag == 0)
-    {
-        flag = 1;
-        return (execute_parenthesis(root, helper));
-    }
+    // if (root->content->type == AND && flag == 0)
+    // {
+    //     flag = 1;
+    //     return (execute_parenthesis(root, helper));
+    // }
     if (root->content->type == INPUT)
     {
         if (redirect_input(root, helper) != EXIT_SUCCESS)

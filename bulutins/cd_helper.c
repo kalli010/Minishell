@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 02:07:29 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 02:09:50 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 05:45:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char *get_target_path(t_list *list, t_helper *helper)
 {
     char *go_path;
     list = list->next;
-
+  
     if (!list)
     {
         go_path = ft_getenv(helper->envp, "HOME");
@@ -35,7 +35,7 @@ char *get_target_path(t_list *list, t_helper *helper)
         }
     }
     else
-        go_path = ft_strdup(list->content);
+        go_path = *(get_options(helper,list));
     return go_path;
 }
 
