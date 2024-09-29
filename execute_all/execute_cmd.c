@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 06:35:03 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 07:07:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ int prepare_command(t_tree *root, t_helper *helper)
     {
         exit_path(root->content->content, ERROR_C);
         g_exit_status = ERROR_C;
-        my_free(helper);
-        return (ERROR_C);
+		return (ERROR_C);
     }
     return (EXIT_SUCCESS);
 }

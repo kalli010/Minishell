@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 04:46:34 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 07:00:04 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,34 +78,33 @@ char	*get_path(t_helper *helper, t_list *list)
 	return (path);
 }
 
-char	**get_options(t_helper *helper, t_list *list)
+char **get_options(t_helper *helper, t_list *list)
 {
-	int		i;
-	int		count;
-	char	**op;
+    int i;
+    int count;
+    char **op;
 
-	count = count_arg(list);
-	if (count < 1)
-	{
-		op = NULL;
-		return (NULL);
-	}
-	op = (char **)malloc((count + 2) * sizeof(char *));
-	if (!op)
-		return (NULL);
-	op[0] = get_path(helper, list);
-	if (!op[0])
-		return (free(op), (NULL));
-	list = list->next;
-	i = 1;
-	while (list && list->type == OPTIONS)
-	{
-		op[i++] = ft_strdup(list->content);
-		list = list->next;
-	}
-	op[i] = NULL;
-	return (op);
+    count = count_arg(list);
+    if (count < 1)
+        return (NULL);
+    op = (char **)malloc((count + 2) * sizeof(char *));
+    if (!op)
+        return (NULL);
+    
+    op[0] = get_path(helper, list);
+    if (!op[0])
+        return (free(op),NULL);
+    list = list->next;
+    i = 1;
+    while (list && list->type == OPTIONS)
+    {
+        op[i++] = ft_strdup(list->content);
+        list = list->next;
+    }
+    op[i] = NULL;
+    return (op);
 }
+
 
 
 

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 02:07:29 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 05:45:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 07:13:08 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ int is_directory(const char *path)
 char *get_target_path(t_list *list, t_helper *helper)
 {
     char *go_path;
-    list = list->next;
-  
-    if (!list)
+    
+    go_path = NULL;
+    if (list)
+        list = list->next;
+    if (!list || !list->content)
     {
         go_path = ft_getenv(helper->envp, "HOME");
         if (!go_path)
@@ -34,10 +36,15 @@ char *get_target_path(t_list *list, t_helper *helper)
             return (NULL);
         }
     }
-    else
-        go_path = *(get_options(helper,list));
+    else if (list->type == OPTIONS)
+    {
+        go_path = ft_strdup(list->content);
+        if (!go_path)
+            return (NULL);
+    }        
     return go_path;
 }
+
 
 void handle_cd_error(const char *path, int error_type)
 {

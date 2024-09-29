@@ -4,6 +4,7 @@
 int ft_unset(t_list *list,t_helper *helper)
 {
 	char **env;
+	
 	g_exit_status = 1;
 	env = helper->envp;
 	if(list->back == NULL && list->next->next == NULL)
