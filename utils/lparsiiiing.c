@@ -293,6 +293,8 @@ int count_words(char *str)
   i = -1;
   c = 0;
   in_word = 0;
+  if(str == NULL)
+    return(0);
   while(str[++i])
   {
     if(str[i] == '"' || str[i] == '\'')
@@ -847,7 +849,7 @@ char *ft_getenv(char **env, char *str)
   return(new_var);
 }
 
-void var_dquotes(char **env, t_list **list)
+int var_dquotes(char **env, t_list **list)
 {
   char *fstr;
   char *sstr;
@@ -874,14 +876,21 @@ void var_dquotes(char **env, t_list **list)
   tstr = ft_substr((*list)->content, s, len - s);
   if(sstr)
     var = ft_getenv(env, sstr);
-  else {
+  else
     var = "";
-  }
+  s = count_words(var);
+  if(s > 1 && (*list)->back && ((*list)->back->type == APPEND || (*list)->back->type == INPUT \
+    || (*list)->back->type == OUTPUT))
+    return(1);
+  if(s == 0 && tstr == NULL && (*list)->back && ((*list)->back->type == APPEND || (*list)->back->type == INPUT \
+    || (*list)->back->type == OUTPUT))
+    return(1);
   free(sstr);
   free((*list)->content);
   (*list)->content = get_new_list(fstr, var, tstr);
   free(fstr);
   free(tstr);
+  return(0);
 }
 
 void var_squotes(t_list **list)
@@ -931,7 +940,7 @@ char **var_split(char *str)
   return(list);
 }
 
-void var_quotes(char **env, t_list **list)
+int var_quotes(char **env, t_list **list)
 {
   char **array;
   t_list *n_list;
@@ -939,7 +948,8 @@ void var_quotes(char **env, t_list **list)
   t_list *back;
 
   n_list = NULL;
-  var_dquotes(env, list);
+  if(var_dquotes(env, list))
+    return(1);
   if((*list)->content[0] != '\0')
   {
     array = var_split((*list)->content);
@@ -960,9 +970,10 @@ void var_quotes(char **env, t_list **list)
     }
     ft_lstadd_back(list, tmp);
   }
+  return(0);
 }
 
-void expander(char **env, t_list **list)
+int expander(char **env, t_list **list)
 {
   int i;
 
@@ -978,7 +989,8 @@ void expander(char **env, t_list **list)
       }
       if((*list)->content[i] == '$')
       {
-        var_dquotes(env, list);
+        if(var_dquotes(env, list))
+          return(1);
         break;
       }
     }
@@ -997,11 +1009,13 @@ void expander(char **env, t_list **list)
     }
     else if((*list)->content[i] == '$')
     {
-      var_quotes(env, list);
+      if(var_quotes(env, list))
+        return(1);
       break;
     }
     i++;
   }
+  return(0);
 }
 
 int check_d(char *str)
@@ -1015,15 +1029,21 @@ int check_d(char *str)
   return(0);
 }
 
-void check_expander(char **env, t_list **list)
+int check_expander(char **env, t_list **list)
 {
   t_list *tmp;
+  int i;
 
+  i = 0;
   tmp = NULL;
   while(*list)
   {
+    i++;
     while(check_d((*list)->content))
-      expander(env, list);
+    {
+      if(expander(env, list))
+        return(i);
+    }
     tmp = *list;
     if(*list != NULL)
       (*list) = (*list)->next;
@@ -1032,6 +1052,7 @@ void check_expander(char **env, t_list **list)
   if(*list != NULL)
     while((*list)->back != NULL)
       *list = (*list)->back;
+  return(0);
 }
 
 void set_var(t_list *list, char ***env)

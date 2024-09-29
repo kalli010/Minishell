@@ -48,6 +48,7 @@ typedef struct s_list{
   t_ttype type;
   struct s_list *next;
   struct s_list *back;
+  int i;
 } t_list;
 
 //LCRS tree
