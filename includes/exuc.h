@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/30 23:19:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 05:54:49 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,6 @@ char *get_target_path(t_list *list, t_helper *helper);
 int is_directory(const char *path);
 int	errors(char *file,int status, int fd);
 int prepare_command(t_tree *root, t_helper *helper);
+int	check_file(const char *file);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 02:07:29 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 07:13:08 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 05:56:53 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ void handle_cd_error(const char *path, int error_type)
     write(2, path, strlen(path));
 
     if (error_type == 1)
+    {
+        write(2,"minishell",10);
         write(2, ": No such file or directory\n", 29);
+    }
     else if (error_type == 2)
         write(2, ": Permission denied\n", 20);
 }

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 04:03:02 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 05:52:24 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,13 @@ char	**get_envp(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 
-char	*get_cmd_path(t_helper *helper, t_list *list)
+char	*find_in_path(char **dir, t_list *list)
 {
 	char	*path;
-	char	**dir;
 	char	*temp;
 	int		i;
 
 	i = 0;
-	dir = get_envp(helper->envp);
-	if (dir == NULL)
-		return (NULL);
-	path = NULL;
 	while (dir[i] != NULL)
 	{
 		temp = ft_strjoin(dir[i], "/");
@@ -43,14 +38,26 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 		free(temp);
 		if (access(path, F_OK) == 0)
 		{
-			free_array(dir);
 			return (path);
 		}
-		(free(path), path = NULL);
+		free(path);
 		i++;
 	}
+	return (NULL);
+}
+
+char	*get_cmd_path(t_helper *helper, t_list *list)
+{
+	char	**dir;
+	char	*path;
+
+	dir = get_envp(helper->envp);
+	if (dir == NULL)
+		return (NULL);
+	path = find_in_path(dir, list);
+	free_array(dir);
 	if (path)
-		return (free_array(dir), path);
+		return (path);
 	else
 		return (ft_strdup(list->content));
 }
@@ -79,34 +86,3 @@ char	*get_path(t_helper *helper, t_list *list)
 		path = get_path_of_cpath(helper, list);
 	return (path);
 }
-
-char **get_options(t_helper *helper, t_list *list)
-{
-    int i;
-    int count;
-    char **op;
-
-    count = count_arg(list);
-    if (count < 1)
-        return (NULL);
-    op = (char **)malloc((count + 2) * sizeof(char *));
-    if (!op)
-        return (NULL);
-    
-    op[0] = get_path(helper, list);
-    // if (!op[0])
-    //     return (free(op),NULL);
-    list = list->next;
-    i = 1;
-    while (list && list->type == OPTIONS)
-    {
-        op[i++] = ft_strdup(list->content);
-        list = list->next;
-    }
-    op[i] = NULL;
-    return (op);
-}
-
-
-
-

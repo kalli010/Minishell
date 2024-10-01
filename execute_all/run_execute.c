@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 02:01:22 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 05:18:00 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ int	find_command(t_tree *root, t_helper *helper)
     //     flag = 1;
     //     return (execute_parenthesis(root, helper));
     // }
-    printf("\n\n\n%d\n\n\n",g_exit_status);
-    dprintf(2,"sdfsdfgsd     %s\n",  root->content->content);
+
     if (root->content->type == INPUT)
     {
         if (redirect_input(root, helper) != EXIT_SUCCESS)
