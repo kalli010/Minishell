@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 07:01:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/30 02:10:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static int	ft_all_isdigit(char *data)
 	}
 	return (1);
 }
+
+
 
 static int	exit_errors(int status)
 {
@@ -46,14 +48,14 @@ unsigned char	ft_exit(t_tree *root, t_helper *helper)
 
 	status =  g_exit_status;
 	printf("exit\n");
-	if (count_arg(root->content) > 1)
-		return (exit_errors(1));
 	if (root->content->next && root->content->next->content)
     {
         if (!ft_all_isdigit(root->content->next->content))
             return (exit_errors(0));
         status = ft_atoi(root->content->next->content);
     }
+	else if (count_arg(root->content) > 1)
+		return (exit_errors(1));
 	free_list(root->content);
 	my_free(helper);
 	exit(status);

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/25 01:15:54 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 04:32:36 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int is_only_bs(t_tree *root)
             return (EXIT_SUCCESS);
         i++;
     }
-    printf("minishell : %s:: command not found\n", str);
+    fprintf(stderr, "minishell : %s: command not found\n", str);
     return (EXIT_FAILURE); 
 }
 
@@ -90,4 +90,26 @@ int check_cmd(char *cmd, char *s, char **arg)
         return (P_DNIED);
     }
     return (EXIT_FAILURE);
+}
+
+int	errors(char *file,int status, int fd)
+{
+	g_exit_status = 1;
+	if (status == 0)
+	{
+		write(2,"No such file or directory\n",27);
+		return(g_exit_status);
+	}
+	if (status == 1)
+	{
+		perror("dup2 error");
+		close(fd);
+		return(g_exit_status);
+	}
+	if (status == 2)
+	{
+		printf("%s ambiguous redirect\n",file);
+		return(g_exit_status);
+	}
+	return (EXIT_SUCCESS);
 }

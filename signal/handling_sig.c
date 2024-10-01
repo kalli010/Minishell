@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/07 14:55:28 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 11:35:25 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ctr_c(int sig)
 {
 	if (sig == SIGINT)
 	{
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

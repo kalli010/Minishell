@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 05:37:18 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 05:11:16 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ static void update_pwd(char *old, char *curr, t_helper *helper)
     oldpwd_node.next = NULL;
     currpwd_node.content = curr_pwd;
     currpwd_node.next = NULL;
-    set_var(&oldpwd_node, &(helper->envp));
-    set_var(&currpwd_node, &(helper->envp));
+    set_var(&oldpwd_node, &(helper->envp),&(helper->xenv));
+    set_var(&currpwd_node, &(helper->envp),&(helper->xenv));
     free(old_pwd);
     free(curr_pwd);
 }

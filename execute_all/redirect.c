@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 05:53:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/30 23:29:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,6 @@ static int	redirect_finished(pid_t pid)
 	return (EXIT_FAILURE);
 }
 
-void	errors(int status, int fd)
-{
-	if (status == 0)
-	{
-		perror("open error ");
-		exit(EXIT_FAILURE);
-	}
-	if (status == 1)
-	{
-		perror("dup2 error");
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-}
 int	open_fd(char *file, int append)
 {
 	int	fd;
@@ -53,37 +39,57 @@ int	open_fd(char *file, int append)
 	else
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		errors(0, fd);
+		errors(file,0, fd);
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		errors(1, fd);
+		errors(file,1, fd);
 	return (fd);
+}
+
+int	redirect_input_handler(char *file, t_tree *root, t_helper *helper)
+{
+	int	fd;
+
+	fd = open(file, O_RDONLY, 0644);
+	if (fd == -1)
+	{
+		errors(file, 0, fd);
+		return g_exit_status;
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		errors(file, 1, fd);
+		close(fd);
+		return g_exit_status;
+	}
+	close(fd);
+	find_command(root->first_child, helper);
+	return (EXIT_SUCCESS);
 }
 
 int	redirect_input(t_tree *root, t_helper *helper)
 {
 	char	*file;
-	int		fd;
 	pid_t	pid;
 	int		status;
 
+	if (root->content->i == 2)
+		return (errors(root->content->next->content, 2, 0), g_exit_status);
 	file = root->content->next->content;
 	pid = fork();
 	if (pid == 0)
 	{
-		fd = open(file, O_RDONLY, 0644);
-		if (fd == -1)
-			errors(0, fd);
-		if (dup2(fd, STDIN_FILENO) == -1)
-			errors(1, fd);
-		close(fd);
-		find_command(root->first_child, helper);
+		if (redirect_input_handler(file, root, helper) != EXIT_SUCCESS)
+			exit(g_exit_status);
+
 		exit(EXIT_SUCCESS);
 	}
 	else
+	{
 		status = redirect_finished(pid);
-	return (status);
+		g_exit_status = status;
+	}
+	return g_exit_status;
 }
-
 
 int	redirect_output(t_tree *root, t_helper *helper)
 {
@@ -92,12 +98,9 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	pid_t	pid;
 	int		status;
 
-	file = root->content->next->content;
 	if (root->content->i == 2)
-	{
-		printf("%s ambiguous redirect\n",file);
-		return (EXIT_FAILURE);
-	}
+		return (errors(root->content->next->content, 2, 0), g_exit_status);
+	file = root->content->next->content;
 	if (!ft_strncmp(root->content->content, ">>", 2))
 		root->content->next->type = APPEND;
 	pid = fork();
@@ -109,6 +112,9 @@ int	redirect_output(t_tree *root, t_helper *helper)
 		exit(EXIT_SUCCESS);
 	}
 	else
+	{
 		status = redirect_finished(pid);
-	return (status);
+		g_exit_status = status;
+	}
+	return (g_exit_status);
 }

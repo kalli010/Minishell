@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 08:51:00 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/09/29 09:50:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ int	ft_pwd(t_list *list)
 	
 	if (getcwd(buff, sizeof(buff)) != NULL)
 	{
+		g_exit_status = 0;
 		printf("%s\n", buff);
-		return (EXIT_SUCCESS);
+		return (g_exit_status);
 	}
 	perror("minishell : pwd");
     return (g_exit_status);

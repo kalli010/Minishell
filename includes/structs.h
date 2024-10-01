@@ -27,6 +27,7 @@ typedef struct helper
     char **envp;
     char  *cmd;
     char  **option;
+    char **xenv;
     pid_t	pid;
     int exit_status;
     bool flag;

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 07:00:04 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 04:03:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 		(free(path), path = NULL);
 		i++;
 	}
-	free_array(dir);
-	return (path);
+	if (path)
+		return (free_array(dir), path);
+	else
+		return (ft_strdup(list->content));
 }
 
 char	*get_path_of_cpath(t_helper *helper, t_list *list)
@@ -63,7 +65,7 @@ char	*get_path_of_cpath(t_helper *helper, t_list *list)
 		free_array(dir);
 		return (ft_strdup(list->content));
 	}
-	return (NULL);
+	return (ft_strdup(list->content));
 }
 
 char	*get_path(t_helper *helper, t_list *list)
@@ -92,8 +94,8 @@ char **get_options(t_helper *helper, t_list *list)
         return (NULL);
     
     op[0] = get_path(helper, list);
-    if (!op[0])
-        return (free(op),NULL);
+    // if (!op[0])
+    //     return (free(op),NULL);
     list = list->next;
     i = 1;
     while (list && list->type == OPTIONS)

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 06:35:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 02:01:22 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int check_root_content(t_tree  *root)
 int	find_command(t_tree *root, t_helper *helper)
 {
 
-    if (!root)
-        return (EXIT_FAILURE);
+    // if (!root)
+    //     return (EXIT_FAILURE);
     g_exit_status = check_root_content(root);
     if (g_exit_status !=  0)
         return (g_exit_status);
@@ -83,6 +83,8 @@ int	find_command(t_tree *root, t_helper *helper)
     //     flag = 1;
     //     return (execute_parenthesis(root, helper));
     // }
+    printf("\n\n\n%d\n\n\n",g_exit_status);
+    dprintf(2,"sdfsdfgsd     %s\n",  root->content->content);
     if (root->content->type == INPUT)
     {
         if (redirect_input(root, helper) != EXIT_SUCCESS)
@@ -97,14 +99,13 @@ int	find_command(t_tree *root, t_helper *helper)
         return (check_and_or(root, helper));
     if (root->content->type == PIPE)
         return (execute_pipe(root, helper));
-    if ((root->content->type == COMMAND || root->content->type == PATH_COMMAND)
-        && (root->first_child == NULL || root->first_child->content == NULL
-            || root->first_child->content->type == OPTIONS))
+    if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
     {
         if (is_builtins(root) == true)
             return (run_builtins(root, helper));
-        else
-            return (execute(root, helper));
+        if (prepare_command(root, helper) != EXIT_SUCCESS)
+            return g_exit_status;
+        return (execute(root, helper));
     }
     return (EXIT_FAILURE);
 }
