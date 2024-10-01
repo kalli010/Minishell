@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 05:18:00 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/01 06:09:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int check_root_content(t_tree  *root)
 int	find_command(t_tree *root, t_helper *helper)
 {
 
-    // if (!root)
-    //     return (EXIT_FAILURE);
+    if (!root)
+        return (EXIT_FAILURE);
     g_exit_status = check_root_content(root);
     if (g_exit_status !=  0)
         return (g_exit_status);
