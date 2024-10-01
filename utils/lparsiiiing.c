@@ -1074,6 +1074,7 @@ void set_var(t_list *list, char ***env, char ***xenv)
   char q;
   char *new_var;
   char **n_env;
+  char **n_xenv;
 
   len = 0;
   s = 0;
@@ -1118,25 +1119,31 @@ void set_var(t_list *list, char ***env, char ***xenv)
   ft_cpy(new_var, "=");
   ft_cpy(new_var, value);
   n_env = (char **)malloc(sizeof(char *) * (s + 2));
+  if(value == NULL)
+    n_xenv = (char **)malloc(sizeof(char *) * s);
+  else
+    n_xenv = (char **)malloc(sizeof(char *) * (s + 2));
   len = 0;
   while(*env && (*env)[len])
   {
     n_env[len] = ft_substr((*env)[len], 0, ft_strlen((*env)[len]));
+    n_xenv[len] = ft_substr((*env)[len], 0, ft_strlen((*env)[len]));
     free((*env)[len]);
     free((*xenv)[len]);
     len ++;
   }
-  if(value == NULL)
-    *xenv = n_env;
   n_env[len] = new_var;
   n_env[++len] = NULL;
-  free(*env);
-  *env = n_env;
+  n_xenv[len] = NULL;
   if(value != NULL)
   {
-    free(*xenv);
-    *xenv = n_env;
+    n_xenv[len] = new_var;
+    n_xenv[++len] = NULL;
   }
+  free(*env);
+  free(*xenv);
+  *env = n_env;
+  *xenv = n_xenv;
 }
 
 void check_var(t_list *list, char ***env, char ***xenv)
