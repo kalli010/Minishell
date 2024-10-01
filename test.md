@@ -14,13 +14,10 @@ munmap_chunk(): invalid pointer
 
 //zaki
 
-(ls && ls) | (ls && ls)
 
 $?
 
-$$LS
 
-Wildcards
 
 export data=ls
 [kali@kali Minishell]$ env | grep data
@@ -35,7 +32,10 @@ declare -x data="ls"
 declare -x data1
 [kali@kali Minishell]$ 
 
-(minishell)-> $$USER
-kali  (1)
+
+
+
+Wildcards
+
 
 

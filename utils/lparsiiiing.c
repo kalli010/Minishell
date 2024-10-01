@@ -500,8 +500,6 @@ char **tokenizer(char *str)
 
 void token_type(t_list *list)
 {
-  while(list->next != NULL)
-    list = list->next;
   if(list->content[0] == '|' && list->content[1] == '|' && list->content[2] == '\0')
     list->type = OR;
   else if(list->content[0] == '&' && list->content[1] == '&' && list->content[2] == '\0')
@@ -518,10 +516,9 @@ void token_type(t_list *list)
       list->type = INPUT;
   else if((list->content[0] == ')' && list->content[1] == '\0') || (list->content[0] == '(' && list->content[1] == '\0'))
     list->type = PARENTHESIS;
-  else if(list->content[0] == '-' || ft_strncmp(list->content, "--", 2) == 0\
-    || (list->back != NULL && \
+  else if(list->back != NULL && \
       (list->back->type == COMMAND || list->back->type == OPTIONS \
-      || list->back->type == PATH_COMMAND)))
+      || list->back->type == PATH_COMMAND))
     list->type = OPTIONS;
   else if(list->content[0] == '/' || list->content[0] == '~' \
       || !ft_strncmp(list->content, "./", 2))
@@ -540,7 +537,7 @@ void token_type(t_list *list)
       && (list->back->type == OUTPUT || list->back->type == APPEND || \
     list->back->type == INPUT))
       list->type = PATH;
-  else if(list->content[0] == '$')
+  else if(list->back != NULL && list->content[0] == '$')
      list->type = VAR;
   else if(list->back != NULL && list->back->type == HEREDOC)
     list->type = DELIMITER;
@@ -551,12 +548,16 @@ void token_type(t_list *list)
 void creat_linked_list(t_list **list, char **tokens, int t)
 {
   int i;
+  t_list *tmp;
 
   i = -1;
   while(tokens[++i])
   {
     ft_lstadd_back(list, ft_lstnew(tokens[i]));
-    token_type(*list);
+    tmp = *list;
+    while(tmp->next != NULL)
+      tmp = tmp->next;
+    token_type(tmp);
   }
   if(!t)
     free(tokens);
@@ -849,7 +850,7 @@ char *ft_getenv(char **env, char *str)
   return(new_var);
 }
 
-int var_dquotes(char **env, t_list **list)
+int var_dquotes(char **env, t_list **list, int d)
 {
   char *fstr;
   char *sstr;
@@ -860,8 +861,12 @@ int var_dquotes(char **env, t_list **list)
 
   s = 0;
   len = 0;
-  while((*list)->content[len] && (*list)->content[len] != '$')
+  while(( d != 0 && (*list)->content[len] && ((*list)->content[len] != '$' || ((*list)->content[len + 1] \
+    && (*list)->content[len + 1] == '$'))) || d > 0)
+  {
+    d--;
     len++;
+  }
   fstr = ft_substr((*list)->content, 0, len);
   s = len;
   if((*list)->content[len] == '$')
@@ -940,7 +945,7 @@ char **var_split(char *str)
   return(list);
 }
 
-int var_quotes(char **env, t_list **list)
+int var_quotes(char **env, t_list **list, int d)
 {
   char **array;
   t_list *n_list;
@@ -948,7 +953,7 @@ int var_quotes(char **env, t_list **list)
   t_list *back;
 
   n_list = NULL;
-  if(var_dquotes(env, list))
+  if(var_dquotes(env, list, d))
     return(1);
   if((*list)->content[0] != '\0')
   {
@@ -964,6 +969,7 @@ int var_quotes(char **env, t_list **list)
     {
       (*list) = back;
       ft_lstadd_back(list, n_list);
+      *list = (*list)->next;
     }
     else {
       (*list) = n_list;
@@ -973,7 +979,7 @@ int var_quotes(char **env, t_list **list)
   return(0);
 }
 
-int expander(char **env, t_list **list)
+int expander(char **env, t_list **list, int d)
 {
   int i;
 
@@ -989,7 +995,7 @@ int expander(char **env, t_list **list)
       }
       if((*list)->content[i] == '$')
       {
-        if(var_dquotes(env, list))
+        if(var_dquotes(env, list, d))
           return(1);
         break;
       }
@@ -1009,7 +1015,7 @@ int expander(char **env, t_list **list)
     }
     else if((*list)->content[i] == '$')
     {
-      if(var_quotes(env, list))
+      if(var_quotes(env, list, d))
         return(1);
       break;
     }
@@ -1018,32 +1024,35 @@ int expander(char **env, t_list **list)
   return(0);
 }
 
-int check_d(char *str)
+int check_d(char *str, int i)
 {
-  while(*str)
+  while(str[++i])
   {
-    if(*str == '$')
-      return(1);
-    str++;
+    if(str[i + 1] && str[i] == '$' && str[i + 1] != '$')
+      return(i);
   }
-  return(0);
+  return(i);
 }
 
 int check_expander(char **env, t_list **list)
 {
   t_list *tmp;
+  int i;
 
   tmp = NULL;
+  i = -1;
   while(*list)
   {
-    while(check_d((*list)->content))
+    i = check_d((*list)->content, -1);
+    while((*list)->content[i])
     {
-      if(expander(env, list))
+      if(expander(env, list, i))
       {
         (*list)->back->i = 2;
         break;
       }
       token_type(*list);
+      i = check_d((*list)->content, i);
     }
     tmp = *list;
     if(*list != NULL)
@@ -1056,7 +1065,7 @@ int check_expander(char **env, t_list **list)
   return(0);
 }
 
-void set_var(t_list *list, char ***env)
+void set_var(t_list *list, char ***env, char ***xenv)
 {
   char *var;
   char *value;
@@ -1095,6 +1104,8 @@ void set_var(t_list *list, char ***env)
       ft_cpy(new_var, "=");
       ft_cpy(new_var, value);
       free((*env)[s]);
+      free((*xenv)[s]);
+      (*xenv)[s] = new_var;
       (*env)[s] = new_var;
       return;
     }
@@ -1112,15 +1123,23 @@ void set_var(t_list *list, char ***env)
   {
     n_env[len] = ft_substr((*env)[len], 0, ft_strlen((*env)[len]));
     free((*env)[len]);
+    free((*xenv)[len]);
     len ++;
   }
+  if(value == NULL)
+    *xenv = n_env;
   n_env[len] = new_var;
   n_env[++len] = NULL;
   free(*env);
   *env = n_env;
+  if(value != NULL)
+  {
+    free(*xenv);
+    *xenv = n_env;
+  }
 }
 
-void check_var(t_list *list, char ***env)
+void check_var(t_list *list, char ***env, char ***xenv)
 {
   int i;
 
@@ -1147,7 +1166,7 @@ void check_var(t_list *list, char ***env)
     if(list->back != NULL && list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
     {
       list->type = SET_VAR;
-      set_var(list, env);
+      set_var(list, env, xenv);
     }
     list = list->next;
   }
