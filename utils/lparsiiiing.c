@@ -871,16 +871,26 @@ int var_dquotes(char **env, t_list **list, int d)
   s = len;
   if((*list)->content[len] == '$')
     len++;
-  while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' \
-    && (*list)->content[len] != '$')
+  if((*list)->content[len] == '?')
     len++;
+  else
+  {
+    while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' \
+      && (*list)->content[len] != '$')
+      len++;
+  }
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
   s = len;
   while((*list)->content[len])
     len++;
   tstr = ft_substr((*list)->content, s, len - s);
   if(sstr)
-    var = ft_getenv(env, sstr);
+  {
+    if(sstr[0] == '?')
+      var = ft_itoa(g_exit_status);
+    else
+      var = ft_getenv(env, sstr);
+  }
   else
     var = "";
   s = count_words(var);
