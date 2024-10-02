@@ -1620,34 +1620,82 @@ double check_heredoc(t_list *list)
   return(i);
 }
 
+int clean_heredoc(char **redfile, int hd)
+{
+  int i;
+
+  i = -1;
+  while(redfile[++i] && hd-- > 0)
+  {
+    if (unlink(redfile[i]) < 0)
+    {
+      printf("Error deleting redfile\n");
+      return(1);
+    }
+  }
+  return(0);
+}
+
 int open_file(char *redfile, t_list *delimiter)
 {
   int fd;
   char *line;
-  
-  fd = open(redfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+  pid_t pid;
+  int status;
+
+  fd = open(redfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
   if (fd < 0)
   {
-    perror("Error creating redfile\n");
+    printf("Error creating redfile\n");
     return (1);
   }
-  while (1)
+
+  pid = fork();
+  if (pid == -1)
   {
-    line = readline("> ");
-    if(delimiter->content[0] == '\0')
-    {
-      if(line[0] == '\0')
-        break;
-    }
-    else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
-        break;
-    write(fd, line, ft_strlen(line));
-    write(fd, "\n", 1);
-    free(line);
+    printf("Fork failed");
+    close(fd);
+    return (1);
   }
-  close(fd);
-  return(0);
+  else if (pid == 0)
+  {
+    signal(SIGINT, SIG_DFL);
+    while (1)
+    {
+      line = readline("> ");
+      if (!line)
+      {
+          printf("Error: (Ctrl+D)\n");
+          break;
+      }
+      if (delimiter->content[0] == '\0')
+      {
+          if (line[0] == '\0')
+              break;
+      }
+      else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
+          break;
+      write(fd, line, ft_strlen(line));
+      write(fd, "\n", 1);
+      free(line);
+    }
+    free(line);
+    close(fd);
+    exit(0);
+  }
+  else
+  {
+    waitpid(pid, &status, 0);
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+    {
+      close(fd);
+      clean_heredoc(&redfile, 1);
+      return (1);
+    }
+  }
+  return (0);
 }
+
 //  cat  grep awk  sed  sort  uniq  tr  wc  tee  tail  head  dd bc python 
 int check_command_type(char *content)
 {
@@ -1700,6 +1748,7 @@ void implementing_heredoc(t_list **list, char **redfile)
           (*list)->back = back;
         else
           *list = back;
+        *list = (*list)->back;
       }
       else
       {
@@ -1721,6 +1770,7 @@ void implementing_heredoc(t_list **list, char **redfile)
           (*list)->back = back;
         else
           *list = back;
+        *list = (*list)->back;
       }
     }
     if(*list && (*list)->next == NULL)
@@ -1745,10 +1795,10 @@ char **heredoc(t_list **list, int size)
   redfile = (char **)malloc(sizeof(char *) * (size + 1));
   while(++i < size)
   {
-    redfile[i] = (char *)malloc(sizeof(char) * 10);
-    redfile[i] = ft_strcpy(redfile[i], "redfile");
+    redfile[i] = (char *)malloc(sizeof(char) * 16);
+    redfile[i] = ft_strcpy(redfile[i], "/tmp/.redfile");
     nbr = ft_itoa(i);
-    j = 6;
+    j = 12;
     while(*nbr)
     {
       redfile[i][++j] = *nbr;
@@ -1769,20 +1819,4 @@ char **heredoc(t_list **list, int size)
   }
   implementing_heredoc(list, redfile);
   return(redfile);
-}
-
-int clean_heredoc(char **redfile)
-{
-  int i;
-
-  i = -1;
-  while(redfile[++i])
-  {
-    if (unlink(redfile[i]) < 0)
-    {
-      printf("Error deleting redfile\n");
-      return(1);
-    }
-  }
-  return(0);
 }
