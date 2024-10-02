@@ -1932,3 +1932,4 @@ int wildcards(t_list **list)
     return(1);
   return(0);
 }
+
