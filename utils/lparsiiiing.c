@@ -861,6 +861,9 @@ int var_dquotes(char **env, t_list **list, int d)
 
   s = 0;
   len = 0;
+  fstr = NULL;
+  sstr = NULL;
+  tstr = NULL;
   while(( d != 0 && (*list)->content[len] && ((*list)->content[len] != '$' || ((*list)->content[len + 1] \
     && (*list)->content[len + 1] == '$'))) || d > 0)
   {
@@ -1825,4 +1828,107 @@ char **heredoc(t_list **list, int size)
   }
   implementing_heredoc(list, redfile);
   return(redfile);
+}
+
+
+int check_Wildcards(t_list *list)
+{
+  int i;
+
+  while(list)
+  {
+    i = -1;
+    while(list->content[++i])
+    {
+      if(list->content[i] == '*')
+        return(1);
+    }
+    list = list->next;
+  }
+  return(0);
+}
+
+int implementing_Wildcards(char *wc, const char *filename)
+{
+  char *str;
+  int i;
+  int len;
+  int s;
+
+  len = 0;
+  i = 0;
+  str = NULL;
+  while(wc[len])
+  {
+    s = len;
+    while(wc[len] != '*')
+      len++;
+    str = ft_substr(wc, s, len - s);
+    if(str != NULL)
+    {
+      i = ft_strnstr(&filename[i], str, ft_strlen(filename));
+      if(i == 0)
+      {
+        free(str);
+        return(1);
+      }
+    }
+    while(wc[len] == '*')
+      len++;
+    if(wc[len] == '\0')
+      while(filename[i++]);
+  }
+  if(filename[i] == '\0')
+    return(0);
+  return(1);
+}
+
+void Wildcards_linked_list(t_list **list, char *str)
+{
+  t_list *next;
+
+  next = (*list)->next;
+  (*list)->next = NULL;
+  ft_lstadd_back(list, ft_lstnew(str));
+  *list = (*list)->next;
+  (*list)->next = next;
+}
+
+int wildcards(t_list **list)
+{
+  struct dirent *entry;
+  DIR *dir;
+  int i;
+  int d;
+
+  d = 0;
+  dir = opendir(".");
+  if (dir == NULL)
+    return 1;
+  while(*list)
+  {
+    i = -1;
+    while((*list)->content[++i])
+    {
+      if((*list)->content[i] == '*')
+      {
+        entry = readdir(dir);
+        while(entry != NULL)
+        {
+          if(!implementing_Wildcards((*list)->content, entry->d_name))
+          {
+            Wildcards_linked_list(list, entry->d_name);
+            *list = (*list)->next;
+            d++;
+          }
+          entry = readdir(dir);
+        }
+      }
+    }
+    *list = (*list)->next;
+  }
+  closedir(dir);
+  if(d == 0)
+    return(1);
+  return(0);
 }
