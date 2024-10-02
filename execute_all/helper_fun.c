@@ -6,29 +6,25 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 07:15:20 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 09:02:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-// int	check_file(const char *file)
-// {
-// 	struct stat	buf;
-
-// 	if (stat(file, &buf) == 0)
-// 	{
-// 		if (access(file, X_OK) != 0)
-// 		{
-// 			write(2, "minishell: ", 11);
-// 			write(2, file, ft_strlen(file));
-// 			write(2, ": Permission denied\n", 20);
-// 			g_exit_status = 126;
-// 			return (g_exit_status);
-// 		}
-// 	}
-// 	return (EXIT_SUCCESS);
-// }
+int	check_file(const char *file)
+{
+	
+	if (access(file, R_OK | F_OK | W_OK | X_OK) != 0)
+	{
+		write(2, "minishell: ", 11);
+		write(2, file, ft_strlen(file));
+		write(2, ": Permission denied\n", 20);
+		g_exit_status = 126;
+		return (g_exit_status);
+	}
+	return (EXIT_SUCCESS);
+}
 
 void	my_free(t_helper *helper)
 {

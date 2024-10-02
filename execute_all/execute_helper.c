@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 00:25:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 09:15:10 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,14 @@ int	helper_check_cmd(char *cmd, char *s)
 {
 	struct stat	dir;
 
+	if (access(cmd, F_OK  | X_OK) != 0)
+	{
+		write(2, "minishell: ", 11);
+		write(2, cmd, ft_strlen(cmd));
+		write(2, ": Permission denied\n", 20);
+		g_exit_status = 126;
+		return (g_exit_status);
+	}
 	if (stat(cmd, &dir) != 0)
 	{
 		exit_path(s, ERROR_C);
@@ -76,19 +84,19 @@ int	check_cmd(char *cmd, char *s, char **arg)
 		free_array(arg);
 		return (status);
 	}
-	if (access(cmd, F_OK) == -1)
-	{
-		exit_path(s, ERROR_C);
-		free(cmd);
-		free_array(arg);
-		return (ERROR_C);
-	}
-	if (access(cmd, X_OK) == -1)
+	if (access(cmd, X_OK) != 0)
 	{
 		exit_path(s, P_DNIED);
 		free(cmd);
 		free_array(arg);
 		return (P_DNIED);
+	}
+	if (access(cmd, F_OK) != 0)
+	{
+		exit_path(s, ERROR_C);
+		free(cmd);
+		free_array(arg);
+		return (ERROR_C);
 	}
 	return (EXIT_FAILURE);
 }

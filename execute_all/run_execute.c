@@ -6,13 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 08:00:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 09:01:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-
 
 int check_root_content(t_tree  *root)
 {
@@ -45,30 +43,30 @@ int check_root_content(t_tree  *root)
 
 // int flag = 0;
     
-// static int execute_parenthesis(t_tree *root, t_helper *helper)
-// {
-//     pid_t pid;
-//     int status;
+static int execute_parenthesis(t_tree *root, t_helper *helper)
+{
+    pid_t pid;
+    int status;
+    printf("h\n");
+    if (!root || !root->content)
+        return (EXIT_FAILURE);
+    pid = fork();
+    if (pid == 0)
+    {
+        if (!!find_command(root, helper))
+            exit(EXIT_FAILURE);
+        exit(EXIT_SUCCESS);
+    }
+    else if (pid > 0)
+    {
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) 
+            return WEXITSTATUS(status); 
+        return (EXIT_FAILURE);
+    }
+    return (EXIT_FAILURE);
 
-//     if (!root || !root->content)
-//         return (EXIT_FAILURE);
-//     pid = fork();
-//     if (pid == 0)
-//     {
-//         if (!!find_command(root, helper))
-//             exit(EXIT_FAILURE);
-//         exit(EXIT_SUCCESS);
-//     }
-//     else if (pid > 0)
-//     {
-//         waitpid(pid, &status, 0);
-//         if (WIFEXITED(status)) 
-//             return WEXITSTATUS(status); 
-//         return (EXIT_FAILURE);
-//     }
-//     return (EXIT_FAILURE);
-
-// }
+}
 
 int	find_command(t_tree *root, t_helper *helper)
 {
@@ -78,11 +76,12 @@ int	find_command(t_tree *root, t_helper *helper)
     g_exit_status = check_root_content(root);
     if (g_exit_status !=  0)
         return (g_exit_status);
-    // if (root->content->type == AND && flag == 0)
-    // {
-    //     flag = 1;
-    //     return (execute_parenthesis(root, helper));
-    // }
+    if (root->content->type == AND && root->content->in == 1)
+    {
+        root->content->in = 0;
+        return (execute_parenthesis(root, helper));
+        
+    }
 
     if (root->content->type == INPUT)
     {

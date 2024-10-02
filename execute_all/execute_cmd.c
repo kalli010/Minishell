@@ -280,23 +280,26 @@ void exit_path(char *s, int status)
 		{
 			write(2, s, ft_strlen(s));
 			write(2, ": No such file or directory\n", 28);
+			g_exit_status = 127;
 		}
 		else
 		{
 			write(2, s, ft_strlen(s));
 			write(2, ": command not found\n", 20);
+			g_exit_status = 127;
 		}
 	}
 	else if (status == P_DNIED)
 	{
 		write(2, s, ft_strlen(s));
 		write(2, ": permission denied\n", 20);
+		g_exit_status = 126;
 	}
 }
 
 static int finish_status(pid_t pid)
 {
-	int	status;
+	int status;
 
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
@@ -308,7 +311,8 @@ static int finish_status(pid_t pid)
 	{
 		g_exit_status = WTERMSIG(status) + 128;
 		if (WTERMSIG(status))
-		{	write(1,"\n",1);
+		{
+			write(1, "\n", 1);
 			return (WTERMSIG(status) + 128);
 		}
 	}
@@ -317,44 +321,42 @@ static int finish_status(pid_t pid)
 
 int prepare_command(t_tree *root, t_helper *helper)
 {
-    helper->cmd = get_path(helper, root->content);
-    helper->option = get_options(helper,root->content);
+	helper->cmd = get_path(helper, root->content);
+	helper->option = get_options(helper, root->content);
 
-    if (!helper->cmd)
-    {
-        exit_path(root->content->content, ERROR_C);
-        g_exit_status = ERROR_C;
-        my_free(helper);
-        return (ERROR_C);
-    }
-    return (EXIT_SUCCESS);
+	if (!helper->cmd)
+	{
+		exit_path(root->content->content, ERROR_C);
+		g_exit_status = ERROR_C;
+		return (ERROR_C);
+	}
+	return (EXIT_SUCCESS);
 }
 
 int execute(t_tree *root, t_helper *helper)
 {
-    int status;
-    pid_t pid;
+	int status;
+	pid_t pid;
 
-    if (prepare_command(root, helper) != 0)
-        return (ERROR_C);
-    pid = fork();
-    if (pid == -1)
-        return (perror("fork"), EXIT_FAILURE);
-    if (pid == 0)
-    {
-        signal_handeler(CHILD);
-        execve(helper->cmd, helper->option, helper->envp);
-        status = check_cmd(helper->cmd, root->content->content, helper->option);
-        g_exit_status = status;
-        exit(status);
-    }
-    else
-    {
-        // my_free(helper);
-        status = finish_status(pid);
-        g_exit_status = status;
-    }
-    return status;
+	if (prepare_command(root, helper) != 0)
+		return (ERROR_C);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), EXIT_FAILURE);
+	if (pid == 0)
+	{
+		signal_handeler(CHILD);
+		execve(helper->cmd, helper->option, helper->envp);
+		status = check_cmd(helper->cmd, root->content->content, helper->option);
+		g_exit_status = status;
+		exit(status);
+	}
+	else
+	{
+		status = finish_status(pid);
+		g_exit_status = status;
+	}
+	return status;
 }
 
 
