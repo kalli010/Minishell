@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 06:00:14 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 00:25:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	errors(char *file, int status, int fd)
 	{
         write(2, "minishell: ", 11);
 		write(2, file, ft_strlen(file));
-		write(2, "No such file or directory\n", 27);
+		write(2, " No such file or directory\n", 28);
 		return (g_exit_status);
 	}
 	if (status == 1)
@@ -111,7 +111,9 @@ int	errors(char *file, int status, int fd)
 	}
 	if (status == 2)
 	{
-		printf("%s ambiguous redirect\n", file);
+		write(2, "minishell: ", 11);
+		write(2, file, ft_strlen(file));
+		write(2, " ambiguous redirect\n", 21);
 		return (g_exit_status);
 	}
 	return (EXIT_SUCCESS);

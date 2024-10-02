@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 06:09:43 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 08:00:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,17 @@ int	find_command(t_tree *root, t_helper *helper)
             return (EXIT_FAILURE);
     }
     if (root->content->type == AND || root->content->type == OR)
+    {
+        helper->redin = 0;
+        helper->redout = 0;
         return (check_and_or(root, helper));
+    }
     if (root->content->type == PIPE)
+    {
+        helper->redin = 0;
+        helper->redout = 0;
         return (execute_pipe(root, helper));
+    }
     if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
     {
         if (is_builtins(root) == true)

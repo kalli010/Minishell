@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 05:48:36 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 07:17:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ static int	redirect_finished(pid_t pid)
 	return (EXIT_FAILURE);
 }
 
-int	open_fd(char *file, int append)
+int	open_fd(t_helper *helper,char *file, int append)
 {
 	int	fd;
+	// static int redout = 0;
 
 	if (append)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -40,8 +41,12 @@ int	open_fd(char *file, int append)
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		errors(file, 0, fd);
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		errors(file, 1, fd);
+	if (!helper->redout)
+	{
+		if (dup2(fd, STDOUT_FILENO) == -1)
+			errors(file, 1, fd);
+		helper->redout = 1;
+	}
 	return (fd);
 }
 
@@ -55,11 +60,15 @@ int	redirect_input_handler(char *file, t_tree *root, t_helper *helper)
 		errors(file, 0, fd);
 		return (g_exit_status);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (!helper->redin)
 	{
-		errors(file, 1, fd);
-		close(fd);
-		return (g_exit_status);
+		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			errors(file, 1, fd);
+			close(fd);
+			return (g_exit_status);
+		}
+		helper->redin  = 1;
 	}
 	close(fd);
 	find_command(root->first_child, helper);
@@ -75,8 +84,8 @@ int	redirect_input(t_tree *root, t_helper *helper)
 	if (root->content->i == 2)
 		return (errors(root->content->next->content, 2, 0), g_exit_status);
 	file = root->content->next->content;
-	if (check_file(file) != EXIT_SUCCESS)
-		return (g_exit_status);
+	// if (check_file(file) != EXIT_SUCCESS)
+	// 	return (g_exit_status);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -101,14 +110,14 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	if (root->content->i == 2)
 		return (errors(root->content->next->content, 2, 0), g_exit_status);
 	file = root->content->next->content;
-	if (check_file(file) != EXIT_SUCCESS)
-		return (g_exit_status);
+	// if (check_file(file) != EXIT_SUCCESS)
+	// 	return (g_exit_status);
 	if (!ft_strncmp(root->content->content, ">>", 2))
 		root->content->next->type = APPEND;
 	pid = fork();
 	if (pid == 0)
 	{
-		fd = open_fd(file, root->content->next->type == APPEND);
+		fd = open_fd(helper,file, root->content->next->type == APPEND);
 		find_command(root->first_child, helper);
 		close(fd);
 		exit(EXIT_SUCCESS);

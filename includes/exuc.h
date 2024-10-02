@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 05:54:49 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/02 03:03:09 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #define P_DNIED (126)
 #define SUCCESS (0)
 #define ERROR_C (127)
+#define CMD_NOT_FOUND 127
 # define GREEN "\033[1;32m"
 # define RESET "\033[0m"
 
@@ -59,7 +60,7 @@ int helper_check_cmd(char *cmd, char *s);
 int check_cmd(char *cmd, char *s, char **arg);
 int is_only_bs(t_tree *root);
 int is_only_slashes(t_tree *root);
-void exit_path(char *s, int status);
+void	exit_path(char *s, int status);
 void handle_cd_error(const char *path, int error_type);
 char *get_target_path(t_list *list, t_helper *helper);
 int is_directory(const char *path);

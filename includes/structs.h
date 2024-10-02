@@ -31,6 +31,8 @@ typedef struct helper
     pid_t	pid;
     int exit_status;
     bool flag;
+    int redout;
+    int redin;
 } t_helper;
 
 extern t_helper *g_helper;
