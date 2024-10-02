@@ -1336,8 +1336,10 @@ t_tree *creat_subtree(t_list **list)
       *list = (*list)->next;
     }
     s_tree = creat_tree(*list);
+    
     while((*list)->content[0] != 41)
     {
+      (*list)->in = 1;
       if((*list)->content[0] == 40)
         break;
       *list = (*list)->next;
@@ -1511,7 +1513,7 @@ void print_tree(t_tree *root, int spaces)
     return;
   while(++i < spaces)
     printf(" ");
-  printf("%s  (%d)\n",root->content->content,root->content->type);
+  printf("%s  (%d)\n",root->content->content,root->content->in);
   child = root->first_child;
   while(child)
   {
