@@ -1731,9 +1731,12 @@ void implementing_heredoc(t_list **list, char **redfile)
       next = (*list)->next->next;
       if(back && check_command_type(back->content))
       {
-        while(back->next->type != HEREDOC)
+        while(back && back->next->type != HEREDOC)
           back = back->next;
         back->next = NULL;
+        ft_lstadd_back(&back, ft_lstnew("<"));
+        back = back->next;
+        back->type = INPUT;
         ft_lstadd_back(&back, ft_lstnew(redfile[++i]));
         back = back->next;
         back->type = OPTIONS;
@@ -1772,7 +1775,8 @@ void implementing_heredoc(t_list **list, char **redfile)
           (*list)->back = back;
         else
           *list = back;
-        *list = (*list)->back;
+        if((*list)->back != NULL)
+          *list = (*list)->back;
       }
     }
     if(*list && (*list)->next == NULL)
