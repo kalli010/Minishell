@@ -258,10 +258,10 @@ int token_count(char *str)
   i = -1;
   while(str[++i])
   {
-    if(str[i] != ' ')
+    if(str[i] != ' ' && (str[i] < 9 || str[i] > 13))
     {
       s = i;
-      while(str[i] != '\0' && str[i] != ' ')
+      while(str[i] != '\0' && (str[i] != ' ' && (str[i] < 9 || str[i] > 13)))
       {
         if(str[i] == 34 || str[i] == 39)
         {
@@ -393,14 +393,14 @@ void echo_create_tokens(char *str, char **tokens, int j)
     {
       s = i;
       if(x == 0)
-        while(str[i] != '\0' && str[i] != ' ')
+        while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
           i++;
       else
       {
         if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&' || str[i] == 40 || str[i] == 41)
         {
           x = -1;
-          while(str[i] != '\0' && str[i] != ' ')
+          while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
             i++;
         }
         else if(str[i] == '-')
@@ -417,7 +417,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
               }
               i++;
             }
-            while(str[--i] == ' ');
+            while(str[--i] == ' ' && (str[i] < 9 || str[i] > 13));
             i++;
           }
         }
@@ -432,7 +432,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
             }
             i++;
           }
-          while(str[--i] == ' ');
+          while(str[--i] == ' ' && (str[i] < 9 || str[i] > 13));
           i++;
         }
         
@@ -461,10 +461,10 @@ void create_tokens(char *str, char **tokens)
   i = -1;
   while(str[++i])
   {
-    if(str[i] != ' ')
+    if(str[i] != ' ' && (str[i] < 9 || str[i] > 13))
     {
       s = i;
-      while(str[i] != '\0' && str[i] != ' ')
+      while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
       {
         if(str[i] == 34 || str[i] == 39)
         {
@@ -1192,15 +1192,37 @@ void check_var(t_list *list, char ***env, char ***xenv)
   }
 }
 
+int count_quotes(char *str)
+{
+  int i;
+  char q;
+  int q_n;
+
+  q_n = 0;
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] == '"' || str[i] == '\'')
+    {
+      q_n++;
+      q = str[i];
+      while(str[++i] != q);
+    }
+  }
+  return(q_n);
+}
+
 void remove_quotes(t_list *list)
 {
   int j;
   char q;
+  int q_n;
 
+  q_n = count_quotes(list->content);
   while(list)
   {
     j = -1;
-    while(list->content[++j])
+    while(list->content[++j] && q_n != 0)
     {
       if(list->content[j] == '"' || list->content[j] == '\'')
       {
@@ -1215,6 +1237,7 @@ void remove_quotes(t_list *list)
         while(list->content[++j])
           list->content[j - 2] = list->content[j];
         list->content[j - 2] = '\0';
+        q_n--;
         j = -1;
       }
     }
