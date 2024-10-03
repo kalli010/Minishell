@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:05:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/08 13:21:52 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 00:38:29 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int ft_env(t_list *list, char **env)
     int i;
 
     i = 0;
-
     if (count_arg(list) > 0)
     {
         write(1, "please enter env with no options\n", 34);
@@ -26,10 +25,13 @@ int ft_env(t_list *list, char **env)
     }
     while (env[i])
     {
-        ft_putstr_fd(env[i], STDOUT_FILENO);
-        ft_putchar_fd('\n', STDOUT_FILENO);
+        if (ft_strchr(env[i], '='))
+        {
+            ft_putstr_fd(env[i], STDOUT_FILENO);
+            ft_putchar_fd('\n', STDOUT_FILENO);            
+        }
         i++;
     }
-    return (EXIT_SUCCESS);
+    return (g_exit_status);
 }
 

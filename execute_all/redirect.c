@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 09:19:51 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 02:43:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static int	redirect_finished(pid_t pid)
 int	open_fd(t_helper *helper,char *file, int append)
 {
 	int	fd;
-	// static int redout = 0;
 
 	if (append)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -84,8 +83,8 @@ int	redirect_input(t_tree *root, t_helper *helper)
 	if (root->content->i == 2)
 		return (errors(root->content->next->content, 2, 0), g_exit_status);
 	file = root->content->next->content;
-	// if (check_file(file) != EXIT_SUCCESS)
-	// 	return (g_exit_status);
+	if (check_existence(file, 1) || check_read(file))
+		return (g_exit_status);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -110,7 +109,7 @@ int	redirect_output(t_tree *root, t_helper *helper)
 	if (root->content->i == 2)
 		return (errors(root->content->next->content, 2, 0), g_exit_status);
 	file = root->content->next->content;
-	if (check_file(file) == 126)
+	if (!check_existence(file, 0) && check_write_and_dir(file))
 		return (g_exit_status);
 	if (!ft_strncmp(root->content->content, ">>", 2))
 		root->content->next->type = APPEND;

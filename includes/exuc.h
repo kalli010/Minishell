@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 03:03:09 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 01:28:35 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #define CMD_NOT_FOUND 127
 # define GREEN "\033[1;32m"
 # define RESET "\033[0m"
+#define MAX_PATH 4096
 
 #define BEFORE  888
 #define PARENT  777
@@ -66,6 +67,10 @@ char *get_target_path(t_list *list, t_helper *helper);
 int is_directory(const char *path);
 int	errors(char *file,int status, int fd);
 int prepare_command(t_tree *root, t_helper *helper);
-int	check_file(const char *file);
-
+void check_signal(void);
+int	has_slash(char *str);
+int	check_write_and_dir(char *file);
+int	check_read(char *file);
+int	check_permission(char *file);
+int	check_existence(char *file, int flag);
 #endif

@@ -6,13 +6,22 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/29 11:35:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 01:28:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
+void check_signal(void)
+{
+	if (g_exit_status == 131)
+	{
+		write(2, "Quit (core dumped)\n", \
+				ft_strlen("Quit (core dumped)\n"));
+	}
+	if (g_exit_status == 130)
+		write(2,"\n",1);
+}
 void	ctr_c(int sig)
 {
 	if (sig == SIGINT)

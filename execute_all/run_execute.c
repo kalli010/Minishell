@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/02 09:01:43 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 03:43:29 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ int check_root_content(t_tree  *root)
 }
 
 
-// int flag = 0;
-    
 static int execute_parenthesis(t_tree *root, t_helper *helper)
 {
     pid_t pid;
     int status;
-    printf("h\n");
+
     if (!root || !root->content)
         return (EXIT_FAILURE);
     pid = fork();
@@ -109,8 +107,6 @@ int	find_command(t_tree *root, t_helper *helper)
     {
         if (is_builtins(root) == true)
             return (run_builtins(root, helper));
-        if (prepare_command(root, helper) != EXIT_SUCCESS)
-            return g_exit_status;
         return (execute(root, helper));
     }
     return (EXIT_FAILURE);

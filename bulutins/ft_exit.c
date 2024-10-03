@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/09/30 02:10:07 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 01:37:01 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ static int	ft_all_isdigit(char *data)
 	}
 	return (1);
 }
-
-
 
 static int	exit_errors(int status)
 {

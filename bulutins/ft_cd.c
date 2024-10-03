@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 05:11:16 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 01:34:28 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,16 @@ static void update_pwd(char *old, char *curr, t_helper *helper)
 
 int change_directory(char *go_path)
 {
-    g_exit_status = 0;
-    if (!is_directory(go_path))
+    struct stat path_stat;
+    
+    if (!stat(go_path, &path_stat) && !S_ISDIR(path_stat.st_mode))
+    {
+        handle_cd_error(go_path, 3);
+        free(go_path);
+        g_exit_status = 1;
+        return (g_exit_status);
+    }
+    if (!S_ISDIR(path_stat.st_mode))
     {
         handle_cd_error(go_path, 1);
         free(go_path);

@@ -6,19 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 02:07:29 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/01 06:12:12 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/03 01:36:42 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int is_directory(const char *path)
-{
-    struct stat path_stat;
-    if (stat(path, &path_stat) != 0)
-        return (EXIT_SUCCESS);
-    return (S_ISDIR(path_stat.st_mode)); 
-}
 
 char *get_target_path(t_list *list, t_helper *helper)
 {
@@ -49,12 +41,15 @@ char *get_target_path(t_list *list, t_helper *helper)
 void handle_cd_error(const char *path, int error_type)
 {
     write(2, "minishell: cd: ", 15);
-    write(2, path, strlen(path));
-
     if (error_type == 1)
     {
         write(2, path,ft_strlen(path));
-        write(2, ": No such file or directory\n", 29);
+        write(2, ":  no such file or directory\n", 30);
+    }
+    else if (error_type == 3)
+    {
+        write(2, path,ft_strlen(path));
+        write(2, ":  Not a directory\n", 20);
     }
     else if (error_type == 2)
     {
