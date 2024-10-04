@@ -12,7 +12,7 @@ ana hana
 
 ------------------------------------------------------------------------------------------------
 
-(minishell)-> cat >| ls
+(minishell)-> cat >| ls 
 |  (0)
   >  (0)
     cat  (0)
@@ -43,7 +43,8 @@ minishell : pwd: Could not get cwd
 //////////////////////////////////////////////////zaki/////////////////////////////////////////////
 
 ------------------------------------------------------------------------------------------------
-
+|  (0)
+ khassha tkon syntax error 
 echo $HOME$NOTHING$USER$
 
 ------------------------------------------------------------------------------------------------
@@ -70,6 +71,13 @@ Program received signal SIGSEGV, Segmentation fault.
 fi had l case cat not argument khassha tkon command
 
 ------------------------------------------------------------------------------------------------
+(minishell)-> 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004087e0 in remove_quotes (list=0x0) at utils/lparsiiiing.c:1221
+1221	  q_n = count_quotes(list->content);
+(gdb) 
+
 
 (minishell)-> "   hi "'"'
    hi   (0)

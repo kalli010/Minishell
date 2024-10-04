@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/03 03:43:29 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 04:36:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,43 +66,49 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
 
 }
 
-int	find_command(t_tree *root, t_helper *helper)
+int handle_redirections(t_tree *root, t_helper *helper)
 {
-
-    if (!root)
-        return (EXIT_FAILURE);
-    g_exit_status = check_root_content(root);
-    if (g_exit_status !=  0)
-        return (g_exit_status);
-    if (root->content->type == AND && root->content->in == 1)
-    {
-        root->content->in = 0;
-        return (execute_parenthesis(root, helper));
-        
-    }
-
     if (root->content->type == INPUT)
     {
         if (redirect_input(root, helper) != EXIT_SUCCESS)
             return (EXIT_FAILURE);
     }
-	if (root->content->type == APPEND ||  root->content->type == OUTPUT)
+    if (root->content->type == APPEND || root->content->type == OUTPUT)
     {
         if (redirect_output(root, helper) != EXIT_SUCCESS)
             return (EXIT_FAILURE);
     }
+    return (EXIT_SUCCESS);
+}
+
+int handle_logical(t_tree *root, t_helper *helper)
+{
+    helper->redin = 0;
+    helper->redout = 0;
     if (root->content->type == AND || root->content->type == OR)
-    {
-        helper->redin = 0;
-        helper->redout = 0;
         return (check_and_or(root, helper));
-    }
     if (root->content->type == PIPE)
-    {
-        helper->redin = 0;
-        helper->redout = 0;
         return (execute_pipe(root, helper));
+    return (EXIT_SUCCESS);
+}
+
+int find_command(t_tree *root, t_helper *helper)
+{
+    if (!root)
+        return (EXIT_FAILURE);
+    
+    g_exit_status = check_root_content(root);
+    if (g_exit_status != 0)
+        return (g_exit_status);
+    if (root->content->type == AND && root->content->in == 1)
+    {
+        root->content->in = 0;
+        return (execute_parenthesis(root, helper));
     }
+    if (handle_redirections(root, helper) == EXIT_FAILURE)
+        return (EXIT_FAILURE);
+    if (handle_logical(root, helper) == EXIT_FAILURE)
+        return (EXIT_FAILURE);
     if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
     {
         if (is_builtins(root) == true)
