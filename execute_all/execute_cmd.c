@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 03:46:41 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 04:55:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int execute(t_tree *root, t_helper *helper)
     {
         signal_handeler(CHILD);
         g_exit_status = child_process(helper, root);
+		my_free(helper);
         exit(g_exit_status);
     }
     else

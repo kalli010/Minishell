@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/03 00:50:32 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 05:00:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,40 @@
 
 
 
-void	my_free(t_helper *helper)
+void my_free(t_helper *helper)
 {
-	if (helper)
-	{
-		free(helper->cmd);
-		helper->cmd = NULL;
-		free_array(helper->option);
-		helper->option = NULL;
-		free(helper);
-	}
+    if (helper)
+    {
+        if (helper->cmd)
+		{
+            free(helper->cmd);
+            helper->cmd = NULL;  
+        }
+        if (helper->option)
+		{
+            free_array(helper->option);
+            helper->option = NULL;
+        }
+        free(helper);
+    }
 }
 
 
-void	free_array(char **arr)
-{
-	int	i;
 
-	i = 0;
-	if (arr == NULL)
-		return ;
-	while (arr[i] != NULL)
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
+void free_array(char **arr)
+{
+    int i = 0;
+
+    if (arr == NULL)
+        return;
+    while (arr[i] != NULL)
+    {
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
 }
+
 
 int	count_arg(t_list *list)
 {
