@@ -6,12 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 05:00:07 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 23:36:27 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 
 void my_free(t_helper *helper)
@@ -19,20 +18,19 @@ void my_free(t_helper *helper)
     if (helper)
     {
         if (helper->cmd)
-		{
+        {
             free(helper->cmd);
-            helper->cmd = NULL;  
+            helper->cmd = NULL;
         }
-        if (helper->option)
-		{
-            free_array(helper->option);
-            helper->option = NULL;
-        }
+        // if (helper->option)
+        // {
+        //     free_array(helper->option);
+        //     helper->option = NULL;
+        // }
         free(helper);
+        helper = NULL;
     }
 }
-
-
 
 void free_array(char **arr)
 {
@@ -40,14 +38,16 @@ void free_array(char **arr)
 
     if (arr == NULL)
         return;
+    
     while (arr[i] != NULL)
     {
         free(arr[i]);
+        arr[i] = NULL;
         i++;
     }
     free(arr);
+    arr = NULL;
 }
-
 
 int	count_arg(t_list *list)
 {

@@ -6,12 +6,13 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 04:36:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 22:53:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+int handle_redirections(t_tree *root, t_helper *helper);
 int check_root_content(t_tree  *root)
 {
     if (!ft_strncmp(root->content->content,".", sizeof(".")))
@@ -21,10 +22,7 @@ int check_root_content(t_tree  *root)
         return (2);
     }
     if (!ft_strncmp(root->content->content, "!", sizeof("!")))
-    {
-        printf(""); 
         return (1);
-    }
     if (!ft_strncmp(root->content->content, "..", sizeof("..")))
     {
         printf("..: command not found\n");
@@ -48,10 +46,13 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
 
     if (!root || !root->content)
         return (EXIT_FAILURE);
+    if (handle_redirections(root->first_child, helper) != EXIT_SUCCESS)
+        return (EXIT_FAILURE);
+
     pid = fork();
     if (pid == 0)
     {
-        if (!!find_command(root, helper))
+        if (find_command(root->first_child, helper) != EXIT_SUCCESS)
             exit(EXIT_FAILURE);
         exit(EXIT_SUCCESS);
     }
@@ -63,8 +64,8 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
         return (EXIT_FAILURE);
     }
     return (EXIT_FAILURE);
-
 }
+
 
 int handle_redirections(t_tree *root, t_helper *helper)
 {
@@ -105,7 +106,7 @@ int find_command(t_tree *root, t_helper *helper)
         root->content->in = 0;
         return (execute_parenthesis(root, helper));
     }
-    if (handle_redirections(root, helper) == EXIT_FAILURE)
+    if (handle_redirections(root, helper) == EXIT_FAILURE && root->content->in != 1)
         return (EXIT_FAILURE);
     if (handle_logical(root, helper) == EXIT_FAILURE)
         return (EXIT_FAILURE);

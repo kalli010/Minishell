@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 03:30:36 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/05 00:10:09 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ int				check_write_and_dir(char *file);
 int				check_read(char *file);
 int				check_permission(char *file);
 int				check_existence(char *file, int flag);
+int				get_permission(char *file);
+int check_failure(char *file);
 
 #endif

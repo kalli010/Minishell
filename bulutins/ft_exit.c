@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 03:59:36 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/04 22:52:40 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int exit_errors(int status)
 
 unsigned char ft_exit(t_tree *root, t_helper *helper)
 {
-    unsigned char status;
+    int status;
     char *arg;
 
 	status = g_exit_status;
@@ -53,11 +53,11 @@ unsigned char ft_exit(t_tree *root, t_helper *helper)
         arg = root->content->next->content;
         if (!ft_all_isdigit(arg))
             return (exit_errors(2));
-        status = (unsigned char)ft_atoi(arg);
+        status = ft_atoi(arg);
         if (status < 0)
             status = 0;
     }
     free_list(root->content);
     my_free(helper);
-    exit(status);
+    exit((unsigned char)status);
 }

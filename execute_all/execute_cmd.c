@@ -6,11 +6,13 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 04:55:41 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/05 00:57:30 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+  
+
 
 static int finish_status(pid_t pid)
 {
@@ -45,7 +47,7 @@ int prepare_command(t_tree *root, t_helper *helper)
 static int child_process(t_helper *helper, t_tree *root)
 {
     struct stat path_stat;
-	if (helper->cmd[0] == '.' || helper->cmd[0] == '/')
+	if (helper->cmd[0] == '.' &&  helper->cmd[1] == '/')
 	{
     	if (check_existence(helper->cmd, 0) == 127)
         	return check_existence(helper->cmd,1);
@@ -54,10 +56,12 @@ static int child_process(t_helper *helper, t_tree *root)
 	}
 	if  (get_exec_access(helper->cmd))
         	return 126;
+    // if (get_permission(helper->cmd))
+    //     return 126;
     if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
         return is_dir(helper->cmd);
     if (execve(helper->cmd, helper->option, helper->envp) != 0)
-		 return command_not_found(root->content->content);
+		 return check_failure(root->content->content);
     return EXIT_FAILURE;
 }
 
@@ -76,7 +80,6 @@ int execute(t_tree *root, t_helper *helper)
     {
         signal_handeler(CHILD);
         g_exit_status = child_process(helper, root);
-		my_free(helper);
         exit(g_exit_status);
     }
     else

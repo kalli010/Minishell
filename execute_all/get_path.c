@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 02:53:58 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/05 00:01:56 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*find_in_path(char **dir,  char *cmd)
 		temp = ft_strjoin(dir[i], "/");      
 		path = ft_strjoin(temp, cmd);        
 		free(temp);                        
-		if (access(path, F_OK | X_OK) == 0)  
+		if (access(path, F_OK) == 0)  
 			return (path);                   
 		free(path);                         
 		i++;
