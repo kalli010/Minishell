@@ -1,89 +1,10 @@
-(minishell)-> cat >| ls 
-|  (0)
-  >  (0)
-    cat  (0)
-  ls  (0)
-'|'    bonus	  execute_all   lib   Makefile	  signal    tmp
- bin   bulutins   includes      ls    minishell   test.md   utils
-
-------------------------------------------------------------------------------------------------
-|  (0)
- khassha tkon syntax error 
 echo $HOME$NOTHING$USER$
-
-------------------------------------------------------------------------------------------------
-
-(minishell)-> echo ds > "  "
-
-Program received signal SIGSEGV, Segmentation fault.
-0x00000000004051fb in count_words (str=0x47db30 "\"") at utils/lparsiiiing.c:303
-303	      while(str[++i] != q);
-(gdb) 
-
-------------------------------------------------------------------------------------------------
-
-(minishell)-> < /dev/stdin cat | cat > /dev/stdout
->  (5)
-  |  (2)
-    <  (7)
-      /dev/stdin  (13)
-      cat  (9)
-    cat  (1)
-  /dev/stdout  (13)
-
-
-fi had l case cat not argument khassha tkon command
-
-------------------------------------------------------------------------------------------------
-(minishell)-> 
-
-Program received signal SIGSEGV, Segmentation fault.
-0x00000000004087e0 in remove_quotes (list=0x0) at utils/lparsiiiing.c:1221
-1221	  q_n = count_quotes(list->content);
-(gdb) 
-
-
-(minishell)-> "   hi "'"'
-   hi   (0)
-minishell:    hi : command not found
-free(): invalid pointer
-[1]    96584 IOT instruction (core dumped)  ./minishell
-FAIL
-
-(minishell)-> "'"
-[1]    97070 segmentation fault (core dumped)  ./minishell
-FAIL
-(minishell)-> "'"
-  (0)
-minishell : : command not found
-(minishell)-> 'malloc(): invalid size (unsorted)
-[1]    97117 IOT instruction (core dumped)  ./minishell
-FAIL
-
-------------------------------------------------------------------------------------------------
-
-(minishell)-> ls 
-ls
-ls  (0)
-  
-ls  (0)
-/usr/bin/ls: cannot access ''$'\n''ls': No such file or directory
 
 ------------------------------------------------------------------------------------------------
 
 (minishell)-> cat <| ls
 |  (0)
   <  (0)
-    cat  (0)
-  ls  (0)
-'|'    bonus	  execute_all   lib   Makefile	  signal    tmp
- bin   bulutins   includes      ls    minishell   test.md   utils
-
-------------------------------------------------------------------------------------------------
-
-(minishell)-> cat > |  ls
-|  (0)
-  >  (0)
     cat  (0)
   ls  (0)
 '|'    bonus	  execute_all   lib   Makefile	  signal    tmp

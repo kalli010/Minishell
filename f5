@@ -1,0 +1,22 @@
+total 324
+drwxr-xr-x 11 zelkalai 2019   4096 Oct  5 18:04 .
+drwxr-xr-x 10 zelkalai 2019   4096 Oct  5 17:29 ..
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  1 05:16 bonus
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  5 13:19 bulutins
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  5 13:19 execute_all
+-rw-r--r--  1 zelkalai 2019      0 Oct  5 18:01 f1
+-rw-r--r--  1 zelkalai 2019      0 Oct  5 18:01 f2
+-rw-r--r--  1 zelkalai 2019      0 Oct  5 18:04 f3
+-rw-r--r--  1 zelkalai 2019      0 Oct  5 18:01 f4
+-rw-r--r--  1 zelkalai 2019      0 Oct  5 18:04 f5
+drwxr-xr-x  8 zelkalai 2019   4096 Oct  5 17:28 .git
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  5 13:19 includes
+drwxr-xr-x  3 zelkalai 2019   4096 Oct  1 05:30 lib
+-rw-r--r--  1 zelkalai 2019   1775 Oct  1 05:42 Makefile
+-rwxr-xr-x  1 zelkalai 2019 131728 Oct  5 18:03 minishell
+-rwxr-xr-x  1 zelkalai 2019 131744 Oct  5 17:51 .nfs00000000094425e7000192ba
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  3 05:43 signal
+-rwxr-xr-x  1 zelkalai 2019   5878 Oct  5 17:47 tests
+-rw-r--r--  1 zelkalai 2019    561 Oct  5 17:46 todo
+drwxr-xr-x  2 zelkalai 2019   4096 Oct  5 18:03 utils
+drwxr-xr-x  2 zelkalai 2019   4096 Sep  8 21:10 .vscode

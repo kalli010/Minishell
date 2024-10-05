@@ -394,7 +394,14 @@ void echo_create_tokens(char *str, char **tokens, int j)
       s = i;
       if(x == 0)
         while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
+        {
+          if(str[i] == 34 || str[i] == 39)
+            {
+              q = str[i];
+              while(str[++i] != q);
+            }
           i++;
+        }
       else
       {
         if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&' || str[i] == 40 || str[i] == 41)
@@ -605,7 +612,7 @@ t_list *recreate_linked_list(t_list *list)
     if(list->type == INPUT || list->type == OUTPUT)
     {
       tmp = list->next;
-      while(tmp && (tmp->type == PATH || tmp->type == list->type))
+      while(tmp && (tmp->type == PATH || tmp->type == PATH_COMMAND || tmp->type == INPUT || tmp->type == OUTPUT || tmp->type == APPEND))
         tmp = tmp->next;
       if(tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
       {
@@ -619,14 +626,16 @@ t_list *recreate_linked_list(t_list *list)
         start->back->next = tmp;
       }
       ft_lstadd_back(&n_list, ft_lstnew(list->content));
-      token_type(n_list);
     }
     else
-    {
       ft_lstadd_back(&n_list, ft_lstnew(list->content));
-      token_type(n_list);
-    }
     list = list->next;
+  }
+  tmp = n_list;
+  while(tmp)
+  {
+    token_type(tmp);
+    tmp = tmp->next;
   }
   free_list(list);
   return(n_list);
@@ -1218,6 +1227,8 @@ void remove_quotes(t_list *list)
   char q;
   int q_n;
 
+  if(list == NULL)
+    return;
   q_n = count_quotes(list->content);
   while(list)
   {
@@ -1539,7 +1550,7 @@ void print_tree(t_tree *root, int spaces)
     return;
   while(++i < spaces)
     printf(" ");
-  printf("%s  (%d)\n",root->content->content,root->content->in);
+  printf("%s  (%d)\n",root->content->content,root->content->type);
   child = root->first_child;
   while(child)
   {
