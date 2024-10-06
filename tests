@@ -131,3 +131,11 @@ ls  (0)
 export $dat="waw"
 export
 ------>normalment export a b c d="waw"
+
+(minishell) -> << sdsdf
+> sdsdf
+[1]    1426579 segmentation fault (core dumped)  ./minishell
+
+
+ ">" aa.aa.a..cc
+hana fi had lcase khas ">" t3tbr command

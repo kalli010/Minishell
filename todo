@@ -1,3 +1,15 @@
 handle_redirections in bonus
 
 
+minishell) ->  "||"
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000000000401360 in check_and_or (root=0x42ba80, helper=0x42b9a0) at bonus/check_logical.c:25
+25	            return (find_command(root->first_child->next_sibling, helper));
+(gd
+
+(minishell) -> >> sa asd
+>>  (8)
+  sa  (10)
+  asd  (1)
+(minishell) ->
