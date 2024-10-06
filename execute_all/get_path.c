@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/05 00:01:56 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/06 03:19:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*find_in_path(char **dir,  char *cmd)
 		free(path);                         
 		i++;
 	}
-	return (cmd);
+	return (NULL);
 }
 
 char	*get_cmd_path(t_helper *helper, t_list *list)
@@ -58,7 +58,7 @@ char	*get_cmd_path(t_helper *helper, t_list *list)
 	if (path)
 		return (path);
 	else
-		return (ft_strdup(list->content));
+		return (NULL);
 }
 
 char	*get_path_of_cpath(t_list *list)

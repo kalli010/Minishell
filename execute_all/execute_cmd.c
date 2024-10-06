@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/05 00:57:30 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/06 03:22:53 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,18 @@ int prepare_command(t_tree *root, t_helper *helper)
 static int child_process(t_helper *helper, t_tree *root)
 {
     struct stat path_stat;
-	if (helper->cmd[0] == '.' &&  helper->cmd[1] == '/')
-	{
-    	if (check_existence(helper->cmd, 0) == 127)
-        	return check_existence(helper->cmd,1);
-    	else if  (get_exec_access(helper->cmd))
-        	return 126;
-	}
-	if  (get_exec_access(helper->cmd))
-        	return 126;
-    // if (get_permission(helper->cmd))
-    //     return 126;
+  
+    // printf("%s path is\n ",helper->cmd);
+    if (!helper->cmd)
+        return (command_not_found(root->content->content));
     if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
         return is_dir(helper->cmd);
-    if (execve(helper->cmd, helper->option, helper->envp) != 0)
-		 return check_failure(root->content->content);
+    if (get_permission(helper->cmd))
+        return 126;
+    execve(helper->cmd, helper->option, helper->envp);
     return EXIT_FAILURE;
 }
+
 
 int execute(t_tree *root, t_helper *helper)
 {
