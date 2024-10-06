@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/06 03:22:53 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/06 03:26:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int child_process(t_helper *helper, t_tree *root)
     if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
         return is_dir(helper->cmd);
     if (get_permission(helper->cmd))
-        return 126;
+        return (126);
     execve(helper->cmd, helper->option, helper->envp);
     return EXIT_FAILURE;
 }
