@@ -1,3 +1,17 @@
+echo $HOME$NOTHING$USER$
+
+------------------------------------------------------------------------------------------------
+
+(minishell)-> cat <| ls
+|  (0)
+  <  (0)
+    cat  (0)
+  ls  (0)
+'|'    bonus	  execute_all   lib   Makefile	  signal    tmp
+ bin   bulutins   includes      ls    minishell   test.md   utils
+
+------------------------------------------------------------------------------------------------
+
 (minishell)-> unset HOME
 unset  (0)
   HOME  (0)
@@ -18,26 +32,8 @@ Aborted (core dumped)
 
 ------------------------------------------------------------------------------------------------
 
-(minishell)-> export data
-export  (1)
-  data  (9)
-(minishell)-> export | grep data
-|  (2)
-  export  (1)
-  grep  (1)
-    data  (9)
-XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/zelkalai
-data
-(minishell)-> env | grep data
-|  (2)
-  env  (1)
-  grep  (1)
-    data  (9)
-XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/zelkalai
-(minishell)-> export data1
-free(): invalid pointer
-[1]    384964 IOT instruction (core dumped)  ./minishell
-FAIL
+export HOME="\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"
+malloc error;
 
 ------------------------------------------------------------------------------------------------
 
@@ -143,3 +139,25 @@ export
 
  ">" aa.aa.a..cc
 hana fi had lcase khas ">" t3tbr command
+
+
+valgrind ./minishell
+==1433468== Memcheck, a memory error detector
+==1433468== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1433468== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1433468== Command: ./minishell
+==1433468== 
+(minishell) ->  export da="                        sadd"
+==1433468== Invalid write of size 8
+==1433468==    at 0x408735: set_var (lparsiiiing.c:1163)
+==1433468==    by 0x408832: check_var (lparsiiiing.c:1198)
+==1433468==    by 0x40A9E8: ft_minishell (minishell.c:50)
+==1433468==    by 0x40AC3B: main (minishell.c:114)
+==1433468==  Address 0x4b65990 is 0 bytes after a block of size 592 alloc'd
+==1433468==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1433468==    by 0x4085BA: set_var (lparsiiiing.c:1147)
+==1433468==    by 0x408832: check_var (lparsiiiing.c:1198)
+==1433468==    by 0x40A9E8: ft_minishell (minishell.c:50)
+==1433468==    by 0x40AC3B: main (minishell.c:114)
+==1433468== 
+(minishell) -> 
