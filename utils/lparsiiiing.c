@@ -122,7 +122,7 @@ int check_p_r2(char *str,int *i)
   return(-1);
 }
 
-char *split_symbols(char *str)
+int split_symbols(char *str, char **cmd)
 {
   int i;
   int s;
@@ -142,6 +142,8 @@ char *split_symbols(char *str)
     check_p_r(&str[i], &i, &s);
   }
   tmp = (char *)malloc(sizeof(char) * (i + s + 1));
+  if(tmp == NULL)
+    return(1);
   i = -1;
   s = 0;
   while(str[++i])
@@ -175,7 +177,8 @@ char *split_symbols(char *str)
     }
   }
   tmp[s] = '\0';
-  return(tmp);
+  *cmd = tmp;
+  return(0);
 }
 
 int echo_check(char *str)
@@ -457,7 +460,7 @@ void echo_create_tokens(char *str, char **tokens, int j)
   tokens[j] = NULL;
 }
 
-void create_tokens(char *str, char **tokens)
+int create_tokens(char *str, char **tokens)
 {
   int i;
   int s;
@@ -486,23 +489,35 @@ void create_tokens(char *str, char **tokens)
         return;
       }
       tokens[j] = ft_substr(str, s, i - s);
+      if(tokens[j] == NULL)
+      {
+        i = -1;
+        while(++i < j)
+          free(tokens[i]);
+        return (1);
+      }
       j++;
       if(str[i] == '\0')
         i--;
     }
   }
   tokens[j] = NULL;
+  return(0);
 }
 
-char **tokenizer(char *str)
+int tokenizer(char *str, char ***tokens)
 {
-  char **tokens;
+  char **tkn;
   int tc;
 
   tc = token_count(str);
-  tokens = (char **)malloc(sizeof(char *) * (tc + 1));
-  create_tokens(str, tokens);
-  return(tokens);
+  tkn = (char **)malloc(sizeof(char *) * (tc + 1));
+  if(tkn == NULL)
+    return(1);
+  if(create_tokens(str, tkn))
+    return(1);
+  *tokens = tkn;
+  return(0);
 }
 
 void token_type(t_list *list)
