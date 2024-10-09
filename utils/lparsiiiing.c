@@ -841,6 +841,7 @@ char *ft_getenv(char **env, char *str)
 {
   int s;
   int i;
+  int st;
   char *new_var;
 
   s = -1;
@@ -849,11 +850,14 @@ char *ft_getenv(char **env, char *str)
   {
     if(!ft_strncmp(env[s], str, ft_strlen(str)) && env[s][ft_strlen(str)] == '=')
     {
-      i = ft_strlen(str);
+      st = ft_strlen(str);
+      st++;
+      i = -1;
       while(env[s][++i]);
-      new_var = (char *)malloc(sizeof(char) * (i + 1));
+      new_var = (char *)malloc(sizeof(char) * (i - st + 1));
       new_var[0] = '\0';
-      ft_cpy(new_var, &env[s][ft_strlen(str) + 1]);
+      ft_cpy(new_var, &env[s][st]);
+      new_var[i - st] = '\0';
     }
   }
   return(new_var);
@@ -873,8 +877,7 @@ int var_dquotes(char **env, t_list **list, int d)
   fstr = NULL;
   sstr = NULL;
   tstr = NULL;
-  while(( d != 0 && (*list)->content[len] && ((*list)->content[len] != '$' || ((*list)->content[len + 1] \
-    && (*list)->content[len + 1] == '$'))) || d > 0)
+  while(d > 0)
   {
     d--;
     len++;
@@ -888,10 +891,14 @@ int var_dquotes(char **env, t_list **list, int d)
   else
   {
     while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' \
-      && (*list)->content[len] != '$')
+      && (*list)->content[len] != '$' && (*list)->content[len] != ' ' && (*list)->content[len] != '=')
       len++;
   }
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
+  if(sstr == NULL)
+    return(1);
+  if(sstr != NULL && !ft_isalpha(sstr[0]))
+    return(1);
   s = len;
   while((*list)->content[len])
     len++;
@@ -920,11 +927,6 @@ int var_dquotes(char **env, t_list **list, int d)
   return(0);
 }
 
-void var_squotes(t_list **list)
-{
-  (void)list;
-}
-
 void get_words(int *i, int *end, char *str)
 {
   char q;
@@ -943,6 +945,70 @@ void get_words(int *i, int *end, char *str)
   }
 }
 
+int count_quotes(char *str)
+{
+  int i;
+  char q;
+  int q_n;
+
+  q_n = 0;
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] == '"' || str[i] == '\'')
+    {
+      q_n++;
+      q = str[i];
+      while(str[++i])
+      {
+        if(str[i] == q)
+          break;
+      }
+      if(str[i] == '\0')
+        i--;
+    }
+  }
+  return(q_n);
+}
+
+void remove_quotes_string(char *str)
+{
+  int j;
+  int q_n;
+  char q;
+
+  j = -1;
+  if(str == NULL)
+    return;
+  q_n = count_quotes(str);
+  while(str[++j] && q_n != 0)
+  {
+    if(str[j] == '"' || str[j] == '\'')
+    {
+      q = str[j];
+      str[j] = str[j + 1];
+      while(str[j + 1])
+      {
+        if(str[j + 1] == q)
+          break;
+        str[j] = str[j + 1];
+        j++;
+      }
+      j++;
+      if(str[j] == '\0')
+      {
+        str[j - 1] = '\0';
+        return;
+      }
+      while(str[++j])
+        str[j - 2] = str[j];
+      str[j - 2] = '\0';
+      q_n--;
+      j = -1;
+    }
+  }
+}
+
 char **var_split(char *str)
 {
   char **list;
@@ -951,6 +1017,7 @@ char **var_split(char *str)
   int end;
 
   end = 0;
+  remove_quotes_string(str);
   c = count_words(str);
   list = (char **)malloc(sizeof(char *) * (c + 1));
   i = 0;
@@ -1005,44 +1072,22 @@ int expander(char **env, t_list **list, int d)
 {
   int i;
 
-  i = 0;
-  while((*list)->content[i])
+  i = d;
+  while(--d >= 0)
   {
-    if((*list)->content[i] == '"')
+    if((*list)->content[d] == '"')
     {
-      while((*list)->content[++i] && (*list)->content[i] != '$')
+      while(--d >= 0 && (*list)->content[d] != '"');
+      if(d < 0)
       {
-        if((*list)->content[i] == '"')
-          break;
-      }
-      if((*list)->content[i] == '$')
-      {
-        if(var_dquotes(env, list, d))
+        if(var_dquotes(env, list, i))
           return(1);
-        break;
+        return(0);
       }
     }
-    else if((*list)->content[i] == '\'')
-    {
-      while((*list)->content[++i] && (*list)->content[i] != '$')
-      {
-        if((*list)->content[i] == '\'')
-          break;
-      }
-      if((*list)->content[i] == '$')
-      {
-        var_squotes(list);
-        break;
-      }
-    }
-    else if((*list)->content[i] == '$')
-    {
-      if(var_quotes(env, list, d))
-        return(1);
-      break;
-    }
-    i++;
   }
+  if(var_quotes(env, list, i))
+    return(1);
   return(0);
 }
 
@@ -1054,6 +1099,24 @@ int check_d(char *str, int i)
       return(i);
   }
   return(i);
+}
+
+int check_squotes(char *str, int i)
+{
+  while(--i >= 0)
+  {
+    if(str[i] == '\'')
+    {
+      while(str[--i] != '\'' && i >= 0);
+      if(i < 0)
+        return(0);
+      else
+        return(1);
+    }
+    else if(str[i] == '"')
+        return(1);
+  }
+  return(1);
 }
 
 int check_expander(char **env, t_list **list)
@@ -1068,13 +1131,18 @@ int check_expander(char **env, t_list **list)
     i = check_d((*list)->content, -1);
     while((*list)->content[i])
     {
-      if(expander(env, list, i))
+      if(check_squotes((*list)->content, i))
       {
-        (*list)->back->i = 2;
-        break;
+        if(expander(env, list, i))
+        {
+          (*list)->back->i = 2;
+          break;
+        }
+        token_type(*list);
+        i = check_d((*list)->content, i - 1);
       }
-      token_type(*list);
-      i = check_d((*list)->content, i - 1);
+      else
+        i = check_d((*list)->content, i);
     }
     tmp = *list;
     if(*list != NULL)
@@ -1087,154 +1155,165 @@ int check_expander(char **env, t_list **list)
   return(0);
 }
 
-void set_var(t_list *list, char ***env, char ***xenv)
+void clean_linked_list(t_list **list)
+{
+  t_list *tmp;
+  t_list *back;
+  t_list *next;
+
+  tmp = *list;
+  while(tmp)
+  {
+    if(tmp->content[0] == '\0')
+    {
+      back = tmp->back;
+      next = tmp->next;
+      free(tmp->content);
+      free(tmp);
+      if(back == NULL)
+        *list = next;
+      else
+        back->next = next;
+      if(next != NULL)
+        next->back = back;
+      tmp = *list;
+    }
+    else
+      tmp = tmp->next;
+  }
+}
+
+void add_var(char **env_or_xenv, char *var, char *value, int index)
+{
+  char *new_var;
+
+  new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 4));
+  new_var[0] = '\0';
+  ft_cpy(new_var, var);
+  if(value != NULL)
+  {
+    ft_cpy(new_var, "=");
+    ft_cpy(new_var, "\"");
+    ft_cpy(new_var, value);
+    ft_cpy(new_var, "\"");
+  }
+  free(env_or_xenv[index]);
+  env_or_xenv[index] = new_var;
+}
+
+char **add_new_env(char **env_or_xenv, int s, char *var, char *value, int check)
+{
+  char **new_env;
+  int len;
+
+  len = 0;
+  if(check == 0)
+    new_env = (char **)malloc(sizeof(char *) * (s + 2));
+  else
+  {
+    if(value != NULL)
+      new_env = (char **)malloc(sizeof(char *) * (s + 2));
+    else
+      new_env = (char **)malloc(sizeof(char *) * (s + 1));
+  }
+  while (env_or_xenv && env_or_xenv[len])
+  {
+    new_env[len] = ft_substr(env_or_xenv[len], 0, ft_strlen(env_or_xenv[len]));
+    free(env_or_xenv[len]);
+    len++;
+  }
+  new_env[len] = NULL;
+  if(check == 1)
+  {
+    if(value != NULL)
+    {
+      add_var(new_env, var, value, len);
+      new_env[++len] = NULL;
+    }
+  }
+  else
+  {
+    add_var(new_env, var, value, len);
+    new_env[++len] = NULL;
+  }
+  free(env_or_xenv);
+  return new_env;
+}
+
+int set_var(t_list *list, char ***env, char ***xenv)
 {
   char *var;
   char *value;
   int len;
   int s;
-  char q;
-  char *new_var;
-  char *x_new_var;
-  char **n_env;
-  char **n_xenv;
 
   len = 0;
   s = 0;
-  while(list->content[len] && list->content[len] != '=')
+  while (list->content[len] && list->content[len] != '=')
     len++;
   var = ft_substr(list->content, 0, len);
-  s = len;
-  if(list->content[len] != '\0')
+  remove_quotes_string(var);
+  if(var == NULL || (!ft_isalpha(var[0]) && var[0] != '_'))
+    return(1);
+  if (list->content[len] != '\0')
+  {
+    if(list->content[len - 1] == ' ')
+      return(1);
     len++;
-  if(list->content[len] && (list->content[len] == '"' || list->content[len] == '\''))
-  {
-    q = list->content[len];
-    s = len++;
-    while(list->content[len] != q)
-      len++;
   }
-  else
-    while(list->content[len++]);
-  value = ft_substr(list->content, s + 1, len - (s + 1));
+  s = len;
+  while (list->content[len])
+    len++;
+  value = ft_substr(list->content, s, len - s);
+  remove_quotes_string(value);
   s = 0;
-  while(*env != NULL && (*env)[s] != NULL)
+  while (*env != NULL && (*env)[s] != NULL)
   {
-    if(!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
+    if (!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
     {
-      new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
-      new_var[0] = '\0';
-      ft_cpy(new_var, var);
-      ft_cpy(new_var, "=");
-      ft_cpy(new_var, value);
-      x_new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
-      x_new_var[0] = '\0';
-      ft_cpy(x_new_var, var);
-      ft_cpy(x_new_var, "=");
-      ft_cpy(x_new_var, value);
-      free((*env)[s]);
-      free((*xenv)[s]);
-      (*xenv)[s] = x_new_var;
-      (*env)[s] = new_var;
+      add_var(*env, var, value, s);
+      add_var(*xenv, var, value, s);
       free(var);
       free(value);
-      return;
+      return(0);
     }
     s++;
   }
-  new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
-  new_var[0] = '\0';
-  ft_cpy(new_var, var);
-  if(list->content[ft_strlen(var)] != '\0')
-  ft_cpy(new_var, "=");
-  ft_cpy(new_var, value);
-  n_env = (char **)malloc(sizeof(char *) * (s + 2));
-  if(value != NULL)
-    n_xenv = (char **)malloc(sizeof(char *) * (s + 2));
-  else
-    n_xenv = (char **)malloc(sizeof(char *) * s);
-  len = 0;
-  while(*env && (*env)[len])
-  {
-    n_env[len] = ft_substr((*env)[len], 0, ft_strlen((*env)[len]));
-    free((*env)[len]);
-    len ++;
-  }
-  len = 0;
-  while(*xenv && (*xenv)[len])
-  {
-    n_xenv[len] = ft_substr((*xenv)[len], 0, ft_strlen((*xenv)[len]));
-    free((*xenv)[len]);
-    len ++;
-  }
-  n_env[len] = new_var;
-  n_env[++len] = NULL;
-  if(value != NULL)
-  {
-    n_xenv[len] = new_var;
-    n_xenv[++len] = NULL;
-  }
-  else
-    n_xenv[len] = NULL;
-  free(*env);
-  free(*xenv);
-  free(value);
+  *env = add_new_env(*env, s, var, value, 0);
+  *xenv = add_new_env(*xenv, s, var, value, 1);
   free(var);
-  *env = n_env;
-  *xenv = n_xenv;
+  free(value);
+  return(0);
+}
+
+int check_schar(t_list *list)
+{
+  if(list->type == PIPE || list->type == OR \
+    || list->type == AND || list->type == OUTPUT \
+    || list->type == HEREDOC || list->type == INPUT \
+    || list->type == APPEND)
+    return(1);
+  return(0);
 }
 
 void check_var(t_list *list, char ***env, char ***xenv)
 {
   int i;
 
+  i = 0;
   while(list)
   {
-    i = -1;
-    //while(list->content[++i])
-    //{
-    //  if(list->content[i] == '=')
-    //  {
-    //    if(list->back == NULL && list->next == NULL)
-    //    {
-    //      list->type = SET_VAR;
-    //      set_var(list, xenv);
-    //    }
-    //    else if(list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
-    //    {
-    //      list->type = SET_VAR;
-    //      set_var(list, env);
-    //    }
-    //    break;
-    //  }
-    //}
-    if(list->back != NULL && list->back->back == NULL && !ft_strncmp(list->back->content, "export", 6) && list->back->content[6] == '\0' && list->next == NULL)
+    if(((list->back != NULL && !ft_strncmp(list->back->content, "export", 6) \
+      && list->back->content[6] == '\0' ) || i == 1) && !check_schar(list))
     {
-      list->type = SET_VAR;
-      set_var(list, env, xenv);
+      i = 1;
+      if(set_var(list, env, xenv))
+        printf("`%s': not a valid identifier\n", list->content);
     }
+    else if(check_schar(list))
+      i = 0;
     list = list->next;
   }
-}
-
-int count_quotes(char *str)
-{
-  int i;
-  char q;
-  int q_n;
-
-  q_n = 0;
-  i = -1;
-  while(str[++i])
-  {
-    if(str[i] == '"' || str[i] == '\'')
-    {
-      q_n++;
-      q = str[i];
-      while(str[++i] != q);
-    }
-  }
-  return(q_n);
 }
 
 void remove_quotes(t_list *list)
@@ -1245,9 +1324,9 @@ void remove_quotes(t_list *list)
 
   if(list == NULL)
     return;
-  q_n = count_quotes(list->content);
   while(list)
   {
+    q_n = count_quotes(list->content);
     j = -1;
     while(list->content[++j] && q_n != 0)
     {
@@ -1627,7 +1706,7 @@ char **unset(char **env, char *str)
       size = 0;
       while(*env && env[size + i])
       {
-        if(size == s)
+        if(size + i == s)
         {
           free(env[s]);
           i = 1;
@@ -1691,13 +1770,91 @@ int clean_heredoc(char **redfile, int hd)
   return(0);
 }
 
-int open_file(char *redfile, t_list *delimiter)
+int check_quotes(char *str)
+{
+  int i;
+
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] == '"' || str[i] == '\'')
+      return(1);
+  }
+  return(0);
+}
+
+int expand_line(char **env, char **str, int d)
+{
+  char *fstr;
+  char *sstr;
+  char *tstr;
+  char *var;
+  int len;
+  int s;
+
+  s = 0;
+  len = 0;
+  fstr = NULL;
+  sstr = NULL;
+  tstr = NULL;
+  while(d > 0)
+  {
+    d--;
+    len++;
+  }
+  fstr = ft_substr((*str), 0, len);
+  s = len;
+  if((*str)[len] == '$')
+    len++;
+  if((*str)[len] == '?')
+    len++;
+  else
+  {
+    while((*str)[len] && (*str)[len] != '"' && (*str)[len] != '\'' \
+      && (*str)[len] != '$' && (*str)[len] != ' ')
+      len++;
+  }
+  sstr = ft_substr((*str),s + 1, len - (s + 1));
+  if(sstr == NULL)
+    return(1);
+  if(sstr != NULL && !ft_isalpha(sstr[0]))
+    return(1);
+  s = len;
+  while((*str)[len])
+    len++;
+  tstr = ft_substr((*str), s, len - s);
+  if(sstr)
+  {
+    if(sstr[0] == '?')
+      var = ft_itoa(g_exit_status);
+    else
+      var = ft_getenv(env, sstr);
+  }
+  else
+    var = "";
+  free(sstr);
+  free((*str));
+  (*str) = get_new_list(fstr, var, tstr);
+  remove_quotes_string(*str);
+  free(fstr);
+  free(tstr);
+  return(0);
+}
+
+int open_file(char *redfile, t_list *delimiter, char **env)
 {
   int fd;
   char *line;
   pid_t pid;
   int status;
+  int d;
+  int i;
 
+  i = 0;
+  d = -1;
+  if(!check_quotes(delimiter->content))
+    i = 1;
+  remove_quotes_string(delimiter->content);
   fd = open(redfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
   if (fd < 0)
   {
@@ -1730,6 +1887,15 @@ int open_file(char *redfile, t_list *delimiter)
       }
       else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
           break;
+      if(i == 1)
+      {
+        d = check_d(line, -1);
+        while(line[d])
+        {
+          expand_line(env, &line, d);
+          d = check_d(line, d - 1);
+        }
+      }
       write(fd, line, ft_strlen(line));
       write(fd, "\n", 1);
       free(line);
@@ -1828,7 +1994,7 @@ void implementing_heredoc(t_list **list, char **redfile)
           (*list)->back = back;
         else
           *list = back;
-        if((*list)->back != NULL)
+        if(*list != NULL && (*list)->back != NULL)
           *list = (*list)->back;
       }
     }
@@ -1841,7 +2007,7 @@ void implementing_heredoc(t_list **list, char **redfile)
     *list = (*list)->back;
 }
 
-char **heredoc(t_list **list, int size)
+char **heredoc(t_list **list, int size, char **env)
 {
   char **redfile;
   int i;
@@ -1871,7 +2037,7 @@ char **heredoc(t_list **list, int size)
   {
     if(delimiter->type == HEREDOC)
     {
-      if(open_file(redfile[++i], delimiter->next))
+      if(open_file(redfile[++i], delimiter->next, env))
         return(NULL);
     }
     delimiter = delimiter->next;
@@ -1884,12 +2050,18 @@ char **heredoc(t_list **list, int size)
 int check_Wildcards(t_list *list)
 {
   int i;
+  char q;
 
   while(list)
   {
     i = -1;
     while(list->content[++i])
     {
+      if(list->content[i] == '"' || list->content[i] == '\'')
+      {
+        q = list->content[i];
+        while(list->content[++i] != q);
+      }
       if(list->content[i] == '*')
         return(1);
     }
