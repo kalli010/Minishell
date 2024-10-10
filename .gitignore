@@ -4,14 +4,14 @@ utils/minishell.c
 utils/Minishell.c
 includes/minishell.h
 
-*/*.o
+/.o
 .nfs*
-*/.nfs*
+/.nfs
 lib/libft/*.a
 lib/libft/*.o
-
+bulutins/*.o
 minishell
-
+bin/
 
 bulutins/a.out
 bulutins/wil.c

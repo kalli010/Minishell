@@ -1758,8 +1758,11 @@ void free_tree(t_tree *root)
   i = -1;
   if(root == NULL)
   {
-    free(root->content->content);
-    free(root->content);
+    if(root)
+    {
+      free(root->content->content);
+      free(root->content);
+    }
     free(root);
     return;
   }
