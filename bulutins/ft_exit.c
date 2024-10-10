@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/04 22:52:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:20:53 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ static int exit_errors(int status)
 {
     if (status == 1)
     {
-        write(2, "minishell: exit: too many arguments\n", 37);
+        write(2, M_SHELL, 23);
+        write(2, "exit: too many arguments\n", 26);
     }
     else if (status == 2)
     {
-        write(2, "minishell: exit: numeric argument required\n", 44);
+        write(2, M_SHELL, 23);
+        write(2, "exit: numeric argument required\n", 33);
     }
     return (EXIT_FAILURE);
 }

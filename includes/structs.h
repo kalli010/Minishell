@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/10/10 14:35:16 by ayel-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
@@ -10,10 +22,10 @@ typedef enum s_ttype
 	PIPE,
 	OR,
 	AND,
-	OUTPUT,  /*>*/
-	HEREDOC, /*<<*/
-	INPUT,   /*<*/
-	APPEND,  /*>>*/
+	OUTPUT,
+	HEREDOC,
+	INPUT,
+	APPEND,
 	OPTIONS,
 	PATH,
 	VAR,
@@ -22,6 +34,15 @@ typedef enum s_ttype
 	DELIMITER,
 	PARENTHESIS,
 }					t_ttype;
+
+typedef struct s_redirect
+{
+    char *filename;
+    int type;               
+	int flag;
+    struct s_redirect *next; 
+} t_redirect; 
+
 
 typedef struct helper
 {
@@ -37,8 +58,6 @@ typedef struct helper
 	char			*pwd;
 }					t_helper;
 
-extern t_helper		*g_helper;
-
 typedef struct s_file
 {
 	char			*file_name;
@@ -46,7 +65,6 @@ typedef struct s_file
 	struct s_file	*next;
 }					t_file;
 
-// linked list
 typedef struct s_list
 {
 	char			*content;
@@ -57,7 +75,6 @@ typedef struct s_list
 	int				in;
 }					t_list;
 
-// LCRS tree
 typedef struct s_tree
 {
 	t_list			*content;

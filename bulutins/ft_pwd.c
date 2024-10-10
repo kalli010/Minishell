@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/03 08:03:27 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:17:17 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,24 @@
 
 int	ft_pwd(t_list *list,t_helper *helper)
 {
-	
+	char *path;
+	g_exit_status = 0;
+	(void)helper;
 	if (count_arg(list) > 0)
 	{
 		g_exit_status = 1;
-		write(2,"minishell ", 11);
+		write(2, M_SHELL, 23);
 		write(2, "please enter pwd  with no options\n", 35);
         return (g_exit_status);
 	}
-	printf("%s\n",helper->pwd);
+	if (!getcwd(NULL,0))
+	{
+		g_exit_status = 1;
+		write(2, M_SHELL, 23);
+		printf("dir is not defined\n");
+		return (g_exit_status);
+	}
+	path = getcwd(NULL,0);
+	printf("%s\n",path);
 	return (g_exit_status);
 }

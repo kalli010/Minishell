@@ -1,12 +1,7 @@
 handle_redirections in bonus
 
 
-minishell) ->  "||"
 
-Program received signal SIGSEGV, Segmentation fault.
-0x0000000000401360 in check_and_or (root=0x42ba80, helper=0x42b9a0) at bonus/check_logical.c:25
-25	            return (find_command(root->first_child->next_sibling, helper));
-(gd
 
 (minishell) -> >> sa asd
 >>  (8)
@@ -30,3 +25,8 @@ pwd  (1)
 ==268251== 
 (null)
 
+< /etc/passwd (perm denied?)
+cp /usr/bin/ls . ; export PATH=":" ; ls (it does not work when its supposed to!)
+spacial:
+  when 'ls' is written in prompt and minishell was ran with 'env -i'
+  it screams in pain.

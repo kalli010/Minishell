@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/05 00:10:09 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:55:45 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,15 @@ extern int		g_exit_status;
 # define ERROR_C 127
 # define CMD_NOT_FOUND 127
 # define GREEN "\033[1;32m"
-# define RESET "\033[0m"
+# define RED "\033[1;31m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
+# define MAGENTA "\033[1;35m"
+# define CYAN "\033[1;36m"
+# define WHITE "\033[1;37m"
+# define BLACK "\033[0;30m"
 # define MAX_PATH 4096
-
+# define M_SHELL "\033[1;31mminishell: \033[0m"
 # define BEFORE 888
 # define PARENT 777
 # define CHILD 666
@@ -38,7 +44,6 @@ int				find_command(t_tree *root, t_helper *helper);
 char			**get_options(t_helper *helper, t_list *list);
 void			free_array(char **arr);
 int				command_not_found(char *cmd);
-int				get_exec_access(char *filename);
 int				is_dir(char *dir);
 int				ft_env(t_list *list, char **env);
 int				ft_pwd(t_list *list, t_helper *helper);
@@ -46,10 +51,8 @@ int				is_builtins(t_tree *root);
 int				run_builtins(t_tree *root, t_helper *helper);
 int				ft_cd(t_list *list, t_helper *helper);
 unsigned char	ft_exit(t_tree *root, t_helper *helper);
-int				redirect_output(t_tree *root, t_helper *helper);
 int				execute(t_tree *root, t_helper *helper);
 int				count_arg(t_list *list);
-int				redirect_input(t_tree *root, t_helper *helper);
 int				execute_pipe(t_tree *root, t_helper *helper);
 int				ft_echo(t_list *list);
 int				check_and_or(t_tree *root, t_helper *helper);
@@ -58,7 +61,6 @@ void			free_list(t_list *list);
 int				ft_unset(t_list *list, t_helper *helper);
 void			ctr_c(int sig);
 void			signal_handeler(int place);
-int				check_cmd(char *cmd, char *s, char **arg);
 int				is_only_bs(t_tree *root);
 int				is_only_slashes(t_tree *root);
 void			handle_cd_error(const char *path, int error_type);
@@ -72,6 +74,10 @@ int				check_read(char *file);
 int				check_permission(char *file);
 int				check_existence(char *file, int flag);
 int				get_permission(char *file);
-int check_failure(char *file);
-
+int	open_fd(char *file, int type);
+t_redirect *init_redirect_lst(t_tree **root);
+int exec_redirections(t_redirect *redlst, t_helper *helper);
+int	redirect_all(t_tree *root, t_helper *helper);
+void free_redirect_list(t_redirect **redlst);
+void free_tree(t_tree *root);
 #endif

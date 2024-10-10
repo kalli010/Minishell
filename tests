@@ -1,3 +1,33 @@
 ------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------
+ ((echo 1) | (echo 2) | (echo 3 | (echo 4)))
+|  (2)
+  |  (2)
+    echo  (1)
+      1  (9)
+    echo  (1)
+      2  (9)
+  |  (2)
+    echo  (1)
+      3  (9)
+    echo 4  (1)
+minishell: echo 4: command not found
+
+
+
+
+
+
+
+
+
+
+
+
+
+YOUNESS
+$HEHEHE > oout | << x
+unset LD_LIBRARY_PATH=/ (invalid free)
+export ls=1337 (invalid free)
+remove quotes from env (VAR=VALUE machi VAR="VALUE")

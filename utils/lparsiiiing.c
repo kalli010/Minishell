@@ -3,7 +3,7 @@
 int quotes_check(char *str)
 {
   int i;
-  char c;
+char c;
   int e;
 
   e = 0;
@@ -122,7 +122,7 @@ int check_p_r2(char *str,int *i)
   return(-1);
 }
 
-int split_symbols(char *str, char **cmd)
+char *split_symbols(char *str)
 {
   int i;
   int s;
@@ -142,8 +142,6 @@ int split_symbols(char *str, char **cmd)
     check_p_r(&str[i], &i, &s);
   }
   tmp = (char *)malloc(sizeof(char) * (i + s + 1));
-  if(tmp == NULL)
-    return(1);
   i = -1;
   s = 0;
   while(str[++i])
@@ -177,8 +175,7 @@ int split_symbols(char *str, char **cmd)
     }
   }
   tmp[s] = '\0';
-  *cmd = tmp;
-  return(0);
+  return(tmp);
 }
 
 int echo_check(char *str)
@@ -316,7 +313,7 @@ int count_words(char *str)
   return(c);
 }
 
-int split_tokens(char *tokens, char **tkn)
+char *split_tokens(char *tokens)
 {
   char *str;
   int len;
@@ -340,8 +337,6 @@ int split_tokens(char *tokens, char **tkn)
       len++;
   }
   str = (char *)malloc(sizeof(char) * (len + (wd - 1) + 1));
-  if(str == NULL)
-    return(1);
   i = -1;
   len = -1;
   wd = 0;
@@ -380,11 +375,10 @@ int split_tokens(char *tokens, char **tkn)
   }
   str[++len] = '\0';
   free(tokens);
-  *tkn = str;
-  return(0);
+  return(str);
 }
 
-int echo_create_tokens(char *str, char **tokens, int j)
+void echo_create_tokens(char *str, char **tokens, int j)
 {
   int i;
   int s;
@@ -451,20 +445,7 @@ int echo_create_tokens(char *str, char **tokens, int j)
         
       }
       tokens[j] = ft_substr(str, s, i - s);
-      if(tokens[j] == NULL)
-      {
-        i = -1;
-        while(++i < j)
-          free(tokens[i]);
-        return (1);
-      }
-      if(split_tokens(tokens[j], &tokens[j]))
-      {
-        i = -1;
-        while(++i < j)
-          free(tokens[i]);
-        return (1);
-      }
+      tokens[j] = split_tokens(tokens[j]);
       j++;
       x++;
       if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == 40 || str[i] == 41)
@@ -474,10 +455,9 @@ int echo_create_tokens(char *str, char **tokens, int j)
     }
   }
   tokens[j] = NULL;
-  return(0);
 }
 
-int create_tokens(char *str, char **tokens)
+void create_tokens(char *str, char **tokens)
 {
   int i;
   int s;
@@ -502,41 +482,76 @@ int create_tokens(char *str, char **tokens)
       }
       if(!ft_strncmp(&str[s], "echo", 4) || !ft_strncmp(&str[s], "\"echo\"", 6))
       {
-        if(echo_create_tokens(&str[s], tokens, j))
-          return (1);
-        return(0);
+        echo_create_tokens(&str[s], tokens, j);
+        return;
       }
       tokens[j] = ft_substr(str, s, i - s);
-      if(tokens[j] == NULL)
-      {
-        i = -1;
-        while(++i < j)
-          free(tokens[i]);
-        return (1);
-      }
       j++;
       if(str[i] == '\0')
         i--;
     }
   }
   tokens[j] = NULL;
-  return(0);
 }
 
-int tokenizer(char *str, char ***tokens)
+char **tokenizer(char *str)
 {
-  char **tkn;
+  char **tokens;
   int tc;
 
   tc = token_count(str);
-  tkn = (char **)malloc(sizeof(char *) * (tc + 1));
-  if(tkn == NULL)
-    return(1);
-  if(create_tokens(str, tkn))
-    return(1);
-  *tokens = tkn;
-  free(str);
-  return(0);
+  tokens = (char **)malloc(sizeof(char *) * (tc + 1));
+  create_tokens(str, tokens);
+  return(tokens);
+}
+
+void token_type(t_list *list)
+{
+  if(list->content[0] == '|' && list->content[1] == '|' && list->content[2] == '\0')
+    list->type = OR;
+  else if(list->content[0] == '&' && list->content[1] == '&' && list->content[2] == '\0')
+    list->type = AND;
+  else if(list->content[0] == '<' && list->content[1] == '<' && list->content[2] == '\0')
+    list->type = HEREDOC;
+  else if(list->content[0] == '>' && list->content[1] == '>' && list->content[2] == '\0')
+    list->type = APPEND;
+  else if(list->content[0] == '|' && list->content[1] == '\0')
+      list->type = PIPE;
+  else if(list->content[0] == '>' && list->content[1] == '\0')
+      list->type = OUTPUT;
+  else if(list->content[0] == '<' && list->content[1] == '\0')
+      list->type = INPUT;
+  else if((list->content[0] == ')' && list->content[1] == '\0') || (list->content[0] == '(' && list->content[1] == '\0'))
+    list->type = PARENTHESIS;
+  else if(list->back != NULL && list->back->type == HEREDOC)
+    list->type = DELIMITER;
+  else if(list->back != NULL \
+      && (list->back->type == OUTPUT || list->back->type == APPEND || \
+    list->back->type == INPUT))
+      list->type = PATH;
+  else if(list->back != NULL && \
+      (list->back->type == COMMAND || list->back->type == OPTIONS \
+      || list->back->type == PATH_COMMAND))
+    list->type = OPTIONS;
+  else if(list->content[0] == '/' || list->content[0] == '~' \
+      || !ft_strncmp(list->content, "./", 2))
+      {
+        if(list->back != NULL)
+        {
+          if(list->back->type != COMMAND && list->back->type != VAR)
+            list->type = PATH_COMMAND;
+        }
+        else if(list->back == NULL)
+          list->type = PATH_COMMAND;
+        else
+          list->type = PATH;
+      }
+  
+  else if(list->back != NULL && list->content[0] == '$')
+     list->type = VAR;
+  
+  else
+    list->type = COMMAND;
 }
 
 void token_type(t_list *list)
@@ -586,44 +601,6 @@ void token_type(t_list *list)
     list->type = COMMAND;
 }
 
-int creat_linked_list(t_list **list, char **tokens, int t)
-{
-  int i;
-  t_list *tmp;
-
-  i = -1;
-  while(tokens[++i])
-  {
-    if(ft_lstadd_back(list, ft_lstnew(tokens[i])))
-    {
-      free_list(*list);
-      free(tokens);
-      return(1);
-    }
-    tmp = *list;
-    while(tmp->next != NULL)
-      tmp = tmp->next;
-    token_type(tmp);
-  }
-  if(!t)
-    free(tokens);
-  return(0);
-}
-
-int check_red_with_cmd(t_list *list)
-{
-  while(list)
-  {
-    if(list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
-    {
-      if(list->next != NULL && list->next->next != NULL && (list->next->next->type == COMMAND || list->next->next->type == OPTIONS))
-        return(1);
-    }
-    list = list->next;
-  }
-  return(0);
-}
-
 void free_list(t_list *list)
 {
   t_list *tmp;
@@ -640,7 +617,7 @@ void free_list(t_list *list)
   }
 }
 
-int recreate_linked_list(t_list *list, t_list **lst)
+t_list *recreate_linked_list(t_list *list)
 {
   t_list *n_list;
   t_list *tmp;
@@ -659,30 +636,16 @@ int recreate_linked_list(t_list *list, t_list **lst)
         start = tmp;
         while(tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
         {
-          if(ft_lstadd_back(&n_list, ft_lstnew(tmp->content)))
-          {
-            free_list(n_list);
-            return(1);
-          }
+          ft_lstadd_back(&n_list, ft_lstnew(tmp->content));
           token_type(n_list);
           tmp = tmp->next;
         }
         start->back->next = tmp;
       }
-      if(ft_lstadd_back(&n_list, ft_lstnew(list->content)))
-      {
-        free_list(n_list);
-        return(1);
-      }
+      ft_lstadd_back(&n_list, ft_lstnew(list->content));
     }
     else
-    {
-      if(ft_lstadd_back(&n_list, ft_lstnew(list->content)))
-      {
-        free_list(n_list);
-        return(1);
-      }
-    }
+      ft_lstadd_back(&n_list, ft_lstnew(list->content));
     list = list->next;
   }
   tmp = n_list;
@@ -692,8 +655,7 @@ int recreate_linked_list(t_list *list, t_list **lst)
     tmp = tmp->next;
   }
   free_list(list);
-  *lst = n_list;
-  return(0);
+  return(n_list);
 }
 
 int symbols_check(t_list *list)
@@ -817,8 +779,6 @@ char *get_new_list(char *fstr, char *var, char *tstr)
   n_list = NULL;
   len = ft_strlen(fstr) + ft_strlen(var) + ft_strlen(tstr);
   n_list = (char *)malloc(sizeof(char) * (len + 1));
-  if(n_list == NULL)
-    return(NULL);
   n_list[0] = '\0';
   ft_cpy(n_list, fstr);
   ft_cpy(n_list, var);
@@ -835,8 +795,6 @@ char *ft_getenv(char **env, char *str)
 
   s = -1;
   new_var = NULL;
-  if(str == NULL)
-    return(NULL);
   while(env != NULL && env[++s])
   {
     if(!ft_strncmp(env[s], str, ft_strlen(str)) && env[s][ft_strlen(str)] == '=')
@@ -846,8 +804,6 @@ char *ft_getenv(char **env, char *str)
       i = -1;
       while(env[s][++i]);
       new_var = (char *)malloc(sizeof(char) * (i - st + 1));
-      if(new_var == NULL)
-        return(NULL);
       new_var[0] = '\0';
       ft_cpy(new_var, &env[s][st]);
       new_var[i - st] = '\0';
@@ -866,16 +822,16 @@ int var_dquotes(char **env, t_list **list, int d)
   int s;
 
   s = 0;
+  len = 0;
   fstr = NULL;
   sstr = NULL;
   tstr = NULL;
-  //while(d > 0)
-  //{
-  //  d--;
-  //  len++;
-  //}
-  len = d - 1;
-  fstr = ft_substr((*list)->content, s, len);
+  while(d > 0)
+  {
+    d--;
+    len++;
+  }
+  fstr = ft_substr((*list)->content, 0, len);
   s = len;
   if((*list)->content[len] == '$')
     len++;
@@ -883,61 +839,40 @@ int var_dquotes(char **env, t_list **list, int d)
     len++;
   else
   {
-    while(ft_isalpha((*list)->content[len]) || ft_isdigit((*list)->content[len]) || (*list)->content[len] == '_')
+    while((*list)->content[len] && (*list)->content[len] != '"' && (*list)->content[len] != '\'' \
+      && (*list)->content[len] != '$' && (*list)->content[len] != ' ' && (*list)->content[len] != '=')
       len++;
   }
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
-  //if(sstr == NULL)
-  //{
-  //  free(fstr);
-  //  return(1);
-  //}
-  if(sstr != NULL && sstr[0] != '_' && !ft_isalpha(sstr[0]))
-  {
-    free(fstr);
-    free(sstr);
+  if(sstr == NULL)
     return(1);
-  }
+  if(sstr != NULL && !ft_isalpha(sstr[0]))
+    return(1);
   s = len;
   while((*list)->content[len])
     len++;
   tstr = ft_substr((*list)->content, s, len - s);
-  //if(sstr)
-  //{
+  if(sstr)
+  {
     if(sstr[0] == '?')
       var = ft_itoa(g_exit_status);
     else
       var = ft_getenv(env, sstr);
-  //}
-  //else
-  //  var = "";
+  }
+  else
+    var = "";
   s = count_words(var);
   if(s > 1 && (*list)->back && ((*list)->back->type == APPEND || (*list)->back->type == INPUT \
     || (*list)->back->type == OUTPUT))
-  {
-    free(fstr);
-    free(sstr);
-    free(tstr);
-    free(var);
     return(1);
-  }
   if(s == 0 && tstr == NULL && (*list)->back && ((*list)->back->type == APPEND || (*list)->back->type == INPUT \
     || (*list)->back->type == OUTPUT))
-  {
-    free(fstr);
-    free(sstr);
-    free(tstr);
-    free(var);
     return(1);
-  }
   free(sstr);
   free((*list)->content);
   (*list)->content = get_new_list(fstr, var, tstr);
   free(fstr);
   free(tstr);
-  free(var);
-  if((*list)->content == NULL)
-    return(2);
   return(0);
 }
 
@@ -1023,7 +958,7 @@ void remove_quotes_string(char *str)
   }
 }
 
-int var_split(char *str, char ***array)
+char **var_split(char *str)
 {
   char **list;
   int i;
@@ -1034,8 +969,6 @@ int var_split(char *str, char ***array)
   remove_quotes_string(str);
   c = count_words(str);
   list = (char **)malloc(sizeof(char *) * (c + 1));
-  if(list == NULL)
-    return(1);
   i = 0;
   c = 0;
   while(str[i])
@@ -1044,19 +977,10 @@ int var_split(char *str, char ***array)
     if(str[i] == '\0')
       break;
     list[c++] = ft_substr(str, i, end - i);
-    if(list[c - 1] == NULL)
-    {
-      i = -1;
-      while(++i < c - 1)
-        free(list[i]);
-      free(list);
-      return(1);
-    }
     i = end;
   }
   list[c] = NULL;
-  *array = list;
-  return(0);
+  return(list);
 }
 
 int var_quotes(char **env, t_list **list, int d)
@@ -1065,20 +989,14 @@ int var_quotes(char **env, t_list **list, int d)
   t_list *n_list;
   t_list *tmp;
   t_list *back;
-  int i;
 
   n_list = NULL;
-  i = var_dquotes(env, list, d);
-  if(i == 1)
+  if(var_dquotes(env, list, d))
     return(1);
-  else if(i == 2)
-    return(2);
   if((*list)->content[0] != '\0')
   {
-    if(var_split((*list)->content, &array))
-      return(2);
-    if(creat_linked_list(&n_list, array, 0))
-      return(2);
+    array = var_split((*list)->content);
+    creat_linked_list(&n_list, array, 0);
     tmp = (*list)->next;
     back = (*list)->back;
     if((*list)->back != NULL)
@@ -1102,7 +1020,6 @@ int var_quotes(char **env, t_list **list, int d)
 int expander(char **env, t_list **list, int d)
 {
   int i;
-  int status;
 
   i = d;
   while(--d >= 0)
@@ -1112,20 +1029,14 @@ int expander(char **env, t_list **list, int d)
       while(--d >= 0 && (*list)->content[d] != '"');
       if(d < 0)
       {
-        status = var_dquotes(env, list, i);
-        if(status == 1)
+        if(var_dquotes(env, list, i))
           return(1);
-        else if(status == 2)
-          return(2);
         return(0);
       }
     }
   }
-  status = var_quotes(env, list, i);
-  if(status == 1)
+  if(var_quotes(env, list, i))
     return(1);
-  else if(status == 2)
-    return(2);
   return(0);
 }
 
@@ -1161,7 +1072,6 @@ int check_expander(char **env, t_list **list)
 {
   t_list *tmp;
   int i;
-  int status;
 
   tmp = NULL;
   i = -1;
@@ -1172,14 +1082,11 @@ int check_expander(char **env, t_list **list)
     {
       if(check_squotes((*list)->content, i))
       {
-        status = expander(env, list, i);
-        if(status == 1)
+        if(expander(env, list, i))
         {
           (*list)->back->i = 2;
           break;
         }
-        else if(status == 2)
-          return(1);
         token_type(*list);
         i = check_d((*list)->content, i - 1);
       }
@@ -1225,23 +1132,22 @@ void clean_linked_list(t_list **list)
   }
 }
 
-int add_var(char **env_or_xenv, char *var, char *value, int index)
+void add_var(char **env_or_xenv, char *var, char *value, int index)
 {
   char *new_var;
 
-  new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 2));
-  if(new_var == NULL)
-    return(1);
+  new_var = (char *)malloc(sizeof(char) * (ft_strlen(var) + ft_strlen(value) + 4));
   new_var[0] = '\0';
   ft_cpy(new_var, var);
   if(value != NULL)
   {
     ft_cpy(new_var, "=");
+    ft_cpy(new_var, "\"");
     ft_cpy(new_var, value);
+    ft_cpy(new_var, "\"");
   }
   free(env_or_xenv[index]);
   env_or_xenv[index] = new_var;
-  return(0);
 }
 
 char **add_new_env(char **env_or_xenv, int s, char *var, char *value, int check)
@@ -1251,39 +1157,17 @@ char **add_new_env(char **env_or_xenv, int s, char *var, char *value, int check)
 
   len = 0;
   if(check == 0)
-  {
     new_env = (char **)malloc(sizeof(char *) * (s + 2));
-    if(new_env == NULL)
-      return(NULL);
-  }
   else
   {
     if(value != NULL)
-    {
       new_env = (char **)malloc(sizeof(char *) * (s + 2));
-      if(new_env == NULL)
-        return(NULL);
-    }
     else
-    {
       new_env = (char **)malloc(sizeof(char *) * (s + 1));
-      if(new_env == NULL)
-        return(NULL);
-    }
   }
   while (env_or_xenv && env_or_xenv[len])
   {
     new_env[len] = ft_substr(env_or_xenv[len], 0, ft_strlen(env_or_xenv[len]));
-    if(new_env[len] == NULL)
-    {
-      check = -1;
-      while(++check < len)
-        free(new_env[check]);
-      while(env_or_xenv && env_or_xenv[len])
-        free(env_or_xenv[len++]);
-      free(new_env);
-      return(NULL);
-    }
     free(env_or_xenv[len]);
     len++;
   }
@@ -1292,27 +1176,13 @@ char **add_new_env(char **env_or_xenv, int s, char *var, char *value, int check)
   {
     if(value != NULL)
     {
-      if(add_var(new_env, var, value, len))
-      {
-        while(--len >= 0)
-          free(new_env[len]);
-        free(new_env);
-        free(env_or_xenv);
-        return(NULL);
-      }
+      add_var(new_env, var, value, len);
       new_env[++len] = NULL;
     }
   }
   else
   {
-    if(add_var(new_env, var, value, len))
-    {
-      while(--len >= 0)
-        free(new_env[len]);
-      free(new_env);
-      free(env_or_xenv);
-      return(NULL);
-    }
+    add_var(new_env, var, value, len);
     new_env[++len] = NULL;
   }
   free(env_or_xenv);
@@ -1331,10 +1201,8 @@ int set_var(t_list *list, char ***env, char ***xenv)
   while (list->content[len] && list->content[len] != '=')
     len++;
   var = ft_substr(list->content, 0, len);
-  if(var == NULL)
-    return(1);
   remove_quotes_string(var);
-  if(!ft_isalpha(var[0]) && var[0] != '_')
+  if(var == NULL || (!ft_isalpha(var[0]) && var[0] != '_'))
     return(1);
   if (list->content[len] != '\0')
   {
@@ -1352,18 +1220,8 @@ int set_var(t_list *list, char ***env, char ***xenv)
   {
     if (!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
     {
-      if(add_var(*env, var, value, s))
-      {
-        free(var);
-        free(value);
-        return(1);
-      }
-      if(add_var(*xenv, var, value, s))
-      {
-        free(var);
-        free(value);
-        return(1);
-      }
+      add_var(*env, var, value, s);
+      add_var(*xenv, var, value, s);
       free(var);
       free(value);
       return(0);
@@ -1372,12 +1230,6 @@ int set_var(t_list *list, char ***env, char ***xenv)
   }
   *env = add_new_env(*env, s, var, value, 0);
   *xenv = add_new_env(*xenv, s, var, value, 1);
-  if(*env == NULL || *xenv == NULL)
-  {
-    free(var);
-    free(value);
-    return(1);
-  }
   free(var);
   free(value);
   return(0);
@@ -1490,6 +1342,7 @@ void add_sibling_to_child(t_tree *child, t_tree *sibling)
     l_sibling->next_sibling = sibling;
   }
 }
+
 
 int check_parenthesis(t_list *list)
 {
@@ -1750,27 +1603,6 @@ void print_tree(t_tree *root, int spaces)
   }
 }
 
-void free_tree(t_tree *root)
-{
-  int i;
-  t_tree *child;
-
-  i = -1;
-  if(root == NULL)
-  {
-    free(root->content->content);
-    free(root->content);
-    free(root);
-    return;
-  }
-  child = root->first_child;
-  while(child)
-  {
-    free_tree(child);
-    child = child->next_sibling;
-  }
-}
-
 int env_size(char **str)
 {
   int s;
@@ -1796,39 +1628,12 @@ char **create_env(char **envp)
   return(env);
 }
 
-int get_var_value(char *env, char **var, char **value)
-{
-  int i;
-  int s;
-
-  i = -1;
-  while(env[++i] && env[i] != '=');
-  *var = ft_substr(env, 0, i);
-  if(*var == NULL)
-    return(1);
-  if(env[i] != '\0')
-    i++;
-  s = i;
-  while(env[i++]);
-  *value = ft_substr(env, s, i - s);
-  return(0);
-}
-
-int export(char **env)
+void export(char **env)
 {
   int i = -1;
-  char *var;
-  char *value;
-  
+
   while(env[++i])
-  {
-    if(get_var_value(env[i], &var, &value))
-      return(1);
-    printf("%s=\"%s\"\n", var, value);
-    free(var);
-    free(value);
-  }
-  return(0);
+    printf("%s\n",env[i]);
 }
 
 char **unset(char **env, char *str)
@@ -1910,9 +1715,7 @@ int clean_heredoc(char **redfile, int hd)
       printf("Error deleting redfile\n");
       return(1);
     }
-    free(redfile[i]);
   }
-  free(redfile);
   return(0);
 }
 
@@ -1962,32 +1765,32 @@ int expand_line(char **env, char **str, int d)
   }
   sstr = ft_substr((*str),s + 1, len - (s + 1));
   if(sstr == NULL)
-  {
-    free(fstr);
-    free((*str));
     return(1);
-  }
   if(sstr != NULL && !ft_isalpha(sstr[0]))
     return(1);
   s = len;
   while((*str)[len])
     len++;
   tstr = ft_substr((*str), s, len - s);
-  if(sstr[0] == '?')
-    var = ft_itoa(g_exit_status);
+  if(sstr)
+  {
+    if(sstr[0] == '?')
+      var = ft_itoa(g_exit_status);
+    else
+      var = ft_getenv(env, sstr);
+  }
   else
-    var = ft_getenv(env, sstr);
+    var = "";
   free(sstr);
   free((*str));
   (*str) = get_new_list(fstr, var, tstr);
   remove_quotes_string(*str);
   free(fstr);
   free(tstr);
-  free(var);
   return(0);
 }
 
-int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char ***tokens, char **rf)
+int open_file(char *redfile, t_list *delimiter, char **env)
 {
   int fd;
   char *line;
@@ -2007,6 +1810,7 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
     printf("Error creating redfile\n");
     return (1);
   }
+
   pid = fork();
   if (pid == -1)
   {
@@ -2037,28 +1841,16 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
         d = check_d(line, -1);
         while(line[d])
         {
-          if(expand_line(env, &line, d))
-          {
-            close(fd);
-            exit(1);
-          }
+          expand_line(env, &line, d);
           d = check_d(line, d - 1);
         }
       }
       write(fd, line, ft_strlen(line));
       write(fd, "\n", 1);
-      free_list(list);
-      free(*tokens);
       free(line);
     }
     free(line);
     close(fd);
-    free_list(list);
-    free(*tokens);
-    i = -1;
-    while(rf[++i])
-      free(rf[i]);
-    free(rf);
     exit(0);
   }
   else
@@ -2067,10 +1859,10 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
     if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
     {
       close(fd);
+      clean_heredoc(&redfile, 1);
       return (1);
     }
   }
-  close(fd);
   return (0);
 }
 
@@ -2094,7 +1886,6 @@ void implementing_heredoc(t_list **list, char **redfile)
   t_list *next;
   t_list *tmp;
   int i;
-  char *rf;
 
   i = -1;
   next = NULL;
@@ -2108,15 +1899,13 @@ void implementing_heredoc(t_list **list, char **redfile)
       next = (*list)->next->next;
       if(back && check_command_type(back->content))
       {
-        i++;
         while(back && back->next->type != HEREDOC)
           back = back->next;
         back->next = NULL;
         ft_lstadd_back(&back, ft_lstnew("<"));
         back = back->next;
         back->type = INPUT;
-        rf = ft_substr(redfile[i], 0, ft_strlen(redfile[i]));
-        ft_lstadd_back(&back, ft_lstnew(rf));
+        ft_lstadd_back(&back, ft_lstnew(redfile[++i]));
         back = back->next;
         back->type = OPTIONS;
         tmp = *list;
@@ -2136,7 +1925,6 @@ void implementing_heredoc(t_list **list, char **redfile)
       }
       else
       {
-        i++;
         while(back && back->next->type != HEREDOC)
           back = back->next;
         if(back != NULL)
@@ -2168,14 +1956,13 @@ void implementing_heredoc(t_list **list, char **redfile)
     *list = (*list)->back;
 }
 
-int heredoc(t_list **list, int size, char **env, char ***rf, char ***tokens)
+char **heredoc(t_list **list, int size, char **env)
 {
   char **redfile;
   int i;
   char *nbr;
   int j;
   t_list *delimiter;
-  int n;
 
   delimiter = *list;
   i = -1;
@@ -2186,30 +1973,28 @@ int heredoc(t_list **list, int size, char **env, char ***rf, char ***tokens)
     redfile[i] = ft_strcpy(redfile[i], "/tmp/.redfile");
     nbr = ft_itoa(i);
     j = 12;
-    n = -1;
-    while(nbr[++n])
-      redfile[i][++j] = nbr[n];
+    while(*nbr)
+    {
+      redfile[i][++j] = *nbr;
+      nbr++;
+    }
     redfile[i][++j] = '\0';
-    free(nbr);
   }
   redfile[i] = NULL;
-  *rf = redfile;
   i = -1;
   while(delimiter)
   {
     if(delimiter->type == HEREDOC)
     {
-      if(open_file(redfile[++i], delimiter->next, env, *list, tokens, redfile))
-      {
-        clean_heredoc(redfile, 1);
-        return(1);
-      }
+      if(open_file(redfile[++i], delimiter->next, env))
+        return(NULL);
     }
     delimiter = delimiter->next;
   }
   implementing_heredoc(list, redfile);
-  return(0);
+  return(redfile);
 }
+
 
 int check_Wildcards(t_list *list)
 {
@@ -2234,227 +2019,88 @@ int check_Wildcards(t_list *list)
   return(0);
 }
 
-
-
-
-
-
 int implementing_Wildcards(char *wc, const char *filename)
 {
   char *str;
   int i;
   int len;
   int s;
-  int pos;
 
-  i = 0;
   len = 0;
-  while (wc[len])
+  i = 0;
+  str = NULL;
+  while(wc[len])
   {
     s = len;
-    while (wc[len] != '*' && wc[len] != '\0')
-        len++;
+    while(wc[len] != '*')
+      len++;
     str = ft_substr(wc, s, len - s);
-    if (str != NULL)
+    if(str != NULL)
     {
-      pos = ft_strnstr(&filename[i], str, ft_strlen(&filename[i]));
-      if (pos == 0)
+      i = ft_strnstr(&filename[i], str, ft_strlen(filename));
+      if(i == 0)
       {
         free(str);
-        return 1;
-      }
-      i += pos;
-    }
-    free(str);
-    while (wc[len] == '*')
-      len++;
-    if (wc[len] == '\0')
-    {
-      if(filename[i] == '\0')
-        return(0);
-      else
         return(1);
+      }
     }
+    while(wc[len] == '*')
+      len++;
+    if(wc[len] == '\0')
+      while(filename[i++]);
   }
   if(filename[i] == '\0')
     return(0);
-  else
-    return(1);
+  return(1);
 }
 
-void Wildcards_linked_list(t_list *list, char *str)
+void Wildcards_linked_list(t_list **list, char *str)
 {
   t_list *next;
 
-  next = list->next;
-  list->next = NULL;
-  ft_lstadd_back(&list, ft_lstnew(str));
-  list = list->next;
-  if (list && next)
-  {
-    list->next = next;
-    next->back = list;
-  }
+  next = (*list)->next;
+  (*list)->next = NULL;
+  ft_lstadd_back(list, ft_lstnew(str));
+  *list = (*list)->next;
+  (*list)->next = next;
 }
 
-void clean_wildcards(t_list *list)
-{
-  t_list *back;
-  t_list *next;
-
-  back = list->back;
-  next = list->next;
-  free(list->content);
-  free(list);
-  back->next = next;
-  next->back = back;
-}
-
-int wildcards(t_list *list)
+int wildcards(t_list **list)
 {
   struct dirent *entry;
   DIR *dir;
-  int d;
   int i;
+  int d;
 
+  d = 0;
   dir = opendir(".");
   if (dir == NULL)
     return 1;
-  while (list)
+  while(*list)
   {
     i = -1;
-    while (list->content[++i])
+    while((*list)->content[++i])
     {
-      if (list->content[i] == '*')
+      if((*list)->content[i] == '*')
       {
-        d = 0;
-        rewinddir(dir);
-        while ((entry = readdir(dir)) != NULL)
+        entry = readdir(dir);
+        while(entry != NULL)
         {
-          if (!implementing_Wildcards(list->content, entry->d_name))
+          if(!implementing_Wildcards((*list)->content, entry->d_name))
           {
             Wildcards_linked_list(list, entry->d_name);
+            *list = (*list)->next;
             d++;
           }
+          entry = readdir(dir);
         }
-        if (d != 0)
-          clean_wildcards(list);
-        break;
       }
     }
-    list = list->next;
+    *list = (*list)->next;
   }
   closedir(dir);
-  return 0;
+  if(d == 0)
+    return(1);
+  return(0);
 }
 
-
-
-
-
-
-
-
-
-
-
-//int implementing_Wildcards(char *wc, const char *filename)
-//{
-//  char *str;
-//  int i;
-//  int len;
-//  int s;
-//
-//  len = 0;
-//  i = 0;
-//  str = NULL;
-//  while(wc[len])
-//  {
-//    s = len;
-//    while(wc[len] != '*' && wc[len] != '\0')
-//      len++;
-//    str = ft_substr(wc, s, len - s);
-//    if(str != NULL)
-//    {
-//      i = ft_strnstr(&filename[i], str, ft_strlen(filename));
-//      if(i == 0)
-//      {
-//        free(str);
-//        return(1);
-//      }
-//    }
-//    while(wc[len] == '*')
-//      len++;
-//    if(wc[len] == '\0')
-//      while(filename[i++]);
-//    free(str);
-//  }
-//  if(filename[i] == '\0')
-//    return(0);
-//  return(1);
-//}
-//
-//void Wildcards_linked_list(t_list *list, char *str)
-//{
-//  t_list *next;
-//
-//  next = list->next;
-//  list->next = NULL;
-//  ft_lstadd_back(list, ft_lstnew(str));
-//  list = list->next;
-//  list->next = next;
-//  next->back = list;
-//}
-//
-//void clean_wildcards(t_list *list)
-//{
-//  t_list *back;
-//  t_list *next;
-//
-//  back = list->back;
-//  next = list->next;
-//  free(list->content);
-//  free(list);
-//  back->next = next;
-//  next->back = back;
-//}
-//
-//int wildcards(t_list *list)
-//{
-//  struct dirent *entry;
-//  DIR *dir;
-//  int i;
-//  int d;
-//
-//  dir = opendir(".");
-//  if (dir == NULL)
-//    return 1;
-//  while(list)
-//  {
-//    i = -1;
-//    while(list->content[++i])
-//    {
-//      if(list->content[i] == '*')
-//      {
-//        d = 0;
-//        entry = readdir(dir);
-//        while(entry != NULL)
-//        {
-//          if(!implementing_Wildcards(list->content, entry->d_name))
-//          {
-//            Wildcards_linked_list(list, entry->d_name);
-//            d++;
-//          }
-//          entry = readdir(dir);
-//        }
-//        if(d != 0)
-//          clean_wildcards(list);
-//        break;
-//      }
-//    }
-//    list = list->next;
-//  }
-//  closedir(dir);
-//  return(0);
-//}
-//
