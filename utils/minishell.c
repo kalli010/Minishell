@@ -12,7 +12,6 @@ t_helper *init_helper(char ***env,char ***xenv)
     helper->xenv = *xenv;
     helper->option = NULL;
     helper->flag = false;
-   
     return (helper);
 }
 
@@ -28,22 +27,50 @@ int ft_minishell(char *line, char ***env, char ***xenv)
   t_list *tmp;
 
   list = NULL;
+  redfile = NULL;
   if (quotes_check(line))
     return 1;
-  cmd = split_symbols(line);
+  if(split_symbols(line, &cmd))
+  {
+    free(line);
+    return(1);
+  }
   free(line);
-  tokens = tokenizer(cmd);
-  creat_linked_list(&list, tokens, 0);
+  if(tokenizer(cmd, &tokens))
+  {
+    free(cmd);
+    return(1);
+  }
+  if(creat_linked_list(&list, tokens, 0))
+    return(1);
   if (check_red_with_cmd(list))
-    list = recreate_linked_list(list);
+  {
+    if(recreate_linked_list(list, &list))
+    {
+      free(tokens);
+      return(1);
+    }
+  }
   if (symbols_check(list))
-    return 1;
+  {
+    free_list(list);
+    free(tokens);
+    return (1);
+  }
   if (check_parenthesis_error(list))
   {
     printf("syntax error\n");
+    free_list(list);
+    free(tokens);
     return 1;
   }
-  check_expander(*env, &list);
+  if(check_expander(*env, &list))
+  {
+    printf("malloc failed.\n");
+    free_list(list);
+    free(tokens);
+    return(1);
+  }
   clean_linked_list(&list);
   tmp = list;
   while(tmp)
@@ -53,7 +80,7 @@ int ft_minishell(char *line, char ***env, char ***xenv)
   }
   check_var(list, env, xenv);
   if(check_Wildcards(list))
-    wildcards(&list);
+    wildcards(list);
   hd = check_heredoc(list);
   if (hd > 16)
   {
@@ -62,8 +89,7 @@ int ft_minishell(char *line, char ***env, char ***xenv)
   }
   else if (hd)
   {
-    redfile = heredoc(&list, hd, *env);
-    if (redfile == NULL)
+    if (heredoc(&list, hd, *env, &redfile, &tokens))
       return 1;
   }
   remove_quotes(list);
@@ -71,15 +97,14 @@ int ft_minishell(char *line, char ***env, char ***xenv)
     root = creat_tree_with_parenthesis(list);
   else
     root = creat_tree(list);
-  // print_tree(root,0);
+  print_tree(root,0);
   helper =  init_helper(env,xenv);
   find_command(root, helper);
-  check_signal();
-  free_tree(root);
-  free(list);
+  my_free(helper);
   if (hd)
     if (clean_heredoc(redfile, hd))
       return 1;
+  free_tree(root);
   return 0;
 }
 
