@@ -72,9 +72,7 @@ int exec_redirections(t_redirect *redlst, t_helper *helper)
     {
         status = check_file(redlst->type, redlst->filename, redlst->flag);
         if (status != 0)
-        {
             return status;
-        }
         status = open_fd(redlst->filename, redlst->type);
         if (status != 0)
             return status;

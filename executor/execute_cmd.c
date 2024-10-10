@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:50:23 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:40:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	prepare_command(t_tree *root, t_helper *helper)
 	helper->option = get_options(helper, root->content);
 	if (!helper->cmd)
 	{
-		my_free(helper);
 		return (command_not_found(root->content->content));
 	}
 	return (EXIT_SUCCESS);

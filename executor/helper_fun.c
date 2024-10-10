@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:56:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:38:40 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,4 @@ void free_redirect_list(t_redirect **redlst)
         current = next;
     }
     *redlst = NULL;
-}
-
-void free_tree(t_tree *root)
-{
-  int i;
-  t_tree *child;
-
-  i = -1;
-  if(root == NULL)
-  {
-    free(root->content->content);
-    free(root->content);
-    free(root);
-    return;
-  }
-  child = root->first_child;
-  while(child)
-  {
-    free_tree(child);
-    child = child->next_sibling;
-  }
 }
