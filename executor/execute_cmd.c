@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 15:23:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:36:06 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ int	prepare_command(t_tree *root, t_helper *helper)
 static int	child_process(t_helper *helper, t_tree *root)
 {
 	struct stat	path_stat;
-	// if (ft_getenv(helper->envp,"PATH"))
-		
+	if (!ft_getenv(helper->envp,"PATH"))
+		return (no_file_no_dir(root->content->content));
 	if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
 		return (command_not_found(root->content->content));
 	if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))

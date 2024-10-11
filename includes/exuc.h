@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 16:53:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:35:34 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,6 @@ t_redirect *init_redirect_lst(t_tree **root);
 int exec_redirections(t_redirect *redlst, t_helper *helper);
 int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt);
 void free_redirect_list(t_redirect **redlst);
+
+int  no_file_no_dir(char *cmd);
 #endif
