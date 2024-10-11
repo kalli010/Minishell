@@ -384,7 +384,7 @@ int split_tokens(char *tokens, char **tkn)
   return(0);
 }
 
-int echo_create_tokens(char *str, char **tokens, int j)
+int echo_create_tokens(char *str, int j, char ***tokens)
 {
   int i;
   int s;
@@ -450,19 +450,19 @@ int echo_create_tokens(char *str, char **tokens, int j)
         }
         
       }
-      tokens[j] = ft_substr(str, s, i - s);
-      if(tokens[j] == NULL)
+      (*tokens)[j] = ft_substr(str, s, i - s);
+      if((*tokens)[j] == NULL)
       {
         i = -1;
         while(++i < j)
-          free(tokens[i]);
+          free((*tokens)[i]);
         return (1);
       }
-      if(split_tokens(tokens[j], &tokens[j]))
+      if(split_tokens((*tokens)[j], &(*tokens)[j]))
       {
         i = -1;
         while(++i < j)
-          free(tokens[i]);
+          free((*tokens)[i]);
         return (1);
       }
       j++;
@@ -473,11 +473,11 @@ int echo_create_tokens(char *str, char **tokens, int j)
         i--;
     }
   }
-  tokens[j] = NULL;
+  (*tokens)[j] = NULL;
   return(0);
 }
 
-int create_tokens(char *str, char **tokens)
+int create_tokens(char *str, char ***tokens)
 {
   int i;
   int s;
@@ -502,16 +502,16 @@ int create_tokens(char *str, char **tokens)
       }
       if(!ft_strncmp(&str[s], "echo", 4) || !ft_strncmp(&str[s], "\"echo\"", 6))
       {
-        if(echo_create_tokens(&str[s], tokens, j))
+        if(echo_create_tokens(&str[s], j, tokens))
           return (1);
         return(0);
       }
-      tokens[j] = ft_substr(str, s, i - s);
-      if(tokens[j] == NULL)
+      (*tokens)[j] = ft_substr(str, s, i - s);
+      if((*tokens)[j] == NULL)
       {
         i = -1;
         while(++i < j)
-          free(tokens[i]);
+          free((*tokens)[i]);
         return (1);
       }
       j++;
@@ -519,22 +519,20 @@ int create_tokens(char *str, char **tokens)
         i--;
     }
   }
-  tokens[j] = NULL;
+  (*tokens)[j] = NULL;
   return(0);
 }
 
 int tokenizer(char *str, char ***tokens)
 {
-  char **tkn;
   int tc;
 
   tc = token_count(str);
-  tkn = (char **)malloc(sizeof(char *) * (tc + 1));
-  if(tkn == NULL)
+  *tokens = (char **)malloc(sizeof(char *) * (tc + 1));
+  if(tokens == NULL)
     return(1);
-  if(create_tokens(str, tkn))
+  if(create_tokens(str, tokens))
     return(1);
-  *tokens = tkn;
   free(str);
   return(0);
 }
@@ -557,6 +555,12 @@ void token_type(t_list *list)
       list->type = INPUT;
   else if((list->content[0] == ')' && list->content[1] == '\0') || (list->content[0] == '(' && list->content[1] == '\0'))
     list->type = PARENTHESIS;
+  else if(list->back != NULL && list->back->type == HEREDOC)
+    list->type = DELIMITER;
+  else if(list->back != NULL \
+      && (list->back->type == OUTPUT || list->back->type == APPEND || \
+    list->back->type == INPUT))
+      list->type = PATH;
   else if(list->back != NULL && \
       (list->back->type == COMMAND || list->back->type == OPTIONS \
       || list->back->type == PATH_COMMAND))
@@ -574,14 +578,10 @@ void token_type(t_list *list)
         else
           list->type = PATH;
       }
-  else if(list->back != NULL \
-      && (list->back->type == OUTPUT || list->back->type == APPEND || \
-    list->back->type == INPUT))
-      list->type = PATH;
+  
   else if(list->back != NULL && list->content[0] == '$')
      list->type = VAR;
-  else if(list->back != NULL && list->back->type == HEREDOC)
-    list->type = DELIMITER;
+  
   else
     list->type = COMMAND;
 }
@@ -605,8 +605,9 @@ int creat_linked_list(t_list **list, char **tokens, int t)
       tmp = tmp->next;
     token_type(tmp);
   }
-  if(!t)
-    free(tokens);
+  //if(!t)
+  //  free(tokens);
+  t = 1;
   return(0);
 }
 
@@ -630,13 +631,13 @@ void free_list(t_list *list)
   
   if(list == NULL)
     return;
-  tmp = list;
   while(list)
   {
-    list = list->next;
-    free(tmp->content);
-    free(tmp);
     tmp = list;
+    list = list->next;
+    if(tmp->content)
+      free(tmp->content);
+    free(tmp);
   }
 }
 
@@ -691,7 +692,7 @@ int recreate_linked_list(t_list *list, t_list **lst)
     token_type(tmp);
     tmp = tmp->next;
   }
-  free_list(list);
+  free_list(*lst);
   *lst = n_list;
   return(0);
 }
@@ -874,7 +875,11 @@ int var_dquotes(char **env, t_list **list, int d)
   //  d--;
   //  len++;
   //}
-  len = d - 1;
+  if(d > 0)
+    len = d - 1;
+  else {
+    len = 0;
+  }
   fstr = ft_substr((*list)->content, s, len);
   s = len;
   if((*list)->content[len] == '$')
@@ -892,7 +897,7 @@ int var_dquotes(char **env, t_list **list, int d)
   //  free(fstr);
   //  return(1);
   //}
-  if(sstr != NULL && sstr[0] != '_' && !ft_isalpha(sstr[0]))
+  if(sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?')
   {
     free(fstr);
     free(sstr);
@@ -1448,14 +1453,14 @@ void remove_quotes(t_list *list)
   }
 }
 
-t_tree *create_tree_node(t_list *list)
+t_tree *create_tree_node(t_list **list)
 {
   t_tree *n_node;
 
   n_node = (t_tree *)malloc(sizeof(t_tree));
   if(!n_node)
     return (NULL);
-  n_node->content = list;
+  n_node->content = *list;
   n_node->first_child = NULL;
   n_node->next_sibling = NULL;
   return(n_node);
@@ -1563,7 +1568,7 @@ t_tree *creat_subtree(t_list **list)
       l_tree = creat_subtree(&(*list));
       *list = (*list)->next;
     }
-    s_tree = creat_tree(*list);
+    s_tree = creat_tree(list);
     
     while((*list)->content[0] != 41)
     {
@@ -1625,7 +1630,7 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
       else
         add_child_to_tree(root, r_tree);
     }
-    l_node = creat_tree(list);
+    l_node = creat_tree(&list);
     
     if(root == NULL)
     {
@@ -1672,7 +1677,7 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
   return(root);
 }
 
-t_tree *creat_tree(t_list *list)
+t_tree *creat_tree(t_list **lst)
 {
   t_tree *root;
   t_tree *n_node;
@@ -1681,11 +1686,11 @@ t_tree *creat_tree(t_list *list)
   l_node = NULL;
   n_node = NULL;
   root = NULL;
-  while(list)
+  while(*lst)
   {
-    if(list->content[0] == 41 || list->content[0] == 40)
+    if((*lst)->content[0] == 41 || (*lst)->content[0] == 40)
       return(root);
-    n_node = create_tree_node(list);
+    n_node = create_tree_node(lst);
     if(root == NULL)
       root = n_node;
     else if( n_node->content->type == PIPE 
@@ -1709,7 +1714,7 @@ t_tree *creat_tree(t_list *list)
     if(n_node->content->type == OR || n_node->content->type == AND)
     {
       
-      l_node = creat_tree(list->next);
+      l_node = creat_tree(&((*lst)->next));
       if(l_node != NULL && (l_node->content->type == OR || l_node->content->type == AND))
       {
         root = l_node;
@@ -1726,7 +1731,7 @@ t_tree *creat_tree(t_list *list)
       return(root);
     }
     l_node = n_node;
-    list = list->next;
+    (*lst) = (*lst)->next;
   }
   return(root);
 }
@@ -1752,26 +1757,22 @@ void print_tree(t_tree *root, int spaces)
 
 void free_tree(t_tree *root)
 {
-  int i;
   t_tree *child;
+  t_tree *next;
 
-  i = -1;
   if(root == NULL)
-  {
-    if(root)
-    {
-      free(root->content->content);
-      free(root->content);
-    }
-    free(root);
     return;
-  }
   child = root->first_child;
   while(child)
   {
+    next = child->next_sibling;
     free_tree(child);
-    child = child->next_sibling;
+    child = next;
   }
+  if (root->content->content != NULL)
+    free(root->content->content);
+  free(root->content);
+  free(root);
 }
 
 int env_size(char **str)
@@ -1793,8 +1794,18 @@ char **create_env(char **envp)
   i = -1;
   s = env_size(envp);
   env = (char **)malloc(sizeof(char *) * (s + 1));
+  if(env == NULL)
+    return(NULL);
   while(envp[++i])
+  {
     env[i] = ft_substr(envp[i], 0, ft_strlen(envp[i]));
+    if(env[i] == NULL)
+    {
+      while(--i >= 0)
+        free(env[i]);
+      free(env);
+    }
+  }
   env[i] = NULL;
   return(env);
 }
@@ -1913,9 +1924,7 @@ int clean_heredoc(char **redfile, int hd)
       printf("Error deleting redfile\n");
       return(1);
     }
-    free(redfile[i]);
   }
-  free(redfile);
   return(0);
 }
 
@@ -1990,7 +1999,17 @@ int expand_line(char **env, char **str, int d)
   return(0);
 }
 
-int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char ***tokens, char **rf)
+void clean_env(char **env)
+{
+  int i;
+
+  i = -1;
+  while(env[++i])
+    free(env[i]);
+  free(env);
+}
+
+int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list *list, char ***rf)
 {
   int fd;
   char *line;
@@ -2004,7 +2023,7 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
   if(!check_quotes(delimiter->content))
     i = 1;
   remove_quotes_string(delimiter->content);
-  fd = open(redfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
+  fd = open(redfile, O_CREAT | O_WRONLY, 0644);
   if (fd < 0)
   {
     printf("Error creating redfile\n");
@@ -2043,6 +2062,13 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
           if(expand_line(env, &line, d))
           {
             close(fd);
+            free_list(list);
+            i = -1;
+            while((*rf)[++i])
+              free((*rf)[i]);
+            free(*rf);
+            clean_env(env);
+            clean_env(xenv);
             exit(1);
           }
           d = check_d(line, d - 1);
@@ -2050,18 +2076,17 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
       }
       write(fd, line, ft_strlen(line));
       write(fd, "\n", 1);
-      free_list(list);
-      free(*tokens);
       free(line);
     }
     free(line);
     close(fd);
     free_list(list);
-    free(*tokens);
     i = -1;
-    while(rf[++i])
-      free(rf[i]);
-    free(rf);
+    while((*rf)[++i])
+      free((*rf)[i]);
+    free(*rf);
+    clean_env(env);
+    clean_env(xenv);
     exit(0);
   }
   else
@@ -2077,28 +2102,15 @@ int open_file(char *redfile, t_list *delimiter, char **env, t_list *list, char *
   return (0);
 }
 
-//  cat  grep awk  sed  sort  uniq  tr  wc  tee  tail  head  dd bc python 
-int check_command_type(char *content)
-{
-  if(!ft_strncmp(content, "cat", 3) || !ft_strncmp(content, "grep", 4) || \
-  !ft_strncmp(content, "awk", 3) || !ft_strncmp(content, "sed", 3) || \
-  !ft_strncmp(content, "sort", 4) || !ft_strncmp(content, "uniq", 4) || \
-  !ft_strncmp(content, "tr", 2) || !ft_strncmp(content, "wc", 2) || \
-  !ft_strncmp(content, "tee", 3) || !ft_strncmp(content, "tail", 4) || \
-  !ft_strncmp(content, "head", 4) || !ft_strncmp(content, "dd", 2) || \
-  !ft_strncmp(content, "bc", 2) || !ft_strncmp(content, "python", 6))
-    return(1);
-  return(0);
-}
-
-void implementing_heredoc(t_list **list, char **redfile)
+void implementing_heredoc(t_list **list, char ***redfile)
 {
   t_list *back;
   t_list *next;
   t_list *tmp;
   int i;
-  char *rf;
+  char *red;
 
+  red = NULL;
   i = -1;
   next = NULL;
   while(*list)
@@ -2106,61 +2118,36 @@ void implementing_heredoc(t_list **list, char **redfile)
     if((*list)->type == HEREDOC)
     {
       back = (*list)->back;
-      while(back && back->type != COMMAND)
-        back = back->back;
       next = (*list)->next->next;
-      if(back && check_command_type(back->content))
+      i++;
+      while(*list != next)
       {
-        i++;
-        while(back && back->next->type != HEREDOC)
-          back = back->next;
+        tmp = *list;
+        *list = (*list)->next;
+        if(tmp->content)
+          free(tmp->content);
+        free(tmp);
+      }
+      if(back != NULL)
         back->next = NULL;
-        ft_lstadd_back(&back, ft_lstnew("<"));
+      red = (char *)malloc(sizeof(char) * 2);
+      red[0] = '<';
+      red[1] = '\0';
+      ft_lstadd_back(&back, ft_lstnew(red));
+      if(back->next != NULL)
         back = back->next;
-        back->type = INPUT;
-        rf = ft_substr(redfile[i], 0, ft_strlen(redfile[i]));
-        ft_lstadd_back(&back, ft_lstnew(rf));
-        back = back->next;
-        back->type = OPTIONS;
-        tmp = *list;
-        while(*list != next)
-        {
-          *list = (*list)->next;
-          free(tmp->content);
-          free(tmp);
-          tmp = *list;
-        }
+      back->type = INPUT;
+      ft_lstadd_back(&back, ft_lstnew((*redfile)[i]));
+      back = back->next;
+      back->type = PATH;
+      if(back != NULL)
         back->next = *list;
-        if((*list) != NULL)
-          (*list)->back = back;
-        else
-          *list = back;
-        *list = (*list)->back;
-      }
+      if((*list) != NULL)
+        (*list)->back = back;
       else
-      {
-        i++;
-        while(back && back->next->type != HEREDOC)
-          back = back->next;
-        if(back != NULL)
-          back->next = NULL;
-        tmp = *list;
-        while(*list != next)
-        {
-          *list = (*list)->next;
-          free(tmp->content);
-          free(tmp);
-          tmp = *list;
-        }
-        if(back != NULL)
-          back->next = *list;
-        if((*list) != NULL)
-          (*list)->back = back;
-        else
-          *list = back;
-        if(*list != NULL && (*list)->back != NULL)
-          *list = (*list)->back;
-      }
+        *list = back;
+      if(*list != NULL && (*list)->back != NULL)
+        *list = (*list)->back;
     }
     if(*list && (*list)->next == NULL)
       break;
@@ -2171,9 +2158,8 @@ void implementing_heredoc(t_list **list, char **redfile)
     *list = (*list)->back;
 }
 
-int heredoc(t_list **list, int size, char **env, char ***rf, char ***tokens)
+int heredoc(t_list **list, int size, char **env, char **xenv, char ***rf)
 {
-  char **redfile;
   int i;
   char *nbr;
   int j;
@@ -2182,35 +2168,35 @@ int heredoc(t_list **list, int size, char **env, char ***rf, char ***tokens)
 
   delimiter = *list;
   i = -1;
-  redfile = (char **)malloc(sizeof(char *) * (size + 1));
+  *rf = (char **)malloc(sizeof(char *) * (size + 1));
   while(++i < size)
   {
-    redfile[i] = (char *)malloc(sizeof(char) * 16);
-    redfile[i] = ft_strcpy(redfile[i], "/tmp/.redfile");
+    (*rf)[i] = (char *)malloc(sizeof(char) * 16);
+    (*rf)[i][0] = '\0';
+    ft_cpy((*rf)[i], "/tmp/.redfile");
     nbr = ft_itoa(i);
     j = 12;
     n = -1;
     while(nbr[++n])
-      redfile[i][++j] = nbr[n];
-    redfile[i][++j] = '\0';
+      (*rf)[i][++j] = nbr[n];
+    (*rf)[i][++j] = '\0';
     free(nbr);
   }
-  redfile[i] = NULL;
-  *rf = redfile;
+  (*rf)[i] = NULL;
   i = -1;
   while(delimiter)
   {
     if(delimiter->type == HEREDOC)
     {
-      if(open_file(redfile[++i], delimiter->next, env, *list, tokens, redfile))
+      if(open_file((*rf)[++i], delimiter->next, env, xenv, *list, rf))
       {
-        clean_heredoc(redfile, 1);
+        clean_heredoc(*rf, 1);
         return(1);
       }
     }
     delimiter = delimiter->next;
   }
-  implementing_heredoc(list, redfile);
+  implementing_heredoc(list, rf);
   return(0);
 }
 
