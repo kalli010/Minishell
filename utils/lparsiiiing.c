@@ -1324,6 +1324,19 @@ char **add_new_env(char **env_or_xenv, int s, char *var, char *value, int check)
   return new_env;
 }
 
+int check_content(char *str)
+{
+  int i;
+  
+  i = 0;
+  while(str[++i])
+  {
+    if(!ft_isalpha(str[i]) && !ft_isdigit(str[i]) && str[i] != '_')
+      return(1);
+  }
+  return(0);
+}
+
 int set_var(t_list *list, char ***env, char ***xenv)
 {
   char *var;
@@ -1335,12 +1348,17 @@ int set_var(t_list *list, char ***env, char ***xenv)
   s = 0;
   while (list->content[len] && list->content[len] != '=')
     len++;
+  if(list->content[len] != '=')
+    return(0);
   var = ft_substr(list->content, 0, len);
   if(var == NULL)
     return(1);
   remove_quotes_string(var);
-  if(!ft_isalpha(var[0]) && var[0] != '_')
+  if(ft_isdigit(var[0]) || var[0] != '_' || check_content(var))
+  {
+    free(var);
     return(1);
+  }
   if (list->content[len] != '\0')
   {
     if(list->content[len - 1] == ' ')
@@ -1410,7 +1428,7 @@ void check_var(t_list *list, char ***env, char ***xenv)
     {
       i = 1;
       if(set_var(list, env, xenv))
-        printf("`%s': not a valid identifier\n", list->content);
+        printf("not a valid identifier\n");
     }
     else if(check_schar(list))
       i = 0;
@@ -1845,6 +1863,19 @@ int export(char **env)
   return(0);
 }
 
+int check_unset(char *str)
+{
+  int i;
+
+  i = -1;
+  while(str[++i])
+  {
+    if(str[i] == '=')
+      return(1);
+  }
+  return(0);
+}
+
 char **unset(char **env, char *str)
 {
   int s;
@@ -1852,13 +1883,15 @@ char **unset(char **env, char *str)
   int size;
   int i;
 
+  if(check_unset(str))
+    return(NULL);
   size = env_size(env);
   new_env = NULL;
   s = 0;
   i = 0;
   while(*env != NULL && env[s] != NULL)
   {
-    if(!ft_strncmp(env[s], str, ft_strlen(str)))
+    if(!ft_strncmp(env[s], str, ft_strlen(str)) && (env[s][ft_strlen(str)] == '=' || env[s][ft_strlen(str)] == '\0' ))
     {
       new_env = (char **)malloc(sizeof(char *) * size);
       size = 0;
