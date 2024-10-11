@@ -1973,14 +1973,18 @@ int expand_line(char **env, char **str, int d)
       len++;
   }
   sstr = ft_substr((*str),s + 1, len - (s + 1));
-  if(sstr == NULL)
+  // if(sstr == NULL)
+  // {
+  //   free(fstr);
+  //   free((*str));
+  //   return(1);
+  // }
+  if(sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?')
   {
     free(fstr);
-    free((*str));
+    free(sstr);
     return(1);
   }
-  if(sstr != NULL && !ft_isalpha(sstr[0]))
-    return(1);
   s = len;
   while((*str)[len])
     len++;

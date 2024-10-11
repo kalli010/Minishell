@@ -6,12 +6,20 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 03:25:21 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/09 09:57:41 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:22:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+int  no_file_no_dir(char *cmd)
+{
+	write(2, M_SHELL, 23);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": No such file or directory\n", 29);
+	g_exit_status = 127;
+	return (g_exit_status);
+}
 int	get_permission(char *file)
 {
 	if (access(file, X_OK) != 0)

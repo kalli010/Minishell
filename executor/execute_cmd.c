@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 17:40:07 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:23:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	finish_status(pid_t pid)
 {
 	int	status;
-
+	
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
@@ -45,7 +45,8 @@ int	prepare_command(t_tree *root, t_helper *helper)
 static int	child_process(t_helper *helper, t_tree *root)
 {
 	struct stat	path_stat;
-
+	// if (ft_getenv(helper->envp,"PATH"))
+		
 	if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
 		return (command_not_found(root->content->content));
 	if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
@@ -56,23 +57,33 @@ static int	child_process(t_helper *helper, t_tree *root)
 	return (EXIT_FAILURE);
 }
 
-int	execute(t_tree *root, t_helper *helper)
+int	execute(t_tree *root, t_helper *helper,t_tree **rt)
 {
 	pid_t	pid;
 
 	if (prepare_command(root, helper) != 0)
 		return (ERROR_C);
+
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), EXIT_FAILURE);
+	
 	if (pid == 0)
 	{
 		signal_handeler(CHILD);
 		g_exit_status = child_process(helper, root);
+		clean_env(helper->envp);
+		clean_env(helper->xenv);
+		free_tree(*rt);
+		free(helper->redfile);
 		my_free(helper);
 		exit(g_exit_status);
 	}
 	else
+	{
 		g_exit_status = finish_status(pid);
+	}
+
 	return (g_exit_status);
 }
+

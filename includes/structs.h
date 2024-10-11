@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 14:35:16 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:24:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ typedef enum s_ttype
 	PARENTHESIS,
 }					t_ttype;
 
+typedef struct s_malloc
+{
+	void			*data;
+	struct s_malloc	*next;
+}				t_malloc;
+
 typedef struct s_redirect
 {
     char *filename;
@@ -56,6 +62,7 @@ typedef struct helper
 	int				redout;
 	int				redin;
 	char			*pwd;
+	char **redfile;
 }					t_helper;
 
 typedef struct s_file

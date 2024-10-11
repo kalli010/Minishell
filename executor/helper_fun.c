@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 06:16:39 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 17:38:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:48:34 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	my_free(t_helper *helper)
 		    free_array(helper->option);
 		    helper->option = NULL;
 		}
+		
+		
 		free(helper);
 		helper = NULL;
 	}

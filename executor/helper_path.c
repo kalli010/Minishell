@@ -6,11 +6,12 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 05:52:36 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:47:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:13:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
 
 char	**allocate_options(int count)
 {

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 20:33:17 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/09 09:51:42 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:07:10 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int check_and_or(t_tree *root, t_helper *helper)
         else if (root->content->type == OR)
         {
             status = find_command(root->first_child, helper);
+            if (status == 130)
+                return (status);
             if (status != 0)
                 return (find_command(root->first_child->next_sibling, helper));
             else

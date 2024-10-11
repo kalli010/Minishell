@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:55:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:10:33 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ extern int		g_exit_status;
 # define IN_HERE_DOC 555
 
 char			*get_path(t_helper *help, t_list *list);
-int				find_command(t_tree *root, t_helper *helper);
+int				find_command(t_tree *root, t_helper *helper, t_tree **rt);
 char			**get_options(t_helper *helper, t_list *list);
 void			free_array(char **arr);
 int				command_not_found(char *cmd);
@@ -51,9 +51,9 @@ int				is_builtins(t_tree *root);
 int				run_builtins(t_tree *root, t_helper *helper);
 int				ft_cd(t_list *list, t_helper *helper);
 unsigned char	ft_exit(t_tree *root, t_helper *helper);
-int				execute(t_tree *root, t_helper *helper);
+int	execute(t_tree *root, t_helper *helper,t_tree **rt);
 int				count_arg(t_list *list);
-int				execute_pipe(t_tree *root, t_helper *helper);
+int				execute_pipe(t_tree *root, t_helper *helper, t_tree **rt);
 int				ft_echo(t_list *list);
 int				check_and_or(t_tree *root, t_helper *helper);
 void			my_free(t_helper *helper);
@@ -77,7 +77,8 @@ int				get_permission(char *file);
 int	open_fd(char *file, int type);
 t_redirect *init_redirect_lst(t_tree **root);
 int exec_redirections(t_redirect *redlst, t_helper *helper);
-int	redirect_all(t_tree *root, t_helper *helper);
+int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt);
 void free_redirect_list(t_redirect **redlst);
-void free_tree(t_tree *root);
+
+void *ft_malloc(size_t size, char f_or_m);
 #endif

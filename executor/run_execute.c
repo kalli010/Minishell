@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:35:52 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:07:58 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,11 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
     pid = fork();
     if (pid == 0)
     {
-        if (find_command(root, helper) != EXIT_SUCCESS)
+        if (find_command(root, helper, NULL) != EXIT_SUCCESS)
+        {
+            free_tree(root);
+            my_free(helper);
+        }
             exit(EXIT_FAILURE);
         exit(EXIT_SUCCESS);
     }
@@ -63,17 +67,17 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
 }
 
 
-int handle_pipe(t_tree *root, t_helper *helper)
+int handle_pipe(t_tree *root, t_helper *helper, t_tree **rt)
 {
     
     if (root->content->type == PIPE)
     {
-        return (execute_pipe(root, helper));
+        return (execute_pipe(root, helper, rt));
     }
     return (EXIT_SUCCESS);
 }
 
-int find_command(t_tree *root, t_helper *helper)
+int find_command(t_tree *root, t_helper *helper, t_tree **rt)
 {
    
     if (!root)
@@ -84,19 +88,19 @@ int find_command(t_tree *root, t_helper *helper)
 
     if (root->content->in == 1)
     {    
-        if (root->content->type == APPEND || root->content->type == OUTPUT || root->content->type == INPUT)
-        {
-            if (redirect_all(root, helper) != EXIT_SUCCESS)
-                return (EXIT_FAILURE);
-        }
+        // if (root->content->type == APPEND || root->content->type == OUTPUT || root->content->type == INPUT)
+        // {
+        //     if (redirect_all(root, helper) != EXIT_SUCCESS)
+        //         return (EXIT_FAILURE);
+        // }
         root->content->in = 0;
         return (execute_parenthesis(root, helper));
     }
-    if (handle_pipe(root,helper) == EXIT_FAILURE)
+    if (handle_pipe(root,helper, rt) == EXIT_FAILURE)
         return (EXIT_FAILURE);
     if (root->content->type == APPEND || root->content->type == OUTPUT || root->content->type == INPUT)
     {
-        if (redirect_all(root, helper) != EXIT_SUCCESS)
+        if (redirect_all(root, helper,rt) != EXIT_SUCCESS)
             return (EXIT_FAILURE);
     }
      if (root->content->type == AND || root->content->type == OR)
@@ -105,7 +109,7 @@ int find_command(t_tree *root, t_helper *helper)
     {
         if (is_builtins(root) == true)
             return (run_builtins(root, helper));
-        return (execute(root, helper));
+        return (execute(root, helper,rt));
     }
     return (EXIT_FAILURE);
 }

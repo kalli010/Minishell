@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:17:17 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:32:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,16 @@ int	ft_pwd(t_list *list,t_helper *helper)
 	}
 	if (!getcwd(NULL,0))
 	{
-		g_exit_status = 1;
-		write(2, M_SHELL, 23);
-		printf("dir is not defined\n");
+		path = ft_getenv(helper->envp,"PWD");
+		if (!path)
+		{
+			write(2,"could not get cwd\n", 19);
+			return (g_exit_status = 1, 1);	
+		}
+		printf("%s\n",path);
+		free(path);
 		return (g_exit_status);
+		
 	}
 	path = getcwd(NULL,0);
 	printf("%s\n",path);
