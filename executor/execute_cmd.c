@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 17:36:06 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	prepare_command(t_tree *root, t_helper *helper)
 static int	child_process(t_helper *helper, t_tree *root)
 {
 	struct stat	path_stat;
-	if (!ft_getenv(helper->envp,"PATH"))
+	if (!ft_getenv((*helper->envp),"PATH"))
 		return (no_file_no_dir(root->content->content));
 	if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
 		return (command_not_found(root->content->content));
@@ -53,7 +53,7 @@ static int	child_process(t_helper *helper, t_tree *root)
 		return (is_dir(helper->cmd));
 	if (get_permission(helper->cmd))
 		return (126);
-	execve(helper->cmd, helper->option, helper->envp);
+	execve(helper->cmd, helper->option, (*helper->envp));
 	return (EXIT_FAILURE);
 }
 
@@ -72,8 +72,8 @@ int	execute(t_tree *root, t_helper *helper,t_tree **rt)
 	{
 		signal_handeler(CHILD);
 		g_exit_status = child_process(helper, root);
-		clean_env(helper->envp);
-		clean_env(helper->xenv);
+		clean_env((*helper->envp));
+		clean_env((*helper->xenv));
 		free_tree(*rt);
 		free(helper->redfile);
 		my_free(helper);

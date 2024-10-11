@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 14:18:18 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt)
 		g_exit_status = exec_redirections(redlst, helper);
 		if (g_exit_status != 0)
 		{
-			clean_env(helper->envp);
-			clean_env(helper->xenv);
+			clean_env((*helper->envp));
+			clean_env((*helper->xenv));
 			free_tree(*rt);
 			free(helper->redfile);
 			my_free(helper);
@@ -102,8 +102,8 @@ int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt)
 		}
 		free_redirect_list(&redlst);
 		find_command(root, helper, NULL);
-		clean_env(helper->envp);
-		clean_env(helper->xenv);
+		clean_env((*helper->envp));
+		clean_env((*helper->xenv));
 		free_tree(*rt);
 		free(helper->redfile);
 		my_free(helper);

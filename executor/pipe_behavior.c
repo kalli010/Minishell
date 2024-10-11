@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 04:55:01 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 15:18:01 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ static int	right_pipe(int *fd, pid_t pid,t_tree *root, t_helper *helper, t_tree 
 		if (find_command(root, helper, rt))
 		{
 			free_tree(*rt);
-			clean_env(helper->envp);
-			clean_env(helper->xenv);
+			clean_env((*helper->envp));
+			clean_env((*helper->xenv));
 			free(helper->redfile);
 			my_free(helper);
 			exit(g_exit_status);
 		}
-		clean_env(helper->envp);
-		clean_env(helper->xenv);
+		clean_env((*helper->envp));
+		clean_env((*helper->xenv));
 		free(helper->redfile);
 		free_tree(*rt);
 		my_free(helper);
@@ -65,15 +65,15 @@ static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper, t_tree 
 		(close(fd[0]), close(fd[1]));
 		if (find_command(root, helper, rt))
 		{
-			clean_env(helper->envp);
-			clean_env(helper->xenv);
+			clean_env((*helper->envp));
+			clean_env((*helper->xenv));
 			free_tree(*rt);
 			free(helper->redfile);
 			my_free(helper);
 			exit(g_exit_status);
 		}
-		clean_env(helper->envp);
-		clean_env(helper->xenv);
+		clean_env((*helper->envp));
+		clean_env((*helper->xenv));
 		free(helper->redfile);
 		free_tree(*rt);
 		my_free(helper);

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 13:24:48 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:23:20 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ typedef struct s_redirect
 
 typedef struct helper
 {
-	char			**envp;
+	char			***envp;
 	char			*cmd;
 	char			**option;
-	char			**xenv;
+	char			***xenv;
 	pid_t			pid;
 	int				exit_status;
 	bool			flag;

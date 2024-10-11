@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 13:07:57 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int ft_cd(t_list *list, t_helper *helper)
         list = list->next; 
     if (!list ||  !count_arg(list))
     {
-        path = ft_getenv(helper->envp, "HOME");
+        path = ft_getenv((*helper->envp), "HOME");
         if (!path)
             return (cd_errors(2));
         return (change_directory(helper, path));
@@ -99,7 +99,7 @@ int ft_cd(t_list *list, t_helper *helper)
 //         list = list->next;
 //     if (!list || !list->content)
 //     {
-//         go_path = ft_getenv(helper->envp, "HOME");
+//         go_path = ft_getenv((*helper->envp), "HOME");
 //         if (!go_path)
 //         {
 //             write(2, "minishell: cd: HOME not set\n", 28);
@@ -155,8 +155,8 @@ int ft_cd(t_list *list, t_helper *helper)
 //     oldpwd_node.next = NULL;
 //     currpwd_node.content = curr_pwd;
 //     currpwd_node.next = NULL;
-//     set_var(&oldpwd_node, &(helper->envp),&(helper->xenv));
-//     set_var(&currpwd_node, &(helper->envp),&(helper->xenv));
+//     set_var(&oldpwd_node, &((*helper->envp)),&((*helper->xenv)));
+//     set_var(&currpwd_node, &((*helper->envp)),&((*helper->xenv)));
 //     free(old_pwd);
 //     free(curr_pwd);
 // }

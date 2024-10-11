@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/10 16:55:06 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char *get_cmd_path(t_helper *helper, t_list *list)
     char **dir;
     char *path;
 
-    dir = get_envp(helper->envp);
+    dir = get_envp((*helper->envp));
     if (dir == NULL)
         return NULL;
     path = find_in_path(dir, list->content);
