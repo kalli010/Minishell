@@ -1348,13 +1348,11 @@ int set_var(t_list *list, char ***env, char ***xenv)
   s = 0;
   while (list->content[len] && list->content[len] != '=')
     len++;
-  if(list->content[len] != '=')
-    return(0);
   var = ft_substr(list->content, 0, len);
   if(var == NULL)
     return(1);
   remove_quotes_string(var);
-  if(ft_isdigit(var[0]) || var[0] != '_' || check_content(var))
+  if((!ft_isalpha(var[0]) && var[0] != '_' ) || check_content(var))
   {
     free(var);
     return(1);
@@ -1375,6 +1373,12 @@ int set_var(t_list *list, char ***env, char ***xenv)
   {
     if (!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
     {
+      if(list->content[ft_strlen(var)] == '\0')
+      {
+        free(var);
+        free(value);
+        return(0);
+      }
       if(add_var(*env, var, value, s))
       {
         free(var);
@@ -1856,7 +1860,12 @@ int export(char **env)
   {
     if(get_var_value(env[i], &var, &value))
       return(1);
-    printf("%s=\"%s\"\n", var, value);
+    printf("%s", var);
+    if(value[0] != '\0')
+      printf("=\"%s\"\n", value);
+    else {
+      printf("\n");
+    }
     free(var);
     free(value);
   }
@@ -1886,7 +1895,7 @@ char **unset(char **env, char *str)
   if(check_unset(str))
     return(NULL);
   size = env_size(env);
-  new_env = NULL;
+  new_env = env;
   s = 0;
   i = 0;
   while(*env != NULL && env[s] != NULL)
