@@ -1885,46 +1885,45 @@ int check_unset(char *str)
   return(0);
 }
 
-char **unset(char **env, char *str)
+void unset(char ***env, char *str)
 {
   int s;
-  char **new_env;
-  int size;
   int i;
 
   if(check_unset(str))
     return(NULL);
-  size = env_size(env);
-  new_env = env;
   s = 0;
   i = 0;
-  while(*env != NULL && env[s] != NULL)
+  while(**env) != NULL && (*env)[s] != NULL)
   {
-    if(!ft_strncmp(env[s], str, ft_strlen(str)) && (env[s][ft_strlen(str)] == '=' || env[s][ft_strlen(str)] == '\0' ))
+    if(!ft_strncmp((*env)[s], str, ft_strlen(str)) && ((*env)[s][ft_strlen(str)] == '=' || (*env)[s][ft_strlen(str)] == '\0' ))
     {
-      new_env = (char **)malloc(sizeof(char *) * size);
-      size = 0;
-      while(*env && env[size + i])
-      {
-        if(size + i == s)
-        {
-          free(env[s]);
-          i = 1;
-        }
-        else
-        {
-          new_env[size] = ft_substr(env[size + i], 0, ft_strlen(env[size + i]));
-          free(env[size + i]);
-          size++;
-        }
-      }
-      free(env);
-      new_env[size] = NULL;
+      free((*env)[s]);
+      i = s;
+      while((*env)[++s]);
+      (*env)[i] = (*env)[s - 1];
+      (*env)[s - 1] = NULL;
+      //size = 0;
+      //while(*(*env) && (*env)[size + i])
+      //{
+      //  if(size + i == s)
+      //  {
+      //    free((*env)[s]);
+      //    i = 1;
+      //  }
+      //  else
+      //  {
+      //    new_(*env)[size] = ft_substr((*env)[size + i], 0, ft_strlen((*env)[size + i]));
+      //    free((*env)[size + i]);
+      //    size++;
+      //  }
+      //}
+      //free((*env));
+      //new_(*env)[size] = NULL;
       break;
     }
     s++;
   }
-  return(new_env);
 }
 
 char *ft_strcpy(char *dest, const char *src)
