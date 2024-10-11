@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 14:07:58 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:14:21 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int check_root_content(t_tree  *root)
 }
 
 
-static int execute_parenthesis(t_tree *root, t_helper *helper)
+static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
 {
     pid_t pid;
     int status;
@@ -50,8 +50,11 @@ static int execute_parenthesis(t_tree *root, t_helper *helper)
     {
         if (find_command(root, helper, NULL) != EXIT_SUCCESS)
         {
-            free_tree(root);
-            my_free(helper);
+            clean_env((*helper->envp));
+		    clean_env((*helper->xenv));
+		    free_tree(*rt);
+		    free(helper->redfile);
+		    my_free(helper);
         }
             exit(EXIT_FAILURE);
         exit(EXIT_SUCCESS);
@@ -94,7 +97,7 @@ int find_command(t_tree *root, t_helper *helper, t_tree **rt)
         //         return (EXIT_FAILURE);
         // }
         root->content->in = 0;
-        return (execute_parenthesis(root, helper));
+        return (execute_parenthesis(root, helper,rt));
     }
     if (handle_pipe(root,helper, rt) == EXIT_FAILURE)
         return (EXIT_FAILURE);
@@ -104,7 +107,7 @@ int find_command(t_tree *root, t_helper *helper, t_tree **rt)
             return (EXIT_FAILURE);
     }
      if (root->content->type == AND || root->content->type == OR)
-        return (check_and_or(root, helper));
+        return (check_and_or(root, helper,rt));
     if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
     {
         if (is_builtins(root) == true)

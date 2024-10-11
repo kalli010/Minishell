@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/09 10:20:53 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:06:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ unsigned char ft_exit(t_tree *root, t_helper *helper)
         if (status < 0)
             status = 0;
     }
-    free_list(root->content);
-    my_free(helper);
+    clean_env((*helper->envp));
+	clean_env((*helper->xenv));
+	free(helper->redfile);
+	my_free(helper);
     exit((unsigned char)status);
 }

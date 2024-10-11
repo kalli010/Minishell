@@ -6,13 +6,13 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 20:33:17 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 16:54:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:13:37 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int check_and_or(t_tree *root, t_helper *helper)
+int check_and_or(t_tree *root, t_helper *helper,t_tree **rt)
 {
     int status;
 
@@ -21,6 +21,13 @@ int check_and_or(t_tree *root, t_helper *helper)
         if (root->content->type == AND)
         {  
             status = find_command(root->first_child, helper,NULL);
+            {
+                clean_env((*helper->envp));
+                clean_env((*helper->xenv));
+                free_tree(*rt);
+                free(helper->redfile);
+                my_free(helper);
+            }
             if (status == 0)
                 return (find_command(root->first_child->next_sibling, helper,NULL));
             else
