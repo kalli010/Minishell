@@ -586,7 +586,7 @@ void token_type(t_list *list)
     list->type = COMMAND;
 }
 
-int creat_linked_list(t_list **list, char **tokens, int t)
+int creat_linked_list(t_list **list, char **tokens)
 {
   int i;
   t_list *tmp;
@@ -605,9 +605,6 @@ int creat_linked_list(t_list **list, char **tokens, int t)
       tmp = tmp->next;
     token_type(tmp);
   }
-  //if(!t)
-  //  free(tokens);
-  t = 1;
   return(0);
 }
 
@@ -870,16 +867,7 @@ int var_dquotes(char **env, t_list **list, int d)
   fstr = NULL;
   sstr = NULL;
   tstr = NULL;
-  //while(d > 0)
-  //{
-  //  d--;
-  //  len++;
-  //}
-  if(d > 0)
-    len = d - 1;
-  else {
-    len = 0;
-  }
+  len = d;
   fstr = ft_substr((*list)->content, s, len);
   s = len;
   if((*list)->content[len] == '$')
@@ -892,11 +880,6 @@ int var_dquotes(char **env, t_list **list, int d)
       len++;
   }
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
-  //if(sstr == NULL)
-  //{
-  //  free(fstr);
-  //  return(1);
-  //}
   if(sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?')
   {
     free(fstr);
@@ -907,15 +890,15 @@ int var_dquotes(char **env, t_list **list, int d)
   while((*list)->content[len])
     len++;
   tstr = ft_substr((*list)->content, s, len - s);
-  //if(sstr)
-  //{
+  if(sstr)
+  {
     if(sstr[0] == '?')
       var = ft_itoa(g_exit_status);
     else
       var = ft_getenv(env, sstr);
-  //}
-  //else
-  //  var = "";
+  }
+  else
+    var = ft_getenv(env, sstr);
   s = count_words(var);
   if(s > 1 && (*list)->back && ((*list)->back->type == APPEND || (*list)->back->type == INPUT \
     || (*list)->back->type == OUTPUT))
@@ -1005,6 +988,8 @@ void remove_quotes_string(char *str)
     if(str[j] == '"' || str[j] == '\'')
     {
       q = str[j];
+      if(str[j + 1] == q)
+        return;
       str[j] = str[j + 1];
       while(str[j + 1])
       {
@@ -1082,8 +1067,12 @@ int var_quotes(char **env, t_list **list, int d)
   {
     if(var_split((*list)->content, &array))
       return(2);
-    if(creat_linked_list(&n_list, array, 0))
+    if(creat_linked_list(&n_list, array))
+    {
+      free(array);
       return(2);
+    }
+    free(array);
     tmp = (*list)->next;
     back = (*list)->back;
     if((*list)->back != NULL)
@@ -1180,13 +1169,17 @@ int check_expander(char **env, t_list **list)
         status = expander(env, list, i);
         if(status == 1)
         {
-          (*list)->back->i = 2;
+          if((*list)->back != NULL)
+            (*list)->back->i = 2;
           break;
         }
         else if(status == 2)
           return(1);
-        token_type(*list);
-        i = check_d((*list)->content, i - 1);
+        //token_type(*list);
+        if(*list)
+          i = check_d((*list)->content, i - 1);
+        else
+          break;
       }
       else
         i = check_d((*list)->content, i);
@@ -1885,45 +1878,34 @@ int check_unset(char *str)
   return(0);
 }
 
-void unset(char ***env, char *str)
+int unset(char ***env, t_list *list)
 {
   int s;
   int i;
 
-  if(check_unset(str))
-    return(NULL);
-  s = 0;
-  i = 0;
-  while(**env) != NULL && (*env)[s] != NULL)
+  while(list && list->type == OPTIONS)
   {
-    if(!ft_strncmp((*env)[s], str, ft_strlen(str)) && ((*env)[s][ft_strlen(str)] == '=' || (*env)[s][ft_strlen(str)] == '\0' ))
+    if(!check_unset(list->content))
     {
-      free((*env)[s]);
-      i = s;
-      while((*env)[++s]);
-      (*env)[i] = (*env)[s - 1];
-      (*env)[s - 1] = NULL;
-      //size = 0;
-      //while(*(*env) && (*env)[size + i])
-      //{
-      //  if(size + i == s)
-      //  {
-      //    free((*env)[s]);
-      //    i = 1;
-      //  }
-      //  else
-      //  {
-      //    new_(*env)[size] = ft_substr((*env)[size + i], 0, ft_strlen((*env)[size + i]));
-      //    free((*env)[size + i]);
-      //    size++;
-      //  }
-      //}
-      //free((*env));
-      //new_(*env)[size] = NULL;
-      break;
+      s = 0;
+      i = 0;
+      while(**env != NULL && (*env)[s] != NULL)
+      {
+        if(!ft_strncmp((*env)[s], list->content, ft_strlen(list->content)) && ((*env)[s][ft_strlen(list->content)] == '=' || (*env)[s][ft_strlen(list->content)] == '\0' ))
+        {
+          free((*env)[s]);
+          i = s;
+          while((*env)[++s]);
+          (*env)[i] = (*env)[s - 1];
+          (*env)[s - 1] = NULL;
+          break;
+        }
+        s++;
+      }
     }
-    s++;
+    list = list->next;
   }
+  return(0);
 }
 
 char *ft_strcpy(char *dest, const char *src)
