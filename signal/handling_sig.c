@@ -14,12 +14,12 @@
 
 void check_signal(void)
 {
-	if (g_exit_status == 131)
+	if (g_helper.exit_status == 131)
 	{
 		write(2, "Quit (core dumped)\n", \
 				ft_strlen("Quit (core dumped)\n"));
 	}
-	if (g_exit_status == 130)
+	if (g_helper.exit_status == 130)
 		write(2,"\n",1);
 }
 void	ctr_c(int sig)
