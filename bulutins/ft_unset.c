@@ -9,8 +9,8 @@ int ft_unset(t_list *list,t_helper *helper)
 	env = (*helper->envp);
 	// if(list->back == NULL && list->next->next == NULL)
  	// {
-	unset((*helper->envp), list);
-	unset((*helper->xenv), list);
+	unset(helper->envp, list->next);
+	unset(helper->xenv, list->next);
  	//  }
  	//  else
 	return(g_exit_status);

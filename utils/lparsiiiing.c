@@ -1974,16 +1974,11 @@ int expand_line(char **env, char **str, int d)
   int s;
 
   s = 0;
-  len = 0;
   fstr = NULL;
   sstr = NULL;
   tstr = NULL;
-  while(d > 0)
-  {
-    d--;
-    len++;
-  }
-  fstr = ft_substr((*str), 0, len);
+  len = d;
+  fstr = ft_substr((*str), s, len);
   s = len;
   if((*str)[len] == '$')
     len++;
@@ -1991,17 +1986,10 @@ int expand_line(char **env, char **str, int d)
     len++;
   else
   {
-    while((*str)[len] && (*str)[len] != '"' && (*str)[len] != '\'' \
-      && (*str)[len] != '$' && (*str)[len] != ' ')
+    while(ft_isalpha((*str)[len]) || ft_isdigit((*str)[len]) || (*str)[len] == '_')
       len++;
   }
   sstr = ft_substr((*str),s + 1, len - (s + 1));
-  // if(sstr == NULL)
-  // {
-  //   free(fstr);
-  //   free((*str));
-  //   return(1);
-  // }
   if(sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?')
   {
     free(fstr);
@@ -2012,14 +2000,18 @@ int expand_line(char **env, char **str, int d)
   while((*str)[len])
     len++;
   tstr = ft_substr((*str), s, len - s);
-  if(sstr[0] == '?')
-    var = ft_itoa(g_exit_status);
+  if(sstr)
+  {
+    if(sstr[0] == '?')
+      var = ft_itoa(g_exit_status);
+    else
+      var = ft_getenv(env, sstr);
+  }
   else
     var = ft_getenv(env, sstr);
   free(sstr);
   free((*str));
   (*str) = get_new_list(fstr, var, tstr);
-  remove_quotes_string(*str);
   free(fstr);
   free(tstr);
   free(var);
@@ -2098,7 +2090,8 @@ int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list 
             clean_env(xenv);
             exit(1);
           }
-          d = check_d(line, d - 1);
+          else
+            d = check_d(line, d);
         }
       }
       write(fd, line, ft_strlen(line));

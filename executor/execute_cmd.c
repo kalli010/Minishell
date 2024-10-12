@@ -44,10 +44,14 @@ int	prepare_command(t_tree *root, t_helper *helper)
 
 static int	child_process(t_helper *helper, t_tree *root)
 {
+  char *path;
+
 	struct stat	path_stat;
-	if (!ft_getenv((*helper->envp),"PATH"))
-		return (no_file_no_dir(root->content->content));
-	if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
+	path = ft_getenv((*helper->envp),"PATH");
+  if (!path)
+		return (free(path), no_file_no_dir(root->content->content));
+	free(path);
+  if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
 		return (command_not_found(root->content->content));
 	if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 		return (is_dir(helper->cmd));

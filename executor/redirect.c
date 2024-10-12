@@ -88,8 +88,16 @@ int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt)
 	{
 		redlst = init_redirect_lst(&root);
 		if (!redlst)
+    {
+      clean_env((*helper->envp));
+			clean_env((*helper->xenv));
+			free_tree(*rt);
+			free(helper->redfile);
+			my_free(helper);
+			free_redirect_list(&redlst);
 			exit(EXIT_FAILURE);
-		g_exit_status = exec_redirections(redlst, helper);
+    }
+    g_exit_status = exec_redirections(redlst, helper);
 		if (g_exit_status != 0)
 		{
 			clean_env((*helper->envp));

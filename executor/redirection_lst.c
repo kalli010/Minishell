@@ -47,6 +47,8 @@ t_redirect	*init_redirect_lst(t_tree **root)
             || (*root)->content->type == INPUT
             || (*root)->content->type == APPEND))
     {
+      if((*root)->first_child->next_sibling && (*root)->first_child->next_sibling->content->type == PATH)
+      {
         file = (*root)->first_child->next_sibling->content->content;
         tmp = newred((*root)->content->type, (*root)->content->i, file);
         if (tmp == NULL)
@@ -61,7 +63,8 @@ t_redirect	*init_redirect_lst(t_tree **root)
             return (NULL);
         }
         addred_front(&redlst, tmp);
-        *root = (*root)->first_child;
+      }
+      *root = (*root)->first_child;
     }
     return (redlst);
 }
