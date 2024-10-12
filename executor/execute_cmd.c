@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:46:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ static int	finish_status(pid_t pid)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 	{
-		g_exit_status = WEXITSTATUS(status);
+		g_helper.exit_status = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
 	}
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status))
-			g_exit_status = WTERMSIG(status) + 128;
-		return (g_exit_status);
+			g_helper.exit_status = WTERMSIG(status) + 128;
+		return (g_helper.exit_status);
 	}
 	return (EXIT_FAILURE);
 }
@@ -47,7 +47,7 @@ static int	child_process(t_helper *helper, t_tree *root)
   char *path;
 
 	struct stat	path_stat;
-	path = ft_getenv((*helper->envp),"PATH");
+	path = ft_getenv(helper->envp,"PATH");
   if (!path)
 		return (free(path), no_file_no_dir(root->content->content));
 	free(path);
@@ -57,7 +57,7 @@ static int	child_process(t_helper *helper, t_tree *root)
 		return (is_dir(helper->cmd));
 	if (get_permission(helper->cmd))
 		return (126);
-	execve(helper->cmd, helper->option, (*helper->envp));
+	execve(helper->cmd, helper->option, helper->envp);
 	return (EXIT_FAILURE);
 }
 
@@ -75,19 +75,20 @@ int	execute(t_tree *root, t_helper *helper,t_tree **rt)
 	if (pid == 0)
 	{
 		signal_handeler(CHILD);
-		g_exit_status = child_process(helper, root);
-		clean_env((*helper->envp));
-		clean_env((*helper->xenv));
+		g_helper.exit_status = child_process(helper, root);
+		clean_env(helper->envp);;
+		clean_env(helper->xenv);
+
 		free_tree(*rt);
 		free(helper->redfile);
 		my_free(helper);
-		exit(g_exit_status);
+		exit(g_helper.exit_status);
 	}
 	else
 	{
-		g_exit_status = finish_status(pid);
+		g_helper.exit_status = finish_status(pid);
 	}
 
-	return (g_exit_status);
+	return (g_helper.exit_status);
 }
 

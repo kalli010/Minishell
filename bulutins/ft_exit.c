@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:42:18 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void exit_errors(int status, char *arg)
 
 unsigned char ft_exit(t_tree *root, t_helper *helper)
 {
-    int status = g_exit_status;
+    int status = g_helper.exit_status;
     char *arg = NULL;
 
     printf("exit\n");
@@ -55,23 +55,23 @@ unsigned char ft_exit(t_tree *root, t_helper *helper)
         if (!ft_all_isdigit(arg))
         {
             exit_errors(2, arg);
-            clean_env((*helper->envp));
-            clean_env((*helper->xenv));
+            clean_env(helper->envp);
+            clean_env(helper->xenv);
             free(helper->redfile);
             my_free(helper);
             free_tree(root);
-            exit(g_exit_status = 2);
+            exit(g_helper.exit_status = 2);
         }
 
         if (count_arg(root->content) > 1)
         {
             exit_errors(1, NULL);
-            return (g_exit_status = 1);
+            return (g_helper.exit_status = 1);
         }
         status = ft_atoi(arg);
     }
-    clean_env((*helper->envp));
-    clean_env((*helper->xenv));
+    clean_env(helper->envp);
+    clean_env(helper->xenv);
     free(helper->redfile);
     my_free(helper);
     free_tree(root);

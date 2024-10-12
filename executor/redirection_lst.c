@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 20:07:14 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,16 @@ int	check_file(int type, char *file, int flag)
 	if (type == INPUT)
 	{
 		if (flag == 2)
-			return (errors(file, 2, 0), g_exit_status);
+			return (errors(file, 2, 0), g_helper.exit_status);
 		if (check_existence(file, 1) || check_read(file))
-			return (g_exit_status);
+			return (g_helper.exit_status);
 	}
 	else if (type == OUTPUT || type == APPEND)
 	{
 		if (flag == 2)
-			return (errors(file, 2, 0), g_exit_status);
+			return (errors(file, 2, 0), g_helper.exit_status);
 		if (!check_existence(file, 0) && check_write_and_dir(file))
-			return (g_exit_status);
+			return (g_helper.exit_status);
 	}
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,26 +62,26 @@ int	is_only_slashes(t_tree *root)
 
 int	errors(char *file, int status, int fd)
 {
-	g_exit_status = 1;
+	g_helper.exit_status = 1;
 	if (status == 0)
 	{
 		write(2, M_SHELL, 23);
 		write(2, file, ft_strlen(file));
 		write(2, " No such file or directory\n", 28);
-		return (g_exit_status);
+		return (g_helper.exit_status);
 	}
 	if (status == 1)
 	{
 		perror("dup2 error");
 		close(fd);
-		return (g_exit_status);
+		return (g_helper.exit_status);
 	}
 	if (status == 2)
 	{
 		write(2, M_SHELL, 23);
 		write(2, file, ft_strlen(file));
 		write(2, " ambiguous redirect\n", 21);
-		return (g_exit_status);
+		return (g_helper.exit_status);
 	}
 	return (EXIT_SUCCESS);
 }

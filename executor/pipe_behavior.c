@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 04:55:01 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:46:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ static int	wait_for_finished(pid_t l_fork, pid_t r_fork)
 	waitpid(r_fork, &status, 0);
 	if (WIFEXITED(status))
 	{
-		g_exit_status = WEXITSTATUS(status);
+		g_helper.exit_status = WEXITSTATUS(status);
 		return (WEXITSTATUS(status));
 	}
 	else if (WIFSIGNALED(status))
 	{
-		g_exit_status = WTERMSIG(status) + 128;
+		g_helper.exit_status = WTERMSIG(status) + 128;
 		return (WTERMSIG(status) + 128);
 	}
 	return (EXIT_FAILURE);
@@ -40,14 +40,16 @@ static int	right_pipe(int *fd, pid_t pid,t_tree *root, t_helper *helper, t_tree 
 		if (find_command(root, helper, rt))
 		{
 			free_tree(*rt);
-			clean_env((*helper->envp));
-			clean_env((*helper->xenv));
+			clean_env(helper->envp);;
+			clean_env(helper->xenv);
+
 			free(helper->redfile);
 			my_free(helper);
-			exit(g_exit_status);
+			exit(g_helper.exit_status);
 		}
-		clean_env((*helper->envp));
-		clean_env((*helper->xenv));
+		clean_env(helper->envp);;
+		clean_env(helper->xenv);
+
 		free(helper->redfile);
 		free_tree(*rt);
 		my_free(helper);
@@ -65,15 +67,17 @@ static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper, t_tree 
 		(close(fd[0]), close(fd[1]));
 		if (find_command(root, helper, rt))
 		{
-			clean_env((*helper->envp));
-			clean_env((*helper->xenv));
+			clean_env(helper->envp);;
+			clean_env(helper->xenv);
+
 			free_tree(*rt);
 			free(helper->redfile);
 			my_free(helper);
-			exit(g_exit_status);
+			exit(g_helper.exit_status);
 		}
-		clean_env((*helper->envp));
-		clean_env((*helper->xenv));
+		clean_env(helper->envp);;
+		clean_env(helper->xenv);
+
 		free(helper->redfile);
 		free_tree(*rt);
 		my_free(helper);

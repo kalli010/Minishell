@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:45:15 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
     {
         if (find_command(root, helper, NULL) != EXIT_SUCCESS)
         {
-            clean_env((*helper->envp));
-		    clean_env((*helper->xenv));
+            clean_env(helper->envp);;
+		    clean_env(helper->xenv);
 		    free_tree(*rt);
 		    free(helper->redfile);
 		    my_free(helper);
@@ -85,9 +85,9 @@ int find_command(t_tree *root, t_helper *helper, t_tree **rt)
    
     if (!root)
         return (EXIT_FAILURE);
-    g_exit_status = check_root_content(root);
-    if (g_exit_status != 0)
-        return (g_exit_status);
+    g_helper.exit_status = check_root_content(root);
+    if (g_helper.exit_status != 0)
+        return (g_helper.exit_status);
 
     if (root->content->in == 1)
     {    

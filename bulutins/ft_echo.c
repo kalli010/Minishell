@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,14 @@ int	ft_echo(t_list *list)
 	int		count;
 	char	**op;
 	
-	g_exit_status = 0;
+	g_helper.exit_status = 0;
 	op = NULL;
 	count = count_arg_echo(list);
 	if (!ft_strncmp("echo", list->content, sizeof("echo")))
 	{
 		op = (char **)malloc((count + 2) * sizeof(char *));
 		if (!op)
-			return (g_exit_status);
+			return (g_helper.exit_status);
 		op[0] = ft_strdup("echo");
 		list = list->next;
 		i = 1;
@@ -111,5 +111,5 @@ int	ft_echo(t_list *list)
 		execute_echo(op);
 		free_array(op);
 	}
-	return (g_exit_status);
+	return (g_helper.exit_status);
 }

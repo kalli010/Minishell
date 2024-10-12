@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 18:25:13 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 21:50:48 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ char **get_envp(char **env)
     path = ft_getenv(env, "PATH");
     if (path == NULL)
         return (NULL);
-//   check_path(&path);
-    //.:/nfs/homes/zelkalai/bin:.:/usr/local/sbin:.:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/locddal/games:.:/snap/bin:/opt/nvim-linux64/bin:.
     split_path = ft_split(path, ':');
+    free(path);
     return split_path;
 }
 
@@ -56,12 +55,11 @@ char *get_cmd_path(t_helper *helper, t_list *list)
     char **dir;
     char *path;
 
-    dir = get_envp((*helper->envp));
+    dir = get_envp(helper->envp);
     if (dir == NULL)
         return NULL;
     path = find_in_path(dir, list->content);
-    free(dir[0]);
-    free(dir);
+    free_array(dir);
     if (path)
         return path;
     return NULL;
