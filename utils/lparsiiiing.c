@@ -893,7 +893,7 @@ int var_dquotes(char **env, t_list **list, int d)
   if(sstr)
   {
     if(sstr[0] == '?')
-      var = ft_itoa(g_exit_status);
+      var = ft_itoa(g_helper.exit_status);
     else
       var = ft_getenv(env, sstr);
   }
@@ -1413,10 +1413,11 @@ int check_schar(t_list *list)
   return(0);
 }
 
-void check_var(t_list *list, char ***env, char ***xenv)
+int check_var(t_list *list, char ***env, char ***xenv)
 {
   int i;
 
+  g_helper.exit_status = 0;
   i = 0;
   while(list)
   {
@@ -1425,12 +1426,16 @@ void check_var(t_list *list, char ***env, char ***xenv)
     {
       i = 1;
       if(set_var(list, env, xenv))
+      {
         printf("not a valid identifier\n");
+        g_helper.exit_status = 1;
+      }
     }
     else if(check_schar(list))
       i = 0;
     list = list->next;
   }
+  return(g_helper.exit_status);
 }
 
 void remove_quotes(t_list *list)
@@ -1805,6 +1810,7 @@ char **create_env(char **envp)
   char **env;
   int s;
   int i;
+  char ***new_env;
 
   i = -1;
   s = env_size(envp);
@@ -1822,6 +1828,7 @@ char **create_env(char **envp)
     }
   }
   env[i] = NULL;
+  new_env = &env;
   return(env);
 }
 
@@ -2003,7 +2010,7 @@ int expand_line(char **env, char **str, int d)
   if(sstr)
   {
     if(sstr[0] == '?')
-      var = ft_itoa(g_exit_status);
+      var = ft_itoa(g_helper.exit_status);
     else
       var = ft_getenv(env, sstr);
   }
@@ -2026,6 +2033,28 @@ void clean_env(char **env)
   while(env[++i])
     free(env[i]);
   free(env);
+}
+
+void sigint_handler(int sig)
+{
+  int i;
+
+  if (sig == SIGINT)
+  {
+    free_list(g_helper.list);
+    if (g_helper.redfile)
+    {
+      i = -1;
+      while (g_helper.redfile[++i])
+        free(g_helper.redfile[i]);
+      free(g_helper.redfile);
+    }
+    if(*g_helper.envp != NULL)
+      clean_env(g_helper.envp);
+    if(*g_helper.xenv != NULL)
+      clean_env(g_helper.xenv);
+  exit(1);
+  }
 }
 
 int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list *list, char ***rf)
@@ -2057,7 +2086,7 @@ int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list 
   }
   else if (pid == 0)
   {
-    signal(SIGINT, SIG_DFL);
+    signal(SIGINT, sigint_handler);
     while (1)
     {
       line = readline("> ");
@@ -2114,6 +2143,7 @@ int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list 
     waitpid(pid, &status, 0);
     if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
     {
+      printf("^C\n");
       close(fd);
       return (1);
     }

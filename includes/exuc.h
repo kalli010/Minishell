@@ -18,7 +18,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 
-extern int		g_exit_status;
+extern t_helper		g_helper;
 
 # define P_DNIED 126
 # define SUCCESS 0

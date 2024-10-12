@@ -15,6 +15,10 @@
 
 # include <stdbool.h>
 
+
+
+
+
 typedef enum s_ttype
 {
 	WORD,
@@ -37,40 +41,17 @@ typedef enum s_ttype
 
 typedef struct s_malloc
 {
-	void			*data;
-	struct s_malloc	*next;
+  void			*data;
+  struct s_malloc	*next;
 }				t_malloc;
 
 typedef struct s_redirect
 {
-    char *filename;
-    int type;               
-	int flag;
-    struct s_redirect *next; 
+  char *filename;
+  int type;               
+  int flag;
+  struct s_redirect *next; 
 } t_redirect; 
-
-
-typedef struct helper
-{
-	char			***envp;
-	char			*cmd;
-	char			**option;
-	char			***xenv;
-	pid_t			pid;
-	int				exit_status;
-	bool			flag;
-	int				redout;
-	int				redin;
-	char			*pwd;
-	char **redfile;
-}					t_helper;
-
-typedef struct s_file
-{
-	char			*file_name;
-	t_ttype			type;
-	struct s_file	*next;
-}					t_file;
 
 typedef struct s_list
 {
@@ -84,10 +65,36 @@ typedef struct s_list
 
 typedef struct s_tree
 {
-	t_list			*content;
-	struct s_tree	*first_child;
-	struct s_tree	*next_sibling;
+  t_list			*content;
+  struct s_tree	*first_child;
+  struct s_tree	*next_sibling;
 }					t_tree;
+
+
+
+typedef struct helper
+{
+	char			*cmd;
+	char			**option;
+	char			*pwd;
+	char			**envp;
+	char			**xenv;
+	char      **redfile;
+  t_list    *list;
+  t_tree    *root;
+  int		exit_status;
+}					t_helper;
+
+
+extern t_helper g_helper;
+
+
+typedef struct s_file
+{
+  char			*file_name;
+  t_ttype			type;
+  struct s_file	*next;
+}					t_file;
 
 typedef struct s_free
 {

@@ -22,9 +22,9 @@ char **get_envp(char **env)
     path = ft_getenv(env, "PATH");
     if (path == NULL)
         return (NULL);
-    
-    split_path = ft_split(path + 5, ':');
-    free(path);
+//   check_path(&path);
+    //.:/nfs/homes/zelkalai/bin:.:/usr/local/sbin:.:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/locddal/games:.:/snap/bin:/opt/nvim-linux64/bin:.
+    split_path = ft_split(path, ':');
     return split_path;
 }
 
@@ -60,7 +60,8 @@ char *get_cmd_path(t_helper *helper, t_list *list)
     if (dir == NULL)
         return NULL;
     path = find_in_path(dir, list->content);
-    free_array(dir);
+    free(dir[0]);
+    free(dir);
     if (path)
         return path;
     return NULL;
