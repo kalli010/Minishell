@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 19:14:04 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 17:51:52 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void			free_array(char **arr);
 int				command_not_found(char *cmd);
 int				is_dir(char *dir);
 int				ft_env(t_list *list, char **env);
-int				ft_pwd(t_list *list, t_helper *helper);
+int				ft_pwd(t_helper *helper);
 int				is_builtins(t_tree *root);
 int				run_builtins(t_tree *root, t_helper *helper);
 int				ft_cd(t_list *list, t_helper *helper);

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 19:06:46 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 17:51:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int ft_all_isdigit(char *data)
     return (1);
 }
 
-static int exit_errors(int status)
+static void exit_errors(int status, char *arg)
 {
     if (status == 1)
     {
@@ -36,32 +36,44 @@ static int exit_errors(int status)
     else if (status == 2)
     {
         write(2, M_SHELL, 23);
-        write(2, "exit: numeric argument required\n", 33);
+        write(2, "exit: ", 6);
+        write(2, arg, ft_strlen(arg));
+        write(2, ": numeric argument required\n", 29);
     }
-    return (EXIT_FAILURE);
 }
 
 unsigned char ft_exit(t_tree *root, t_helper *helper)
 {
-    int status;
-    char *arg;
+    int status = g_exit_status;
+    char *arg = NULL;
 
-	status = g_exit_status;
     printf("exit\n");
+    
     if (root->content->next)
     {
-        if (count_arg(root->content) > 1)
-            return exit_errors(1);
         arg = root->content->next->content;
         if (!ft_all_isdigit(arg))
-            return (exit_errors(2));
+        {
+            exit_errors(2, arg);
+            clean_env((*helper->envp));
+            clean_env((*helper->xenv));
+            free(helper->redfile);
+            my_free(helper);
+            free_tree(root);
+            exit(g_exit_status = 2);
+        }
+
+        if (count_arg(root->content) > 1)
+        {
+            exit_errors(1, NULL);
+            return (g_exit_status = 1);
+        }
         status = ft_atoi(arg);
-        if (status < 0)
-            status = 0;
     }
     clean_env((*helper->envp));
-	clean_env((*helper->xenv));
-	free(helper->redfile);
-	my_free(helper);
+    clean_env((*helper->xenv));
+    free(helper->redfile);
+    my_free(helper);
+    free_tree(root);
     exit((unsigned char)status);
 }

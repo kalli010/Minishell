@@ -1,0 +1,14 @@
+bin
+bonus
+bulutins
+executor
+file
+includes
+lib
+Makefile
+minishell
+readline.supp
+signal
+tests
+todo
+utils

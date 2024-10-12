@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 20:33:17 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/11 19:13:37 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/12 14:44:53 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,12 @@
 int check_and_or(t_tree *root, t_helper *helper,t_tree **rt)
 {
     int status;
-
+    (void)rt;
     if (root && root->first_child && root->first_child->next_sibling)
     {
         if (root->content->type == AND)
         {  
             status = find_command(root->first_child, helper,NULL);
-            {
-                clean_env((*helper->envp));
-                clean_env((*helper->xenv));
-                free_tree(*rt);
-                free(helper->redfile);
-                my_free(helper);
-            }
             if (status == 0)
                 return (find_command(root->first_child->next_sibling, helper,NULL));
             else
