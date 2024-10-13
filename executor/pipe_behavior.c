@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 04:55:01 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:46:51 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:15:06 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,59 +31,33 @@ static int	wait_for_finished(pid_t l_fork, pid_t r_fork)
 	return (EXIT_FAILURE);
 }
 
-static int	right_pipe(int *fd, pid_t pid,t_tree *root, t_helper *helper, t_tree **rt)
+static void	right_pipe(int *fd,t_tree *root, t_helper *helper, t_tree **rt)
 {
-	if (pid == 0)
+	
+	dup2(fd[0], STDIN_FILENO);
+	(close(fd[0]), close(fd[1]));
+	if (find_command(root, helper, rt))
 	{
-		dup2(fd[0], STDIN_FILENO);
-		(close(fd[0]), close(fd[1]));
-		if (find_command(root, helper, rt))
-		{
-			free_tree(*rt);
-			clean_env(helper->envp);;
-			clean_env(helper->xenv);
-
-			free(helper->redfile);
-			my_free(helper);
-			exit(g_helper.exit_status);
-		}
-		clean_env(helper->envp);;
-		clean_env(helper->xenv);
-
-		free(helper->redfile);
-		free_tree(*rt);
-		my_free(helper);
-		exit(EXIT_SUCCESS);
+		cleanup(helper,rt);
+		exit(g_helper.exit_status);
 	}
-	return (EXIT_FAILURE);
+	cleanup(helper,rt);
+	exit(EXIT_SUCCESS);
+	
 }
 
-static int	left_pipe(int *fd, pid_t pid, t_tree *root, t_helper *helper, t_tree **rt)
+static void	left_pipe(int *fd, t_tree *root, t_helper *helper, t_tree **rt)
 {
 
-	if (pid == 0)
+	dup2(fd[1], STDOUT_FILENO);
+	(close(fd[0]), close(fd[1]));
+	if (find_command(root, helper, rt))
 	{
-		dup2(fd[1], STDOUT_FILENO);
-		(close(fd[0]), close(fd[1]));
-		if (find_command(root, helper, rt))
-		{
-			clean_env(helper->envp);;
-			clean_env(helper->xenv);
-
-			free_tree(*rt);
-			free(helper->redfile);
-			my_free(helper);
-			exit(g_helper.exit_status);
-		}
-		clean_env(helper->envp);;
-		clean_env(helper->xenv);
-
-		free(helper->redfile);
-		free_tree(*rt);
-		my_free(helper);
-		exit (EXIT_SUCCESS);
+		cleanup(helper,rt);
+		exit(g_helper.exit_status);
 	}
-	return (EXIT_FAILURE);
+	cleanup(helper,rt);
+	exit (EXIT_SUCCESS);
 }
 
 int	execute_pipe(t_tree *root, t_helper *helper, t_tree **rt)
@@ -102,12 +76,12 @@ int	execute_pipe(t_tree *root, t_helper *helper, t_tree **rt)
 		if (l_fork < 0)
 			return (perror("fork"), EXIT_FAILURE);
 		if (l_fork == 0)
-			left_pipe(fd, l_fork, root->first_child, helper, rt);
+			left_pipe(fd, root->first_child, helper, rt);
 		r_fork = fork();
 		if (r_fork < 0)
 			return (perror("fork"), EXIT_FAILURE);
 		if (r_fork == 0)
-			right_pipe(fd, r_fork ,root->first_child->next_sibling, helper, rt);
+			right_pipe(fd,root->first_child->next_sibling, helper, rt);
 		close(fd[0]);
 		close(fd[1]);
 		status = wait_for_finished(l_fork, r_fork);

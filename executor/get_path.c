@@ -6,11 +6,12 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:50:48 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 13:18:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
 
 char **get_envp(char **env)
 {
@@ -22,6 +23,7 @@ char **get_envp(char **env)
     path = ft_getenv(env, "PATH");
     if (path == NULL)
         return (NULL);
+    path = check_path(path);
     split_path = ft_split(path, ':');
     free(path);
     return split_path;

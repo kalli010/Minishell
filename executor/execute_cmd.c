@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:46:51 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:14:46 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,43 +31,47 @@ static int	finish_status(pid_t pid)
 	return (EXIT_FAILURE);
 }
 
-int	prepare_command(t_tree *root, t_helper *helper)
+int prepare_command(t_tree *root, t_helper *helper)
 {
-	helper->cmd = get_path(helper, root->content);
-	helper->option = get_options(helper, root->content);
-	if (!helper->cmd)
-	{
-		return (command_not_found(root->content->content));
-	}
+    char *path;
+
+    path = ft_getenv(helper->envp, "PATH");
+    if (!path || !*path)
+    {
+        helper->cmd = get_path_of_cpath(root->content);
+        if (!helper->cmd)
+            return no_file_no_dir(root->content->content);
+    }
+    else
+        helper->cmd = get_path(helper, root->content); 
+    helper->option = get_options(helper, root->content);
+	free(path);
+    if (!helper->cmd)
+        return command_not_found(root->content->content);
+    return (EXIT_SUCCESS);
+}
+
+static int child_process(t_helper *helper, t_tree *root)
+{
+	struct stat path_stat;
+
+	if (prepare_command(root, helper) != 0)
+		return (ERROR_C);
+	if (stat(helper->cmd, &path_stat) != 0)
+		return no_file_no_dir(helper->cmd);
+	if (S_ISDIR(path_stat.st_mode))
+		return is_dir(helper->cmd);
+	if (get_permission(helper->cmd))
+		return 126; 
+	execve(helper->cmd, helper->option, helper->envp);
 	return (EXIT_SUCCESS);
 }
-
-static int	child_process(t_helper *helper, t_tree *root)
-{
-  char *path;
-
-	struct stat	path_stat;
-	path = ft_getenv(helper->envp,"PATH");
-  if (!path)
-		return (free(path), no_file_no_dir(root->content->content));
-	free(path);
-  if (!helper->cmd || stat(helper->cmd, &path_stat) != 0)
-		return (command_not_found(root->content->content));
-	if (stat(helper->cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
-		return (is_dir(helper->cmd));
-	if (get_permission(helper->cmd))
-		return (126);
-	execve(helper->cmd, helper->option, helper->envp);
-	return (EXIT_FAILURE);
-}
+ 
 
 int	execute(t_tree *root, t_helper *helper,t_tree **rt)
 {
 	pid_t	pid;
-
-	if (prepare_command(root, helper) != 0)
-		return (ERROR_C);
-
+	(void)rt;
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), EXIT_FAILURE);
@@ -76,19 +80,10 @@ int	execute(t_tree *root, t_helper *helper,t_tree **rt)
 	{
 		signal_handeler(CHILD);
 		g_helper.exit_status = child_process(helper, root);
-		clean_env(helper->envp);;
-		clean_env(helper->xenv);
-
-		free_tree(*rt);
-		free(helper->redfile);
-		my_free(helper);
+		cleanup(helper,rt);
 		exit(g_helper.exit_status);
 	}
 	else
-	{
 		g_helper.exit_status = finish_status(pid);
-	}
-
 	return (g_helper.exit_status);
 }
-

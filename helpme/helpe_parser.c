@@ -1,35 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   helpe_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 15:26:21 by ayel-mou         ###   ########.fr       */
+/*   Created: 2024/08/26 22:55:57 by ayel-mou          #+#    #+#             */
+/*   Updated: 2024/10/03 03:53:01 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	ft_pwd(t_helper *helper)
+int	parser_error_status(void)
 {
-	char *path;
-
-	g_helper.exit_status = 0;
-	path = getcwd(NULL, 0);
-	if (!path) 
-	{
-		path = ft_getenv(helper->envp, "PWD");
-		if (!path)
-		{
-			write(2, "could not get cwd\n", 19);
-			return (g_helper.exit_status);
-		}
-	}
-	printf("%s\n", path);
-	free(path);
-	return (g_helper.exit_status);
+	ft_putstr_fd("syntax error near unexpected `\n' \n", 2);
+	exit(EXIT_PARSER);
 }
-
-

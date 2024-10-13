@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:46:29 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 17:00:57 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_builtins(t_tree *root)
 	else
 		return (false);
 }
-// check export
+
 int	run_builtins(t_tree *root, t_helper *helper)
 {
 	if (!ft_strncmp("echo", root->content->content, sizeof("echo")))
@@ -44,10 +44,13 @@ int	run_builtins(t_tree *root, t_helper *helper)
 		return (ft_pwd(helper));
 	else if (!ft_strncmp("unset", root->content->content, sizeof("unset")))
 		return (ft_unset(root->content, helper));
-	else if (!ft_strncmp("export", root->content->content, sizeof("export") && (root->content->next == NULL || root->content->next->type != OPTIONS)))
-		return(export(helper->envp));
-	// else if (!ft_strncmp("export", root->content->content, sizeof("export") && (root->content->next != NULL || root->content->next->type == OPTIONS)))
-	// 	return(check_expander(helper->envp));
+	else if (!ft_strncmp("export", root->content->content, sizeof("export")))
+	{
+		if (root->content->next != NULL || (root->content->next && root->content->next->type == OPTIONS))
+			return(set_var(root->content->next, &helper->envp, &helper->xenv));
+		else
+			return(export(helper->envp));
+	} 
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
 		ft_exit(root, helper);
 	return (EXIT_FAILURE);

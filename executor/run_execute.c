@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:45:15 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:01:30 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,11 @@ static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
     pid = fork();
     if (pid == 0)
     {
-        if (find_command(root, helper, NULL) != EXIT_SUCCESS)
-        {
-            clean_env(helper->envp);;
-		    clean_env(helper->xenv);
-		    free_tree(*rt);
-		    free(helper->redfile);
-		    my_free(helper);
-        }
+        if (find_command(root, helper, rt) != EXIT_SUCCESS)
+        { 
+            cleanup(helper,rt);
             exit(EXIT_FAILURE);
+        }
         exit(EXIT_SUCCESS);
     }
     else if (pid > 0)
@@ -85,17 +81,13 @@ int find_command(t_tree *root, t_helper *helper, t_tree **rt)
    
     if (!root)
         return (EXIT_FAILURE);
+
     g_helper.exit_status = check_root_content(root);
     if (g_helper.exit_status != 0)
         return (g_helper.exit_status);
 
     if (root->content->in == 1)
-    {    
-        // if (root->content->type == APPEND || root->content->type == OUTPUT || root->content->type == INPUT)
-        // {
-        //     if (redirect_all(root, helper) != EXIT_SUCCESS)
-        //         return (EXIT_FAILURE);
-        // }
+    { 
         root->content->in = 0;
         return (execute_parenthesis(root, helper,rt));
     }
