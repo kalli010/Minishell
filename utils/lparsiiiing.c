@@ -1474,14 +1474,14 @@ void remove_quotes(t_list *list)
   }
 }
 
-t_tree *create_tree_node(t_list **list)
+t_tree *create_tree_node(t_list *list)
 {
   t_tree *n_node;
 
   n_node = (t_tree *)malloc(sizeof(t_tree));
   if(!n_node)
     return (NULL);
-  n_node->content = *list;
+  n_node->content = list;
   n_node->first_child = NULL;
   n_node->next_sibling = NULL;
   return(n_node);
@@ -1589,7 +1589,7 @@ t_tree *creat_subtree(t_list **list)
       l_tree = creat_subtree(&(*list));
       *list = (*list)->next;
     }
-    s_tree = creat_tree(list);
+    s_tree = creat_tree(*list);
     
     while((*list)->content[0] != 41)
     {
@@ -1651,7 +1651,7 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
       else
         add_child_to_tree(root, r_tree);
     }
-    l_node = creat_tree(&list);
+    l_node = creat_tree(list);
     
     if(root == NULL)
     {
@@ -1698,7 +1698,7 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
   return(root);
 }
 
-t_tree *creat_tree(t_list **lst)
+t_tree *creat_tree(t_list *lst)
 {
   t_tree *root;
   t_tree *n_node;
@@ -1707,9 +1707,9 @@ t_tree *creat_tree(t_list **lst)
   l_node = NULL;
   n_node = NULL;
   root = NULL;
-  while(*lst)
+  while(lst)
   {
-    if((*lst)->content[0] == 41 || (*lst)->content[0] == 40)
+    if(lst->content[0] == 41 || lst->content[0] == 40)
       return(root);
     n_node = create_tree_node(lst);
     if(root == NULL)
@@ -1735,7 +1735,7 @@ t_tree *creat_tree(t_list **lst)
     if(n_node->content->type == OR || n_node->content->type == AND)
     {
       
-      l_node = creat_tree(&((*lst)->next));
+      l_node = creat_tree(lst->next);
       if(l_node != NULL && (l_node->content->type == OR || l_node->content->type == AND))
       {
         root = l_node;
@@ -1752,7 +1752,7 @@ t_tree *creat_tree(t_list **lst)
       return(root);
     }
     l_node = n_node;
-    (*lst) = (*lst)->next;
+    lst = lst->next;
   }
   return(root);
 }
@@ -2251,7 +2251,7 @@ int heredoc(t_list **list, int size, char **env, char **xenv, char ***rf)
   return(0);
 }
 
-int check_Wildcards(t_list *list)
+int check_wildcards(t_list *list)
 {
   int i;
   char q;
@@ -2274,62 +2274,123 @@ int check_Wildcards(t_list *list)
   return(0);
 }
 
+int ft_find(const char *filename, char *str, int flag)
+{
+  int i;
+  int j;
 
+  i = 0;
+  j = 0;
+  if(flag == 0)
+  {
+    while(str[i] == filename[i])
+      i++;
+    if(str[i] == '\0')
+      return(i);
+    else
+      return(-1);
+  }
+  else if(flag == 1)
+  {
+    while(filename[i] && filename[i] != str[j])
+      i++;
+    while(str[j] && filename[i] && filename[i] == str[j])
+    {
+      i++;
+      j++;
+    }
+    if(str[j] == '\0')
+      return(i);
+    else
+      return(-1);
+  }
+  else
+  {
+    while(filename[i] && filename[i] != str[j])
+      i++;
+    while(filename[i] && str[j] && filename[i] == str[j])
+    {
+      i++;
+      j++;
+    }
+    if(str[j] == '\0' && filename[i] == '\0')
+      return(i);
+    else
+      return(-1);
+  }
+}
 
-
-
-
-int implementing_Wildcards(char *wc, const char *filename)
+int implementing_wildcards(char *wc, const char *filename)
 {
   char *str;
   int i;
   int len;
   int s;
-  int pos;
+  int flag;
 
-  i = 0;
   len = 0;
+  flag = -1;
+  if(filename != NULL && filename[0] == '.')
+    return(1);
+  i = -1;
+  while(wc[++i] == '*')
+  {
+    if(wc[i] == '\0')
+      return(0);
+  }
+  i = 0;
   while (wc[len])
   {
     s = len;
     while (wc[len] != '*' && wc[len] != '\0')
         len++;
+    if(len != 0 && flag == -1)
+      flag = 0;
+    else if(wc[len] == '\0')
+      flag = 2;
+    else
+      flag =1;
     str = ft_substr(wc, s, len - s);
     if (str != NULL)
     {
-      pos = ft_strnstr(&filename[i], str, ft_strlen(&filename[i]));
-      if (pos == 0)
+      i += ft_find(&filename[i], str, flag);
+      if (i == -1)
       {
         free(str);
         return 1;
       }
-      i += pos;
     }
     free(str);
     while (wc[len] == '*')
-      len++;
-    if (wc[len] == '\0')
-    {
-      if(filename[i] == '\0')
-        return(0);
-      else
-        return(1);
-    }
+     len++;
   }
-  if(filename[i] == '\0')
-    return(0);
-  else
-    return(1);
+  return(0);
 }
 
-void Wildcards_linked_list(t_list *list, char *str)
+t_list	*ft_lstnew_2(char *content)
+{
+	t_list	*a;
+
+	a = malloc(sizeof(t_list));
+	if (!a)
+		return (NULL);
+	a->content = ft_substr(content, 0, ft_strlen(content));
+	a->next = NULL;
+	a->back = NULL;
+  a->i = 0;
+  a->in = 0;
+  return (a);
+}
+
+void wildcards_linked_list(t_list *list, char *str)
 {
   t_list *next;
 
   next = list->next;
   list->next = NULL;
-  ft_lstadd_back(&list, ft_lstnew(str));
+  ft_lstadd_back(&list, ft_lstnew_2(str));
   list = list->next;
+  list->type = OPTIONS;
   if (list && next)
   {
     list->next = next;
@@ -2356,12 +2417,14 @@ int wildcards(t_list *list)
   DIR *dir;
   int d;
   int i;
+  int f;
 
   dir = opendir(".");
   if (dir == NULL)
     return 1;
   while (list)
   {
+    f = 0;
     i = -1;
     while (list->content[++i])
     {
@@ -2371,130 +2434,27 @@ int wildcards(t_list *list)
         rewinddir(dir);
         while ((entry = readdir(dir)) != NULL)
         {
-          if (!implementing_Wildcards(list->content, entry->d_name))
+          if (!implementing_wildcards(list->content, entry->d_name))
           {
-            Wildcards_linked_list(list, entry->d_name);
+            wildcards_linked_list(list, entry->d_name);
             d++;
           }
         }
         if (d != 0)
+        {
           clean_wildcards(list);
+          f++;
+        }
         break;
       }
+    }
+    while(f != 0)
+    {
+      list = list->back;
+      f--;
     }
     list = list->next;
   }
   closedir(dir);
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-//int implementing_Wildcards(char *wc, const char *filename)
-//{
-//  char *str;
-//  int i;
-//  int len;
-//  int s;
-//
-//  len = 0;
-//  i = 0;
-//  str = NULL;
-//  while(wc[len])
-//  {
-//    s = len;
-//    while(wc[len] != '*' && wc[len] != '\0')
-//      len++;
-//    str = ft_substr(wc, s, len - s);
-//    if(str != NULL)
-//    {
-//      i = ft_strnstr(&filename[i], str, ft_strlen(filename));
-//      if(i == 0)
-//      {
-//        free(str);
-//        return(1);
-//      }
-//    }
-//    while(wc[len] == '*')
-//      len++;
-//    if(wc[len] == '\0')
-//      while(filename[i++]);
-//    free(str);
-//  }
-//  if(filename[i] == '\0')
-//    return(0);
-//  return(1);
-//}
-//
-//void Wildcards_linked_list(t_list *list, char *str)
-//{
-//  t_list *next;
-//
-//  next = list->next;
-//  list->next = NULL;
-//  ft_lstadd_back(list, ft_lstnew(str));
-//  list = list->next;
-//  list->next = next;
-//  next->back = list;
-//}
-//
-//void clean_wildcards(t_list *list)
-//{
-//  t_list *back;
-//  t_list *next;
-//
-//  back = list->back;
-//  next = list->next;
-//  free(list->content);
-//  free(list);
-//  back->next = next;
-//  next->back = back;
-//}
-//
-//int wildcards(t_list *list)
-//{
-//  struct dirent *entry;
-//  DIR *dir;
-//  int i;
-//  int d;
-//
-//  dir = opendir(".");
-//  if (dir == NULL)
-//    return 1;
-//  while(list)
-//  {
-//    i = -1;
-//    while(list->content[++i])
-//    {
-//      if(list->content[i] == '*')
-//      {
-//        d = 0;
-//        entry = readdir(dir);
-//        while(entry != NULL)
-//        {
-//          if(!implementing_Wildcards(list->content, entry->d_name))
-//          {
-//            Wildcards_linked_list(list, entry->d_name);
-//            d++;
-//          }
-//          entry = readdir(dir);
-//        }
-//        if(d != 0)
-//          clean_wildcards(list);
-//        break;
-//      }
-//    }
-//    list = list->next;
-//  }
-//  closedir(dir);
-//  return(0);
-//}
-//
