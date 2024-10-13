@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:09:31 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:18:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int				execute(t_tree *root, t_helper *helper, t_tree **rt);
 int				count_arg(t_list *list);
 int				execute_pipe(t_tree *root, t_helper *helper, t_tree **rt);
 int				ft_echo(t_list *list);
-int check_and_or(t_tree *root, t_helper *helper,t_tree **rt);
+int             check_and_or(t_tree *root, t_helper *helper,t_tree **rt);
 void			my_free(t_helper *helper);
 char            *get_target_path(t_list *list, t_helper *helper);
 void			free_list(t_list *list);

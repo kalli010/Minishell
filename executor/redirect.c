@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:15:32 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:52:21 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,12 @@ int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt)
 	{
 		redlst = init_redirect_lst(&root);
 		if (!redlst)
-    {
+    	{
 			cleanup(helper,rt);
 			free_redirect_list(&redlst);
 			exit(EXIT_FAILURE);
-    }
-    g_helper.exit_status = exec_redirections(redlst, helper);
+    	}
+   		 g_helper.exit_status = exec_redirections(redlst, helper);
 		if (g_helper.exit_status != 0)
 		{
 			cleanup(helper,rt);
