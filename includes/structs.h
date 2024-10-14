@@ -32,7 +32,7 @@ typedef enum s_ttype
 	APPEND,
 	OPTIONS,
 	PATH,
-	VAR,
+	// VAR,
 	SET_VAR,
 	PATH_COMMAND,
 	DELIMITER,
@@ -83,10 +83,11 @@ typedef struct helper
   t_list    *list;
   t_tree    *root;
   int		exit_status;
+  int fd;
 }					t_helper;
 
 
-t_helper g_helper;
+extern t_helper g_helper;
 
 
 typedef struct s_file

@@ -570,7 +570,7 @@ void token_type(t_list *list)
       {
         if(list->back != NULL)
         {
-          if(list->back->type != COMMAND && list->back->type != VAR)
+          if(list->back->type != COMMAND && list->back->type != OPTIONS)
             list->type = PATH_COMMAND;
         }
         else if(list->back == NULL)
@@ -579,8 +579,8 @@ void token_type(t_list *list)
           list->type = PATH;
       }
   
-  else if(list->back != NULL && list->content[0] == '$')
-     list->type = VAR;
+  // else if(list->back != NULL && list->content[0] == '$')
+  //    list->type = VAR;
   
   else
     list->type = COMMAND;
@@ -715,7 +715,7 @@ int symbols_check(t_list *list)
     {
       if(list->type == PIPE && list->back->type != WORD \
         && list->back->type != COMMAND && list->back->type != OPTIONS \
-        && list->back->type != VAR && list->back->type != PATH \
+        && list->back->type != PATH \
         && list->back->type != SET_VAR && list->back->type != PATH_COMMAND \
         && list->back->type != DELIMITER && list->back->type != PARENTHESIS)
       {
@@ -781,7 +781,7 @@ int symbols_check(t_list *list)
   }
   if(list->type != WORD && list->type != OPTIONS \
       && list->type != COMMAND \
-      && list->type != VAR && list->type != PATH \
+      && list->type != PATH \
       && list->type != PATH_COMMAND \
       && list->type != DELIMITER\
       && list->type != PARENTHESIS)
@@ -1403,13 +1403,14 @@ int set_var(t_list *list, char ***env, char ***xenv)
   return(0);
 }
 
-int check_schar(t_list *list)
+int check_cmd_export(t_list *list)
 {
-  if(list->type == PIPE || list->type == OR \
-    || list->type == AND || list->type == OUTPUT \
-    || list->type == HEREDOC || list->type == INPUT \
-    || list->type == APPEND)
-    return(1);
+  while(list)
+  {
+    if(list->type != OPTIONS)
+      return(1);
+    list = list->next;
+  }
   return(0);
 }
 
@@ -1419,20 +1420,18 @@ int check_var(t_list *list, char ***env, char ***xenv)
 
   g_helper.exit_status = 0;
   i = 0;
+  if(list->back->back != NULL || check_cmd_export(list))
+  {  
+    g_helper.exit_status = 1;
+    return(g_helper.exit_status);
+  }
   while(list)
   {
-    if(((list->back != NULL && !ft_strncmp(list->back->content, "export", 6) \
-      && list->back->content[6] == '\0' ) || i == 1) && !check_schar(list))
+    if(set_var(list, env, xenv))
     {
-      i = 1;
-      if(set_var(list, env, xenv))
-      {
-        printf("not a valid identifier\n");
-        g_helper.exit_status = 1;
-      }
+      printf("not a valid identifier\n");
+      g_helper.exit_status = 1;
     }
-    else if(check_schar(list))
-      i = 0;
     list = list->next;
   }
   return(g_helper.exit_status);
@@ -2041,6 +2040,7 @@ void sigint_handler(int sig)
 
   if (sig == SIGINT)
   {
+    close(g_helper.fd);
     free_list(g_helper.list);
     if (g_helper.redfile)
     {
@@ -2053,7 +2053,7 @@ void sigint_handler(int sig)
       clean_env(g_helper.envp);
     if(*g_helper.xenv != NULL)
       clean_env(g_helper.xenv);
-  exit(1);
+    exit(1);
   }
 }
 
@@ -2072,6 +2072,7 @@ int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list 
     i = 1;
   remove_quotes_string(delimiter->content);
   fd = open(redfile, O_CREAT | O_WRONLY, 0644);
+  g_helper.fd = fd;
   if (fd < 0)
   {
     printf("Error creating redfile\n");
@@ -2100,7 +2101,8 @@ int open_file(char *redfile, t_list *delimiter, char **env, char **xenv, t_list 
           if (line[0] == '\0')
               break;
       }
-      else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)))
+      else if (!ft_strncmp(line, delimiter->content, ft_strlen(delimiter->content)) \
+        && ft_strlen(line) == ft_strlen(delimiter->content))
           break;
       if(i == 1)
       {
