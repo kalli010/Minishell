@@ -636,7 +636,6 @@ void free_list(t_list *list)
       free(tmp->content);
     free(tmp);
   }
-  list = NULL;
 }
 
 int recreate_linked_list(t_list *list, t_list **lst)

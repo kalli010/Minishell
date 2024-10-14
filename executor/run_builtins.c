@@ -47,7 +47,7 @@ int	run_builtins(t_tree *root, t_helper *helper)
 	else if (!ft_strncmp("export", root->content->content, sizeof("export")))
 	{
 		if (root->content->next != NULL || (root->content->next && root->content->next->type == OPTIONS))
-			return(set_var(root->content->next, &helper->envp, &helper->xenv));
+			return(check_var(root->content->next, &helper->envp, &helper->xenv));
 		else
 			return(export(helper->envp));
 	} 

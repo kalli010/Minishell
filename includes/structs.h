@@ -86,7 +86,7 @@ typedef struct helper
 }					t_helper;
 
 
-extern t_helper g_helper;
+t_helper g_helper;
 
 
 typedef struct s_file
