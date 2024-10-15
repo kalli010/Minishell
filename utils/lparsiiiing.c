@@ -398,16 +398,24 @@ int echo_create_tokens(char *str, int j, char ***tokens)
     if(str[i] != ' ')
     {
       s = i;
-      if(x == 0)
+      if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&' || str[i] == 40 || str[i] == 41)
+      {
+        x = -1;
+        while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
+          i++;
+      }
+      else if(x == 0)
+      {
         while(str[i] != '\0' && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
         {
           if(str[i] == 34 || str[i] == 39)
-            {
-              q = str[i];
-              while(str[++i] != q);
-            }
+          {
+            q = str[i];
+            while(str[++i] != q);
+          }
           i++;
         }
+      }
       else
       {
         if(str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == '&' || str[i] == '&' || str[i] == 40 || str[i] == 41)
@@ -682,6 +690,8 @@ int recreate_linked_list(t_list *list, t_list **lst)
       }
     }
     list = list->next;
+    if(list)
+      free(list->back);
   }
   tmp = n_list;
   while(tmp)
@@ -689,7 +699,7 @@ int recreate_linked_list(t_list *list, t_list **lst)
     token_type(tmp);
     tmp = tmp->next;
   }
-  free_list(*lst);
+  // free_list(*lst);
   *lst = n_list;
   return(0);
 }
@@ -1421,10 +1431,7 @@ int check_var(t_list *list, char ***env, char ***xenv)
   g_helper.exit_status = 0;
   i = 0;
   if(list->back && (list->back->back != NULL || check_cmd_export(list)))
-  {  
-    g_helper.exit_status = 1;
     return(g_helper.exit_status);
-  }
   while(list)
   {
     if(set_var(list, env, xenv))
@@ -1859,12 +1866,17 @@ int export(char **env)
   {
     if(get_var_value(env[i], &var, &value))
       return(1);
-    printf("%s", var);
+    ft_putstr_fd(var, STDOUT_FILENO);
     if(value[0] != '\0')
-      printf("=\"%s\"\n", value);
-    else {
-      printf("\n");
+    {
+      ft_putchar_fd('=', STDOUT_FILENO);
+      ft_putchar_fd('"', STDOUT_FILENO);
+      ft_putstr_fd(value, STDOUT_FILENO);
+      ft_putchar_fd('"', STDOUT_FILENO);
+      ft_putchar_fd('\n', STDOUT_FILENO);
     }
+    else
+      ft_putchar_fd('\n', STDOUT_FILENO);
     free(var);
     free(value);
   }

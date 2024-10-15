@@ -1,15 +1,15 @@
 #include <minishell.h>
 
-int check_red_with_cmd(t_list *list)
+int check_red_with_cmd(void)
 {
-  while(list)
+  while(g_helper.list)
   {
-    if(list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
+    if(g_helper.list->type == INPUT || g_helper.list->type == OUTPUT || g_helper.list->type == APPEND)
     {
-      if(list->next != NULL && list->next->next != NULL && (list->next->next->type == COMMAND || list->next->next->type == OPTIONS))
+      if(g_helper.list->next != NULL && g_helper.list->next->next != NULL && (g_helper.list->next->next->type == COMMAND || g_helper.list->next->next->type == OPTIONS))
         return(1);
     }
-    list = list->next;
+    g_helper.list = g_helper.list->next;
   }
   return(0);
 }
