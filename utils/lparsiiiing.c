@@ -733,6 +733,12 @@ int symbols_check(t_list *list)
         printf("syntax error\n");
         return(1);
       }
+      else if(list->type == PIPE && (list->next->type == AND || list->next->type == OR))
+      {
+        printf("11\n");
+        printf("syntax error\n");
+        return(1);
+      }
       else if(list->back != NULL && (list->type == list->back->type) && \
         (list->type != WORD && list->type != OPTIONS && list->type != PARENTHESIS))
       {
@@ -1630,11 +1636,21 @@ t_tree *creat_subtree(t_list **list)
   return(r_tree);
 }
 
+int check_tmp(t_list *tmp)
+{
+  return (tmp->type == PIPE || tmp->type == OR \
+    || tmp->type == AND || tmp->type == OUTPUT \
+    || tmp->type == INPUT || tmp->type == HEREDOC \
+    || tmp->type == APPEND);
+}
+
 t_tree *creat_tree_with_parenthesis(t_list *list)
 {
   t_tree *root;
   t_tree *l_node;
   t_tree *r_tree;
+  t_tree *tmp;
+  t_tree *tmp2;
 
   r_tree = NULL;
   l_node = NULL;
@@ -1670,8 +1686,15 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
             add_sibling_to_child(r_tree, l_node->first_child);
             l_node->first_child = r_tree;
           }
-          else {
-            add_child_to_tree(l_node->first_child, r_tree);
+          else
+          {
+            tmp = l_node->first_child;
+            while(check_tmp(tmp->first_child->content))
+              tmp = tmp->first_child;
+            tmp2 = tmp->first_child;
+            tmp->first_child = r_tree;
+            r_tree->next_sibling = tmp2;
+            //add_child_to_tree(tmp, r_tree);
           }
         }
         else if(l_node != NULL)
