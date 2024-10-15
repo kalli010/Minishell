@@ -1420,7 +1420,7 @@ int check_var(t_list *list, char ***env, char ***xenv)
 
   g_helper.exit_status = 0;
   i = 0;
-  if(list->back->back != NULL || check_cmd_export(list))
+  if(list->back && (list->back->back != NULL || check_cmd_export(list)))
   {  
     g_helper.exit_status = 1;
     return(g_helper.exit_status);
