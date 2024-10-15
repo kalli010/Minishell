@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:05:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:07:27 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:52:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ int ft_env(t_list *list, char **env)
         }
         i++;
     }
-    return (g_helper.exit_status);
+    return (g_helper.exit_status = 0,0);
 }
 

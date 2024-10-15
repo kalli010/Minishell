@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 15:34:06 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:51:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,5 +172,5 @@ int ft_cd(t_list *list, t_helper *helper)
         }
     }
     free(old_pwd);
-    return (g_helper.exit_status);
+    return (g_helper.exit_status = 0,0);
 }

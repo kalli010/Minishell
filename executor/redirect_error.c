@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 00:54:10 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:48:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	check_existence(char *file, int flag)
 {
 	if (!file || access(file, F_OK) != 0)
 	{
-		g_helper.exit_status = 127;
+		g_helper.exit_status = 1;
 		if (flag)
 		{
 			write(2, M_SHELL, 23);

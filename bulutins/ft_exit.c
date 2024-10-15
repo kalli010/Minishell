@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:42:18 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:52:54 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,9 @@ unsigned char ft_exit(t_tree *root, t_helper *helper)
         if (!ft_all_isdigit(arg))
         {
             exit_errors(2, arg);
-            clean_env(helper->envp);
-            clean_env(helper->xenv);
-            free(helper->redfile);
-            my_free(helper);
-            free_tree(root);
+            cleanup(helper,&root);
             exit(g_helper.exit_status = 2);
         }
-
         if (count_arg(root->content) > 1)
         {
             exit_errors(1, NULL);
@@ -70,10 +65,6 @@ unsigned char ft_exit(t_tree *root, t_helper *helper)
         }
         status = ft_atoi(arg);
     }
-    clean_env(helper->envp);
-    clean_env(helper->xenv);
-    free(helper->redfile);
-    my_free(helper);
-    free_tree(root);
+    cleanup(helper,&root);
     exit((unsigned char)status);
 }

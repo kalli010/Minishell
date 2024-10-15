@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 20:07:14 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:07:21 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,27 @@ t_redirect	*init_redirect_lst(t_tree **root)
             || (*root)->content->type == INPUT
             || (*root)->content->type == APPEND))
     {
-      if((*root)->first_child->next_sibling && (*root)->first_child->next_sibling->content->type == PATH)
-      {
-        file = (*root)->first_child->next_sibling->content->content;
-        tmp = newred((*root)->content->type, (*root)->content->i, file);
-        if (tmp == NULL)
-        {
-			while (redlst)
-            {
-                tmp = redlst;
-                redlst = redlst->next;
-                free(tmp->filename);
-                free(tmp);
-            }
-            return (NULL);
-        }
+		if ((*root)->first_child)
+		{
+				if ((*root)->first_child->next_sibling == NULL)
+				file = (*root)->first_child->content->content;
+			else		
+				file = (*root)->first_child->next_sibling->content->content;
+			tmp = newred((*root)->content->type, (*root)->content->i, file);
+			if (tmp == NULL)
+			{
+				while (redlst)
+				{
+					tmp = redlst;
+					redlst = redlst->next;
+					free(tmp->filename);
+					free(tmp);
+				}
+				return (NULL);
+			}
+		}
         addred_front(&redlst, tmp);
-      }
-      *root = (*root)->first_child;
+      	*root = (*root)->first_child;
     }
     return (redlst);
 }

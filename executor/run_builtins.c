@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 05:57:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 17:00:57 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:48:12 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	run_builtins(t_tree *root, t_helper *helper)
 		return (ft_unset(root->content, helper));
 	else if (!ft_strncmp("export", root->content->content, sizeof("export")))
 	{
-		if (root->content->next != NULL || (root->content->next && root->content->next->type == OPTIONS))
+		if (root->content->next && root->content->next->type == OPTIONS)
 			return(check_var(root->content->next, &helper->envp, &helper->xenv));
 		else
 			return(export(helper->envp));

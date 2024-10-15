@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 17:51:47 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:20:26 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef enum s_ttype
 	APPEND,
 	OPTIONS,
 	PATH,
-	// VAR,
+	VAR,
 	SET_VAR,
 	PATH_COMMAND,
 	DELIMITER,
