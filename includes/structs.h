@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 17:20:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:28:40 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct helper
 	char      **redfile;
   t_list    *list;
   t_tree    *root;
+  int 		flag;
   int		exit_status;
   int fd;
 }					t_helper;

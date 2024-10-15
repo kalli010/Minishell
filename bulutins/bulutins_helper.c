@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:33:33 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:18:38 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:54:04 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ char *get_target_path(t_list *list, t_helper *helper)
         go_path =ft_getenv(helper->envp, "HOME");
         if (!go_path)
         {
-            write(2, "minishell: cd: HOME not set\n", 28);
+            write(2, M_SHELL, 23);
+            write(2, "cd: HOME not set\n", 18);
             return (NULL);
         }
     }
@@ -40,7 +41,8 @@ char *get_target_path(t_list *list, t_helper *helper)
 
 void handle_cd_error(const char *path, int error_type)
 {
-    write(2, "minishell: cd: ", 15);
+    write(2, M_SHELL, 23);
+    write(2,"cd",2);
     if (error_type == 1)
     {
         write(2, path,ft_strlen(path));
@@ -56,4 +58,11 @@ void handle_cd_error(const char *path, int error_type)
         write(2, path,ft_strlen(path));
         write(2, ": Permission denied\n", 20);
     }
+}
+int cd_home_not_set(void)
+{
+    write(2, M_SHELL, 23);
+    write(2, "cd: HOME not set\n", 18);
+    g_helper.exit_status = 1;
+    return (g_helper.exit_status);
 }

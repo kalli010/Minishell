@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 20:07:14 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 17:07:21 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:22:54 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,53 @@ void	addred_front(t_redirect **lst, t_redirect *new)
 	}
 }
 
+t_redirect	*create_redirect(t_tree **root)
+{
+    t_redirect	*tmp;
+    char		*file;
+
+	tmp = NULL;
+    if ((*root)->first_child)
+    {
+        if ((*root)->first_child->next_sibling == NULL)
+            file = (*root)->first_child->content->content;
+        else
+            file = (*root)->first_child->next_sibling->content->content;
+
+        tmp = newred((*root)->content->type, (*root)->content->i, file);
+        if (tmp == NULL)
+            return (NULL);
+    }
+    return (tmp);
+}
+
 t_redirect	*init_redirect_lst(t_tree **root)
 {
     t_redirect	*redlst = NULL;
     t_redirect	*tmp;
-    char		*file;
 
     while ((*root) && ((*root)->content->type == OUTPUT
             || (*root)->content->type == INPUT
             || (*root)->content->type == APPEND))
     {
-		if ((*root)->first_child)
-		{
-				if ((*root)->first_child->next_sibling == NULL)
-				file = (*root)->first_child->content->content;
-			else		
-				file = (*root)->first_child->next_sibling->content->content;
-			tmp = newred((*root)->content->type, (*root)->content->i, file);
-			if (tmp == NULL)
-			{
-				while (redlst)
-				{
-					tmp = redlst;
-					redlst = redlst->next;
-					free(tmp->filename);
-					free(tmp);
-				}
-				return (NULL);
-			}
-		}
+        tmp = create_redirect(root);
+        if (tmp == NULL)
+        {
+            while (redlst)
+            {
+                tmp = redlst;
+                redlst = redlst->next;
+                free(tmp->filename);
+                free(tmp);
+            }
+            return (NULL);
+        }
         addred_front(&redlst, tmp);
-      	*root = (*root)->first_child;
+        *root = (*root)->first_child;
     }
     return (redlst);
 }
+
 
 
 

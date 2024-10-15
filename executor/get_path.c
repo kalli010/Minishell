@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 13:18:02 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:30:29 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,13 @@ char *get_path_of_cpath(t_list *list)
 char *get_path(t_helper *helper, t_list *list)
 {
     char *path = NULL;
-
+    g_helper.flag = 0;
     if (list->type == COMMAND)
         path = get_cmd_path(helper, list);
     else if (list->type == PATH_COMMAND)
+    {
+        g_helper.flag = 1;
         path = get_path_of_cpath(list);
+    }
     return path;
 }

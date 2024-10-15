@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:18:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:55:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,5 @@ int				no_file_no_dir(char *cmd);
 int				get_len_path(char *path);
 char			*check_path(char *path);
 void            cleanup(t_helper *helper, t_tree **rt);
+int             cd_home_not_set(void);
 #endif
