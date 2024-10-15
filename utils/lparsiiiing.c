@@ -586,10 +586,6 @@ void token_type(t_list *list)
         else
           list->type = PATH;
       }
-  
-  // else if(list->back != NULL && list->content[0] == '$')
-  //    list->type = VAR;
-  
   else
     list->type = COMMAND;
 }
@@ -699,7 +695,6 @@ int recreate_linked_list(t_list *list, t_list **lst)
     token_type(tmp);
     tmp = tmp->next;
   }
-  // free_list(*lst);
   *lst = n_list;
   return(0);
 }
@@ -1199,7 +1194,6 @@ int check_expander(char **env, t_list **list)
         }
         else if(status == 2)
           return(1);
-        //token_type(*list);
         if(*list)
           i = check_d((*list)->content, i - 1);
         else
@@ -1702,7 +1696,6 @@ t_tree *creat_tree_with_parenthesis(t_list *list)
             tmp2 = tmp->first_child;
             tmp->first_child = r_tree;
             r_tree->next_sibling = tmp2;
-            //add_child_to_tree(tmp, r_tree);
           }
         }
         else if(l_node != NULL)
@@ -1779,7 +1772,6 @@ t_tree *creat_tree(t_list *lst)
           l_node = l_node->first_child;
         add_child_to_tree(n_node, l_node->first_child);
         add_sibling_to_child(n_node, l_node->first_child->next_sibling);
-        //l_node->first_child->next_sibling->next_sibling = NULL;
         l_node->first_child->next_sibling = NULL;
         l_node->first_child = n_node;
       }
