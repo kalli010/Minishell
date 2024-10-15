@@ -896,7 +896,7 @@ int var_dquotes(char **env, t_list **list, int d)
       len++;
   }
   sstr = ft_substr((*list)->content,s + 1, len - (s + 1));
-  if(sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?')
+  if((sstr != NULL && !ft_isalpha(sstr[0]) && sstr[0] != '_' && sstr[0] != '?') || sstr == NULL)
   {
     free(fstr);
     free(sstr);
@@ -1151,15 +1151,23 @@ int check_d(char *str, int i)
 
 int check_squotes(char *str, int i)
 {
+  int s;
+
+  s = 0;
   while(--i >= 0)
   {
     if(str[i] == '\'')
     {
-      while(str[--i] != '\'' && i >= 0);
-      if(i < 0)
-        return(0);
-      else
+      s++;
+      while(--i >= 0)
+      {
+        if(str[i] == '\'')
+          s++;
+      }
+      if(s % 2 == 0)
         return(1);
+      else
+        return(0);
     }
     else if(str[i] == '"')
         return(1);
@@ -2434,63 +2442,79 @@ void wildcards_linked_list(t_list *list, char *str)
   }
 }
 
-void clean_wildcards(t_list *list)
+void clean_wildcards(t_list **list)
 {
   t_list *back;
   t_list *next;
 
-  back = list->back;
-  next = list->next;
-  free(list->content);
-  free(list);
-  back->next = next;
-  next->back = back;
+  back = (*list)->back;
+  next = (*list)->next;
+  next->type = COMMAND;
+  free((*list)->content);
+  free(*list);
+  if(back)
+  {
+    back->next = next;
+  }
+  if(next)
+  {
+    next->back = back;
+    if(back == NULL)
+      *list = next;
+    else
+      *list = back;
+  }
 }
 
-int wildcards(t_list *list)
+int wildcards(t_list **list)
 {
   struct dirent *entry;
   DIR *dir;
   int d;
   int i;
   int f;
+  t_list *tmp;
 
   dir = opendir(".");
   if (dir == NULL)
     return 1;
-  while (list)
+  while (*list)
   {
     f = 0;
     i = -1;
-    while (list->content[++i])
+    while ((*list)->content[++i])
     {
-      if (list->content[i] == '*')
+      if ((*list)->content[i] == '*')
       {
         d = 0;
         rewinddir(dir);
         while ((entry = readdir(dir)) != NULL)
         {
-          if (!implementing_wildcards(list->content, entry->d_name))
+          if (!implementing_wildcards((*list)->content, entry->d_name))
           {
-            wildcards_linked_list(list, entry->d_name);
+            wildcards_linked_list(*list, entry->d_name);
             d++;
           }
         }
         if (d != 0)
         {
           clean_wildcards(list);
-          f++;
+          tmp = *list;
+          while(*list && d > 0)
+          {
+            *list = (*list)->next;
+            d--;
+          }
         }
         break;
       }
     }
-    while(f != 0)
-    {
-      list = list->back;
-      f--;
-    }
-    list = list->next;
+    if(*list)
+      *list = (*list)->next;
   }
+  *list = tmp;
+  while((*list)->back)
+    *list = (*list)->back;
   closedir(dir);
   return 0;
 }
