@@ -53,14 +53,6 @@ t_tree *creat_subtree(t_list **list)
   return(r_tree);
 }
 
-int check_tmp(t_list *tmp)
-{
-  return (tmp->type == PIPE || tmp->type == OR \
-    || tmp->type == AND || tmp->type == OUTPUT \
-    || tmp->type == INPUT || tmp->type == HEREDOC \
-    || tmp->type == APPEND);
-}
-
 t_tree *creat_tree_with_parenthesis(t_list *list)
 {
   t_tree *root;

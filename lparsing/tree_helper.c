@@ -1,5 +1,13 @@
 #include <minishell.h>
 
+int check_tmp(t_list *tmp)
+{
+  return (tmp->type == PIPE || tmp->type == OR \
+    || tmp->type == AND || tmp->type == OUTPUT \
+    || tmp->type == INPUT || tmp->type == HEREDOC \
+    || tmp->type == APPEND);
+}
+
 t_tree *create_tree_node(t_list *list)
 {
   t_tree *n_node;
