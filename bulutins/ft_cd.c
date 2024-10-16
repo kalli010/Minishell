@@ -6,18 +6,17 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 20:56:24 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 10:09:05 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-
 static int cd_errors(void)
 {
     g_helper.exit_status = 1;
     write(2, M_SHELL, 23);
-    write(2, "cd : too many arguments\n", 37);
+    write(2, "cd : too many arguments\n", 25);
     return (g_helper.exit_status);
 }
 
@@ -48,27 +47,24 @@ int change_directory(char *go_path)
     if (!stat(go_path, &path_stat) && !S_ISDIR(path_stat.st_mode))
     {
         handle_cd_error(go_path, 3);
-        free(go_path);
         g_helper.exit_status = 1;
         return (g_helper.exit_status);
     }
     if (!S_ISDIR(path_stat.st_mode))
     {
         handle_cd_error(go_path, 1);
-        free(go_path);
         g_helper.exit_status = 1;
         return (g_helper.exit_status);
     }
     if (chdir(go_path) != 0)
     {
         handle_cd_error(go_path, 2);
-        free(go_path);
         g_helper.exit_status = 1;
         return (g_helper.exit_status);
     }
-    free(go_path);
     return (g_helper.exit_status);
 }
+
 
 int ft_cd(t_list *list, t_helper *helper)
 {
@@ -86,7 +82,7 @@ int ft_cd(t_list *list, t_helper *helper)
 
     if (count_arg(list) == 0)
     {
-        home_path = getenv("HOME");
+        home_path = ft_getenv(helper->envp,"HOME");
         if (!home_path)
             return (cd_home_not_set());
         go_path = strdup(home_path);

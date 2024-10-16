@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 20:42:45 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:05:49 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
             cleanup(helper,rt);
             exit(EXIT_FAILURE);
         }
+        cleanup(helper,rt);
         exit(EXIT_SUCCESS);
     }
     else if (pid > 0)
@@ -86,21 +87,21 @@ int find_command(t_tree *root, t_helper *helper, t_tree **rt)
     if (g_helper.exit_status != 0)
         return (g_helper.exit_status);
 
-      if ((root->first_child && 
-         root->first_child->next_sibling && 
-         ((root->first_child->next_sibling->content->type != COMMAND &&
-           root->first_child->next_sibling->content->type != PATH_COMMAND &&
-           root->first_child->next_sibling->content->type != OPTIONS) || 
-          (root->content->in == 1))))
-    { 
-        // if (root->content->in == 1)
-        // {
-        //     root->content->in = 0;
-        //     return (execute_parenthesis(root, helper, rt));
-        // }
-        //     else
-                return (execute_parenthesis(root->next_sibling, helper, rt));
+    //   if ((root->first_child && 
+    //      root->first_child->next_sibling && 
+    //      ((root->first_child->next_sibling->content->type != COMMAND &&
+    //        root->first_child->next_sibling->content->type != PATH_COMMAND &&
+    //        root->first_child->next_sibling->content->type != OPTIONS) || 
+    //       (root->content->in == 1))))
+    // { 
+    if (root->content->in == 1)
+    {
+        root->content->in = 0;
+        return (execute_parenthesis(root, helper, rt));
     }
+    //         else
+    //             return (execute_parenthesis(root->next_sibling, helper, rt));
+    // }
     if (handle_pipe(root,helper, rt) == EXIT_FAILURE)
         return (EXIT_FAILURE);
     if (root->content->type == APPEND || root->content->type == OUTPUT || root->content->type == INPUT)
