@@ -1,13 +1,44 @@
 #include <minishell.h>
 
+void add_l_tree(t_tree **l_tree, t_tree **r_tree, t_tree **s_tree)
+{
+  if(*l_tree != NULL)
+  {
+    if(*r_tree != NULL)
+      add_child_to_tree(*r_tree, *l_tree);
+    else
+    {
+      add_sibling_to_child(*l_tree, (*s_tree)->first_child);
+      (*s_tree)->first_child = *l_tree;
+    }
+  }
+}
+
+void add_s_tree(t_tree **r_tree, t_tree **s_tree)
+{
+  if(*r_tree == NULL)
+    *r_tree = *s_tree;
+  else if(*s_tree != NULL && (*s_tree)->first_child != NULL)
+  {
+  add_sibling_to_child(*r_tree, (*s_tree)->first_child);
+  (*s_tree)->first_child = *r_tree;
+  *r_tree = *s_tree;
+}
+  else if(*s_tree != NULL && (*s_tree)->first_child == NULL)
+  {
+    add_child_to_tree(*s_tree, *r_tree);
+    *r_tree = *s_tree;
+  }
+}
+
 t_tree *creat_subtree(t_list **list)
 {
   t_tree *s_tree;
   t_tree *r_tree;
   t_tree *l_tree;
 
-  l_tree = NULL;
-  s_tree = NULL;
+  //l_tree = NULL;
+  //s_tree = NULL;
   r_tree = NULL;
   while(*list && (*list)->content[0] != 41)
   {
@@ -18,7 +49,6 @@ t_tree *creat_subtree(t_list **list)
       *list = (*list)->next;
     }
     s_tree = creat_tree(*list);
-    
     while((*list)->content[0] != 41)
     {
       (*list)->in = 1;
@@ -26,29 +56,8 @@ t_tree *creat_subtree(t_list **list)
         break;
       *list = (*list)->next;
     }
-    if(l_tree != NULL)
-    {
-      if(r_tree != NULL)
-        add_child_to_tree(r_tree, l_tree);
-      else
-      {
-        add_sibling_to_child(l_tree, s_tree->first_child);
-        s_tree->first_child = l_tree;
-      }
-    }
-    if(r_tree == NULL)
-      r_tree = s_tree;
-    else if(s_tree != NULL && s_tree->first_child != NULL)
-    {
-      add_sibling_to_child(r_tree, s_tree->first_child);
-      s_tree->first_child = r_tree;
-      r_tree = s_tree;
-    }
-    else if(s_tree != NULL && s_tree->first_child == NULL)
-    {
-      add_child_to_tree(s_tree, r_tree);
-      r_tree = s_tree;
-    }
+    add_l_tree(&l_tree, &r_tree, &s_tree);
+    add_s_tree(&r_tree, &s_tree);
   }
   return(r_tree);
 }
