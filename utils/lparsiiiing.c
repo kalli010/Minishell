@@ -612,20 +612,6 @@ int creat_linked_list(t_list **list, char **tokens)
   return(0);
 }
 
-int check_red_with_cmd(t_list *list)
-{
-  while(list)
-  {
-    if(list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
-    {
-      if(list->next != NULL && list->next->next != NULL && (list->next->next->type == COMMAND || list->next->next->type == OPTIONS))
-        return(1);
-    }
-    list = list->next;
-  }
-  return(0);
-}
-
 void free_list(t_list *list)
 {
   t_list *tmp;
@@ -640,6 +626,20 @@ void free_list(t_list *list)
       free(tmp->content);
     free(tmp);
   }
+}
+
+int check_red_with_cmd(t_list *list)
+{
+  while(list)
+  {
+    if(list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
+    {
+      if(list->next != NULL && list->next->next != NULL && (list->next->next->type == COMMAND || list->next->next->type == OPTIONS))
+        return(1);
+    }
+    list = list->next;
+  }
+  return(0);
 }
 
 int recreate_linked_list(t_list *list, t_list **lst)
@@ -802,6 +802,44 @@ int symbols_check(t_list *list)
       return(1);
   }
   return(0);
+}
+
+int check_parenthesis_error(t_list *list)
+{
+  int p;
+  t_list *node;
+
+  node = list;
+  p = 0;
+  while(node)
+  {
+    if(node->content[0] == 40)
+    {
+      if((node->back != NULL && \
+        (node->back->type != PIPE && node->back->type != AND \
+        && node->back->type != OR && node->back->content[0] != 40)) \
+        || (node->next != NULL && node->next->type != COMMAND \
+        && node->next->type != PATH_COMMAND \
+        && node->next->content[0] != 40))
+        return(1);
+      p++;
+    }
+    node = node->next;
+  }
+  while(list)
+  {
+    if(list->content[0] == 41)
+    {
+      if(list->next != NULL && \
+        ((list->back && list->back->type != COMMAND && list->back->type != OPTIONS && list->back->content[0] != 41)\
+        || (list->next->type == COMMAND \
+        || list->next->type == OPTIONS)))
+        return(1);
+      p--;
+    }
+    list = list->next;
+  }
+  return(p);
 }
 
 void ft_cpy(char *n_list, char *str)
@@ -1434,17 +1472,14 @@ int check_cmd_export(t_list *list)
 
 int check_var(t_list *list, char ***env, char ***xenv)
 {
-  int i;
-
   g_helper.exit_status = 0;
-  i = 0;
   if(list->back && (list->back->back != NULL || check_cmd_export(list)))
     return(g_helper.exit_status);
   while(list)
   {
     if(set_var(list, env, xenv))
     {
-      printf("not a valid identifier\n");
+      printf("%s not a valid identifier\n",list->content);
       g_helper.exit_status = 1;
     }
     list = list->next;
@@ -1545,44 +1580,6 @@ int check_parenthesis(t_list *list)
     list = list->next;
   }
   return(0);
-}
-
-int check_parenthesis_error(t_list *list)
-{
-  int p;
-  t_list *node;
-
-  node = list;
-  p = 0;
-  while(node)
-  {
-    if(node->content[0] == 40)
-    {
-      if((node->back != NULL && \
-        (node->back->type != PIPE && node->back->type != AND \
-        && node->back->type != OR && node->back->content[0] != 40)) \
-        || (node->next != NULL && node->next->type != COMMAND \
-        && node->next->type != PATH_COMMAND \
-        && node->next->content[0] != 40))
-        return(1);
-      p++;
-    }
-    node = node->next;
-  }
-  while(list)
-  {
-    if(list->content[0] == 41)
-    {
-      if(list->next != NULL && \
-        ((list->back && list->back->type != COMMAND && list->back->type != OPTIONS && list->back->content[0] != 41)\
-        || (list->next->type == COMMAND \
-        || list->next->type == OPTIONS)))
-        return(1);
-      p--;
-    }
-    list = list->next;
-  }
-  return(p);
 }
 
 t_tree *creat_subtree(t_list **list)
@@ -1839,7 +1836,6 @@ char **create_env(char **envp)
   char **env;
   int s;
   int i;
-  char ***new_env;
 
   i = -1;
   s = env_size(envp);
@@ -1857,7 +1853,6 @@ char **create_env(char **envp)
     }
   }
   env[i] = NULL;
-  new_env = &env;
   return(env);
 }
 
@@ -1947,6 +1942,16 @@ int unset(char ***env, t_list *list)
     list = list->next;
   }
   return(0);
+}
+
+void clean_env(char **env)
+{
+  int i;
+
+  i = -1;
+  while(env[++i])
+    free(env[i]);
+  free(env);
 }
 
 char *ft_strcpy(char *dest, const char *src)
@@ -2057,16 +2062,6 @@ int expand_line(char **env, char **str, int d)
   free(tstr);
   free(var);
   return(0);
-}
-
-void clean_env(char **env)
-{
-  int i;
-
-  i = -1;
-  while(env[++i])
-    free(env[i]);
-  free(env);
 }
 
 void sigint_handler(int sig)
@@ -2464,7 +2459,6 @@ int wildcards(t_list **list)
   DIR *dir;
   int d;
   int i;
-  int f;
   t_list *tmp;
 
   dir = opendir(".");
@@ -2472,7 +2466,6 @@ int wildcards(t_list **list)
     return 1;
   while (*list)
   {
-    f = 0;
     i = -1;
     while ((*list)->content[++i])
     {
