@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 18:28:40 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 19:24:41 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct helper
   int 		flag;
   int		exit_status;
   int fd;
+  int cd;
 }					t_helper;
 
 

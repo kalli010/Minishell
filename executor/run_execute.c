@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 16:05:49 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:12:01 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
     {
         if (find_command(root, helper, rt) != EXIT_SUCCESS)
         { 
-            cleanup(helper,rt);
+            // cleanup(helper,rt);
             exit(EXIT_FAILURE);
         }
-        cleanup(helper,rt);
+        // cleanup(helper,rt);
         exit(EXIT_SUCCESS);
     }
     else if (pid > 0)

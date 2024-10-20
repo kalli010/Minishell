@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 15:26:21 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 19:40:30 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,13 @@
 int	ft_pwd(t_helper *helper)
 {
 	char *path;
-
-	g_helper.exit_status = 0;
+	(void)helper;
+	g_helper.exit_status = 0; 
+	printf("%d\n",g_helper.cd);
+	// if (g_helper.cd == 1)
+		printf("%s\n",g_helper.pwd);
+	if (g_helper.cd == 1)
+		return (g_helper.exit_status);
 	path = getcwd(NULL, 0);
 	if (!path) 
 	{

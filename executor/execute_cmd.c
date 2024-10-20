@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 16:43:25 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:15:02 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ static int	finish_status(pid_t pid)
 	{
 		if (WTERMSIG(status))
 			g_helper.exit_status = WTERMSIG(status) + 128;
+		if (g_helper.exit_status == 131)
+		{
+			write(2, "Quit (core dumped)\n", \
+				ft_strlen("Quit (core dumped)\n"));
+		}
 		return (g_helper.exit_status);
 	}
 	return (EXIT_FAILURE);
@@ -41,6 +46,7 @@ int prepare_command(t_tree *root, t_helper *helper)
         helper->cmd = get_path_of_cpath(root->content);
         if (!helper->cmd)
             return no_file_no_dir(root->content->content);
+		free(path);
     }
     else
         helper->cmd = get_path(helper, root->content); 

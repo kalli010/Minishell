@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/14 12:04:13 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:18:29 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 void check_signal(void)
 {
-	if (g_helper.exit_status == 131)
-	{
-		write(2, "Quit (core dumped)\n", \
-				ft_strlen("Quit (core dumped)\n"));
-	}
 	if (g_helper.exit_status == 130)
 		write(2,"\n",1);
 }
@@ -50,10 +45,5 @@ void	signal_handeler(int place)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-	}
-	if (place == IN_HERE_DOC)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
 	}
 }
