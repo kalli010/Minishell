@@ -18,6 +18,7 @@ char **get_envp(char **env)
     char *path;
     char **split_path;
 
+<<<<<<< HEAD
     // if (env == NULL)
     //     return (NULL);
     if (env ==  NULL)
@@ -30,6 +31,11 @@ char **get_envp(char **env)
         return split_path;
     }
     path = ft_getenv(env, "PATH");
+=======
+    if (env == NULL)
+        return (NULL);
+    path = ft_getenv(env, "PATH", -1);
+>>>>>>> 7b9fec5a359f20b6b4a63ec393a37c572557bed5
     if (path == NULL)
         return (NULL);
     split_path = ft_split(path, ':');

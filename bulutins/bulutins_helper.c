@@ -21,7 +21,7 @@ char *get_target_path(t_list *list, t_helper *helper)
         list = list->next;
     if (!list || !list->content)
     {
-        go_path =ft_getenv(helper->envp, "HOME");
+        go_path =ft_getenv(helper->envp, "HOME", -1);
         if (!go_path)
         {
             write(2, M_SHELL, 23);

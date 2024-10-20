@@ -39,11 +39,16 @@ static int	finish_status(pid_t pid)
 int prepare_command(t_tree *root, t_helper *helper)
 {
     char *path;
+<<<<<<< HEAD
 	
 	if (!helper->envp)
 		return command_not_found(root->content->content);
     helper->cmd = get_path(helper, root->content); 
     path = ft_getenv(helper->envp, "PATH");
+=======
+
+    path = ft_getenv(helper->envp, "PATH", -1);
+>>>>>>> 7b9fec5a359f20b6b4a63ec393a37c572557bed5
     if (!path || !*path)
     {
         helper->cmd = get_path_of_cpath(root->content);
