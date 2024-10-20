@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 17:15:02 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/20 20:25:43 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ static int	finish_status(pid_t pid)
 int prepare_command(t_tree *root, t_helper *helper)
 {
     char *path;
-
+	
+	if (!helper->envp)
+		return command_not_found(root->content->content);
+    helper->cmd = get_path(helper, root->content); 
     path = ft_getenv(helper->envp, "PATH");
     if (!path || !*path)
     {
@@ -49,7 +52,6 @@ int prepare_command(t_tree *root, t_helper *helper)
 		free(path);
     }
     else
-        helper->cmd = get_path(helper, root->content); 
     helper->option = get_options(helper, root->content);
 	free(path);
     if (!helper->cmd)

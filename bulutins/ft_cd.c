@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 19:36:10 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/20 23:19:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,9 @@ char	*cd_path(t_list *list, t_helper *helper)
 			cd_home_not_set();
 			return (NULL);
 		}
-		printf("Home Path: %s\n", home_path);
 		go_path = ft_strdup(home_path);
+		free(home_path); 
 	}
-
 	else
 	{
 		go_path = get_target_path(list, helper);
@@ -98,7 +97,7 @@ int	ft_cd(t_list *list, t_helper *helper)
 	char	*old_pwd;
 	char	*curr_pwd;
 	char	*go_path;
-
+	
 	if (!list)
 		return (g_helper.exit_status = 1, 1);
 	if (count_arg(list) != 1 && count_arg(list) != 0)
@@ -118,9 +117,6 @@ int	ft_cd(t_list *list, t_helper *helper)
 			free(curr_pwd);
 		}
 	}
-	g_helper.pwd = go_path;
-	printf("%s\n",g_helper.pwd);
-	g_helper.cd = 1;
 	(free(old_pwd), free(go_path));
 	return (g_helper.exit_status = 0, 0);
 }

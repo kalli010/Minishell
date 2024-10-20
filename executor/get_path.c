@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 16:47:01 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/20 20:19:57 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,20 @@ char **get_envp(char **env)
     char *path;
     char **split_path;
 
-    if (env == NULL)
-        return (NULL);
+    // if (env == NULL)
+    //     return (NULL);
+    if (env ==  NULL)
+    {
+        path = ft_strdup(DEFAULT_PATH);
+        path = check_path(path);
+        printf(" path is %s",path);
+        split_path = ft_split(path, ':');
+        free(path);
+        return split_path;
+    }
     path = ft_getenv(env, "PATH");
     if (path == NULL)
         return (NULL);
-    path = check_path(path);
     split_path = ft_split(path, ':');
     free(path);
     return split_path;

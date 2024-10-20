@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 20:55:41 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/20 20:05:19 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 # include <sys/types.h>
 
 extern t_helper	g_helper;
-
+# define DEFAULT_PATH \
+	"/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin\
+:/usr/local/sbin:/opt/bin:/opt/sbin"
 # define GREEN "\033[1;32m"
 # define RED "\033[1;31m"
 # define YELLOW "\033[1;33m"

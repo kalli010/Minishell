@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:06:57 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 19:40:30 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/20 15:59:20 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 int	ft_pwd(t_helper *helper)
 {
 	char *path;
-	(void)helper;
-	g_helper.exit_status = 0; 
-	printf("%d\n",g_helper.cd);
-	// if (g_helper.cd == 1)
-		printf("%s\n",g_helper.pwd);
-	if (g_helper.cd == 1)
+	char	buff[4096];
+	g_helper.exit_status = 0;
+	
+	if (getcwd(buff, sizeof(buff)) != NULL)
+	{
+		printf("%s\n", buff);
 		return (g_helper.exit_status);
-	path = getcwd(NULL, 0);
-	if (!path) 
+	}
+	else 
 	{
 		path = ft_getenv(helper->envp, "PWD");
 		if (!path)
@@ -32,7 +32,7 @@ int	ft_pwd(t_helper *helper)
 			return (g_helper.exit_status);
 		}
 	}
-	printf("%s\n", path);
+	printf("%s\n",path );
 	free(path);
 	return (g_helper.exit_status);
 }
