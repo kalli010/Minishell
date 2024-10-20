@@ -37,35 +37,38 @@ int check_root_content(t_tree  *root)
     return (0);
 }
 
-
-static int execute_parenthesis(t_tree *root, t_helper *helper,t_tree **rt)
+static int execute_parenthesis(t_tree *root, t_helper *helper, t_tree **rt)
 {
-    pid_t pid;
-    int status;
+  pid_t pid;
+  int status;
 
-    if (!root || !root->content)
-        return (EXIT_FAILURE);
-    pid = fork();
-    if (pid == 0)
-    {
-        if (find_command(root, helper, rt) != EXIT_SUCCESS)
-        { 
-            // cleanup(helper,rt);
-            exit(EXIT_FAILURE);
-        }
-        // cleanup(helper,rt);
-        exit(EXIT_SUCCESS);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) 
-            return WEXITSTATUS(status); 
-        return (EXIT_FAILURE);
-    }
+  if (!root || !root->content)
     return (EXIT_FAILURE);
+  if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
+  {
+    if (is_builtins(root))
+      return run_builtins(root, helper);
+  }
+  pid = fork();
+  if (pid == 0)
+  {
+    if (find_command(root, helper, rt) != EXIT_SUCCESS)
+    {
+      cleanup(helper, rt);
+      exit(EXIT_FAILURE);
+    }
+    cleanup(helper, rt);
+    exit(EXIT_SUCCESS);
+  }
+  else if (pid > 0)
+  {
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status))
+      return WEXITSTATUS(status);
+    return (EXIT_FAILURE);
+  }
+  return (EXIT_FAILURE);
 }
-
 
 int handle_pipe(t_tree *root, t_helper *helper, t_tree **rt)
 {
