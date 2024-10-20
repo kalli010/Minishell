@@ -71,7 +71,7 @@ char	*cd_path(t_list *list, t_helper *helper)
 
 	if (count_arg(list) == 0)
 	{
-		home_path = ft_getenv(helper->envp, "HOME");
+		home_path = ft_getenv(helper->envp, "HOME", -1);
 		if (!home_path)
 		{
 			cd_home_not_set();

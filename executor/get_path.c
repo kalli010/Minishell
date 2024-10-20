@@ -20,7 +20,7 @@ char **get_envp(char **env)
 
     if (env == NULL)
         return (NULL);
-    path = ft_getenv(env, "PATH");
+    path = ft_getenv(env, "PATH", -1);
     if (path == NULL)
         return (NULL);
     path = check_path(path);

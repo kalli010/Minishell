@@ -25,7 +25,7 @@ int	ft_pwd(t_helper *helper)
 	path = getcwd(NULL, 0);
 	if (!path) 
 	{
-		path = ft_getenv(helper->envp, "PWD");
+		path = ft_getenv(helper->envp, "PWD", -1);
 		if (!path)
 		{
 			write(2, "could not get cwd\n", 19);
