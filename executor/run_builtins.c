@@ -47,10 +47,11 @@ int	run_builtins(t_tree *root, t_helper *helper)
 	else if (!ft_strncmp("export", root->content->content, sizeof("export")))
 	{
 		if (root->content->next && root->content->next->type == OPTIONS)
-			return(check_var(root->content->next, &helper->envp, &helper->xenv));
+			return (check_var(root->content->next, &helper->envp,
+					&helper->xenv));
 		else
-			return(export(helper->envp));
-	} 
+			return (export(helper->envp));
+	}
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))
 		ft_exit(root, helper);
 	return (EXIT_FAILURE);

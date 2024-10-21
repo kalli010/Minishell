@@ -12,7 +12,6 @@
 
 #include <minishell.h>
 
-
 char	**allocate_options(int count)
 {
 	char	**op;
@@ -45,7 +44,7 @@ char	**get_options(t_helper *helper, t_list *list)
 		return (NULL);
 	op[0] = get_path(helper, list);
 	if (!op[0])
-    	return (free(op), NULL);
+		return (free(op), NULL);
 	list = list->next;
 	i = 1;
 	while (list && list->type == OPTIONS)

@@ -12,27 +12,27 @@
 
 #include <minishell.h>
 
-void cleanup(t_helper *helper, t_tree **rt)
+void	cleanup(t_helper *helper, t_tree **rt)
 {
-    clean_env(helper->envp);
-    clean_env(helper->xenv);
-    free_tree(*rt);
-    free(helper->redfile);
-    my_free(helper);
+	clean_env(helper->envp);
+	clean_env(helper->xenv);
+	free_tree(*rt);
+	free(helper->redfile);
+	my_free(helper);
 }
 
 void	my_free(t_helper *helper)
 {
-		if (helper->cmd)
-		{
-			free(helper->cmd);
-			helper->cmd = NULL;
-		}
-		if (helper->option)
-		{
-		    free_array(helper->option);
-		    helper->option = NULL;
-		}
+	if (helper->cmd)
+	{
+		free(helper->cmd);
+		helper->cmd = NULL;
+	}
+	if (helper->option)
+	{
+		free_array(helper->option);
+		helper->option = NULL;
+	}
 }
 
 void	free_array(char **arr)
@@ -68,21 +68,20 @@ int	count_arg(t_list *list)
 	return (count);
 }
 
-void free_redirect_list(t_redirect **redlst)
+void	free_redirect_list(t_redirect **redlst)
 {
-    t_redirect *current;
-    t_redirect *next;
+	t_redirect	*current;
+	t_redirect	*next;
 
-    if (!redlst || !(*redlst))
-        return;
-    
-    current = *redlst;
-    while (current)
-    {
-        next = current->next;
-        free(current->filename);
-        free(current); 
-        current = next;
-    }
-    *redlst = NULL;
+	if (!redlst || !(*redlst))
+		return ;
+	current = *redlst;
+	while (current)
+	{
+		next = current->next;
+		free(current->filename);
+		free(current);
+		current = next;
+	}
+	*redlst = NULL;
 }

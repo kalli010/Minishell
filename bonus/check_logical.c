@@ -11,26 +11,28 @@
 /* ************************************************************************** */
 
 #include <minishell.h>
-int check_and_or(t_tree *root, t_helper *helper,t_tree **rt)
+
+int	check_and_or(t_tree *root, t_helper *helper, t_tree **rt)
 {
-    int status;
-    if (root->content->type == AND)
-    {  
-        status = find_command(root->first_child, helper,rt);
-        if (status == 0)
-            return (find_command(root->first_child->next_sibling, helper, rt));
-        else
-            return (status); 
-    }
-    else if (root->content->type == OR)
-    {
-        status = find_command(root->first_child, helper, rt);
-        if (status == 130)
-            return (status);
-        if (status != 0)
-            return (find_command(root->first_child->next_sibling, helper, rt));
-        else
-            return (status); 
-    }  
-    return (EXIT_SUCCESS);
+	int	status;
+
+	if (root->content->type == AND)
+	{
+		status = find_command(root->first_child, helper, rt);
+		if (status == 0)
+			return (find_command(root->first_child->next_sibling, helper, rt));
+		else
+			return (status);
+	}
+	else if (root->content->type == OR)
+	{
+		status = find_command(root->first_child, helper, rt);
+		if (status == 130)
+			return (status);
+		if (status != 0)
+			return (find_command(root->first_child->next_sibling, helper, rt));
+		else
+			return (status);
+	}
+	return (EXIT_SUCCESS);
 }

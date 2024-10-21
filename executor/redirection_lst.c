@@ -6,11 +6,12 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 20:07:14 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 12:55:56 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/21 01:17:00 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
 t_redirect	*newred(int type, int flag, char *content)
 {
 	t_redirect	*file;
@@ -25,37 +26,28 @@ t_redirect	*newred(int type, int flag, char *content)
 	return (file);
 }
 
-void	addred_front(t_redirect **lst, t_redirect *new)
-{
-	if (lst && new)
-	{
-		new->next = *lst;
-		*lst = new;
-	}
-}
-
 t_redirect	*create_redirect(t_tree **root)
 {
-    t_redirect	*tmp;
-    char		*file;
+	t_redirect	*tmp;
+	char		*file;
 
 	tmp = NULL;
-    if ((*root)->first_child->next_sibling == NULL)
-        file = (*root)->first_child->content->content;
-    else
-        file = (*root)->first_child->next_sibling->content->content;
-
-    tmp = newred((*root)->content->type, (*root)->content->i, file);
-    if (tmp == NULL)
-        return (NULL);
-    return (tmp);
+	if ((*root)->first_child->next_sibling == NULL)
+		file = (*root)->first_child->content->content;
+	else
+		file = (*root)->first_child->next_sibling->content->content;
+	tmp = newred((*root)->content->type, (*root)->content->i, file);
+	if (tmp == NULL)
+		return (NULL);
+	return (tmp);
 }
 
 t_redirect	*init_redirect_lst(t_tree **root)
 {
-	t_redirect	*redlst = NULL;
+	t_redirect	*redlst;
 	t_redirect	*tmp;
 
+	redlst = NULL;
 	while ((*root) && ((*root)->content->type == OUTPUT
 			|| (*root)->content->type == INPUT
 			|| (*root)->content->type == APPEND))
@@ -67,7 +59,7 @@ t_redirect	*init_redirect_lst(t_tree **root)
 			return (NULL);
 		}
 		addred_front(&redlst, tmp);
-		*root = (*root)->first_child; 
+		*root = (*root)->first_child;
 	}
 	return (redlst);
 }
@@ -80,7 +72,7 @@ int	check_file(int type, char *file, int flag)
 			return (errors(file, 2, 0), g_helper.exit_status);
 		if (check_existence(file, 1) || check_read(file))
 		{
-			return (g_helper.exit_status = 1,1); 
+			return (g_helper.exit_status = 1, 1);
 		}
 	}
 	else if (type == OUTPUT || type == APPEND)
@@ -89,7 +81,7 @@ int	check_file(int type, char *file, int flag)
 			return (errors(file, 2, 0), g_helper.exit_status);
 		if (!check_existence(file, 0) && check_write_and_dir(file))
 		{
-			return (g_helper.exit_status = 1,1);
+			return (g_helper.exit_status = 1, 1);
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -99,7 +91,7 @@ int	exec_redirections(t_redirect *redlst, t_helper *helper)
 {
 	int	status;
 
-	(void)helper;  
+	(void)helper;
 	while (redlst)
 	{
 		status = check_file(redlst->type, redlst->filename, redlst->flag);
@@ -112,4 +104,3 @@ int	exec_redirections(t_redirect *redlst, t_helper *helper)
 	}
 	return (EXIT_SUCCESS);
 }
-

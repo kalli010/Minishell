@@ -12,9 +12,9 @@
 
 #include <minishell.h>
 
-static int wait_for_finished(pid_t l_fork, pid_t r_fork)
+static int	wait_for_finished(pid_t l_fork, pid_t r_fork)
 {
-	int status;
+	int	status;
 
 	if (waitpid(l_fork, &status, 0) > 0)
 	{
@@ -30,37 +30,33 @@ static int wait_for_finished(pid_t l_fork, pid_t r_fork)
 		else if (WIFSIGNALED(status))
 			g_helper.exit_status = WTERMSIG(status) + 128;
 	}
-	return g_helper.exit_status;
+	return (g_helper.exit_status);
 }
 
-
-static void	right_pipe(int *fd,t_tree *root, t_helper *helper, t_tree **rt)
+static void	right_pipe(int *fd, t_tree *root, t_helper *helper, t_tree **rt)
 {
-	
 	dup2(fd[0], STDIN_FILENO);
 	(close(fd[0]), close(fd[1]));
 	if (find_command(root, helper, rt))
 	{
-		cleanup(helper,rt);
+		cleanup(helper, rt);
 		exit(g_helper.exit_status);
 	}
-	cleanup(helper,rt);
+	cleanup(helper, rt);
 	exit(EXIT_SUCCESS);
-	
 }
 
 static void	left_pipe(int *fd, t_tree *root, t_helper *helper, t_tree **rt)
 {
-
 	dup2(fd[1], STDOUT_FILENO);
 	(close(fd[0]), close(fd[1]));
 	if (find_command(root, helper, rt))
 	{
-		cleanup(helper,rt);
+		cleanup(helper, rt);
 		exit(g_helper.exit_status);
 	}
-	cleanup(helper,rt);
-	exit (EXIT_SUCCESS);
+	cleanup(helper, rt);
+	exit(EXIT_SUCCESS);
 }
 
 int	execute_pipe(t_tree *root, t_helper *helper, t_tree **rt)
@@ -84,11 +80,10 @@ int	execute_pipe(t_tree *root, t_helper *helper, t_tree **rt)
 		if (r_fork < 0)
 			return (perror("fork"), EXIT_FAILURE);
 		if (r_fork == 0)
-			right_pipe(fd,root->first_child->next_sibling, helper, rt);
+			right_pipe(fd, root->first_child->next_sibling, helper, rt);
 		close(fd[0]);
 		close(fd[1]);
 		status = wait_for_finished(l_fork, r_fork);
 	}
 	return (status);
 }
-

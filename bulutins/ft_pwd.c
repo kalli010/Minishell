@@ -14,16 +14,16 @@
 
 int	ft_pwd(t_helper *helper)
 {
-	char *path;
+	char	*path;
 	char	buff[4096];
+
 	g_helper.exit_status = 0;
-	
 	if (getcwd(buff, sizeof(buff)) != NULL)
 	{
 		printf("%s\n", buff);
 		return (g_helper.exit_status);
 	}
-	else 
+	else
 	{
 		path = ft_getenv(helper->envp, "PWD", -1);
 		if (!path)
@@ -32,9 +32,7 @@ int	ft_pwd(t_helper *helper)
 			return (g_helper.exit_status);
 		}
 	}
-	printf("%s\n",path );
+	printf("%s\n", path);
 	free(path);
 	return (g_helper.exit_status);
 }
-
-

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/20 20:05:19 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/21 01:28:51 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ int				execute(t_tree *root, t_helper *helper, t_tree **rt);
 int				count_arg(t_list *list);
 int				execute_pipe(t_tree *root, t_helper *helper, t_tree **rt);
 int				ft_echo(t_list *list);
-int             check_and_or(t_tree *root, t_helper *helper,t_tree **rt);
+int				check_and_or(t_tree *root, t_helper *helper, t_tree **rt);
 void			my_free(t_helper *helper);
-char            *get_target_path(t_list *list, t_helper *helper);
+char			*get_target_path(t_list *list, t_helper *helper);
 void			free_list(t_list *list);
 int				ft_unset(t_list *list, t_helper *helper);
 void			ctr_c(int sig);
@@ -86,6 +86,12 @@ char			*get_path_of_cpath(t_list *list);
 int				no_file_no_dir(char *cmd);
 int				get_len_path(char *path);
 char			*check_path(char *path);
-void            cleanup(t_helper *helper, t_tree **rt);
-int             cd_home_not_set(void);
+void			cleanup(t_helper *helper, t_tree **rt);
+int				cd_home_not_set(void);
+int				execute_parenthesis(t_tree *root, t_helper *helper,
+					t_tree **rt);
+void			addred_front(t_redirect **lst, t_redirect *new);
+int				open_fd(char *file, int type);
+int				open_files(char *file, int type);
+int				duplicate_fd(int fd, int duped_fd, char *file);
 #endif

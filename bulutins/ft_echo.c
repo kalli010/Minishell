@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:44:38 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/20 16:09:16 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/21 01:05:18 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	count_arg_echo(t_list *list)
 		temp_list = temp_list->next;
 	}
 	return (count);
-} 
+}
+
 static int	check_option(char *str)
 {
 	int	i;
@@ -90,7 +91,7 @@ int	ft_echo(t_list *list)
 	int		i;
 	int		count;
 	char	**op;
-	
+
 	g_helper.exit_status = 0;
 	op = NULL;
 	count = count_arg_echo(list);
@@ -111,5 +112,5 @@ int	ft_echo(t_list *list)
 		execute_echo(op);
 		free_array(op);
 	}
-	return (g_helper.exit_status = 0,0);
+	return (g_helper.exit_status = 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 12:09:42 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/21 01:34:47 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,50 +61,40 @@ int	duplicate_fd(int fd, int duped_fd, char *file)
 	return (EXIT_SUCCESS);
 }
 
-int	open_fd(char *file, int type)
+void	execute_child_process(t_tree *root, t_helper *helper, t_tree **rt)
 {
-	int	fd;
-	int	duped_fd;
+	t_redirect	*redlst;
 
-	fd = open_files(file, type);
-	if (fd == -1)
-		return (-1);
-	if (type == INPUT)
-		duped_fd = STDIN_FILENO;
-	else
-		duped_fd = STDOUT_FILENO;
-	return (duplicate_fd(fd, duped_fd, file));
+	redlst = init_redirect_lst(&root);
+	if (!redlst)
+	{
+		cleanup(helper, rt);
+		free_redirect_list(&redlst);
+		exit(EXIT_FAILURE);
+	}
+	g_helper.exit_status = exec_redirections(redlst, helper);
+	if (g_helper.exit_status != 0)
+	{
+		free_redirect_list(&redlst);
+		cleanup(helper, rt);
+		exit(g_helper.exit_status);
+	}
+	free_redirect_list(&redlst);
+	find_command(root, helper, rt);
+	cleanup(helper, rt);
+	exit(EXIT_SUCCESS);
 }
 
-int	redirect_all(t_tree *root, t_helper *helper,t_tree **rt)
+int	redirect_all(t_tree *root, t_helper *helper, t_tree **rt)
 {
-	pid_t		pid;
-	t_redirect	*redlst;
+	pid_t	pid;
 
 	if (!ft_strncmp(root->content->content, ">>", 2))
 		root->content->next->type = APPEND;
 	pid = fork();
 	if (pid == 0)
-	{
-		redlst = init_redirect_lst(&root);
-		if (!redlst)
-    	{
-			cleanup(helper,rt);
-			free_redirect_list(&redlst);
-			exit(EXIT_FAILURE);
-    	}
-   		g_helper.exit_status = exec_redirections(redlst, helper);
-		if (g_helper.exit_status != 0)
-		{
-			free_redirect_list(&redlst);
-			cleanup(helper, rt);
-			exit(g_helper.exit_status);
-		}
-		free_redirect_list(&redlst);
-		find_command(root, helper, rt);
-		cleanup(helper,rt);
-		exit(EXIT_SUCCESS);
-	}
+		execute_child_process(root, helper, rt);
 	else
 		return (redirect_finished(pid));
+	return (0);
 }

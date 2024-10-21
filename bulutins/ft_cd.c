@@ -56,7 +56,7 @@ int	change_directory(char *go_path)
 		return (g_helper.exit_status);
 	}
 	if (chdir(go_path) != 0)
-	{	
+	{
 		handle_cd_error(go_path, 2);
 		g_helper.exit_status = 1;
 		return (g_helper.exit_status);
@@ -78,7 +78,7 @@ char	*cd_path(t_list *list, t_helper *helper)
 			return (NULL);
 		}
 		go_path = ft_strdup(home_path);
-		free(home_path); 
+		free(home_path);
 	}
 	else
 	{
@@ -97,7 +97,7 @@ int	ft_cd(t_list *list, t_helper *helper)
 	char	*old_pwd;
 	char	*curr_pwd;
 	char	*go_path;
-	
+
 	if (!list)
 		return (g_helper.exit_status = 1, 1);
 	if (count_arg(list) != 1 && count_arg(list) != 0)
