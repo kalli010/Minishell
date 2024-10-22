@@ -12,151 +12,123 @@
 
 #include <minishell.h>
 
-void	free_var_value(char *var, char *value)
+int	extract_var_name(t_list *list, char **var)
 {
-	free(var);
-	free(value);
+	int	len;
+
+	len = 0;
+	while (list->content[len] && list->content[len] != '=')
+		len++;
+	*var = ft_substr(list->content, 0, len);
+	if (*var == NULL)
+		return (1);
+	remove_quotes_string(*var);
+	return (len);
 }
 
-int	update_existing_var(char ***env, t_set_var *sv, char ***xenv, t_list *list)
+int	validate_var_name(char *var)
 {
-	if (!ft_strncmp((*env)[sv->s], sv->var, ft_strlen(sv->var))
-		&& ((*env)[sv->s][ft_strlen(sv->var)] == '='
-			|| (*env)[sv->s][ft_strlen(sv->var)] == '\0'))
+	if ((!ft_isalpha(var[0]) && var[0] != '_') || check_content(var))
 	{
-		if (list->content[ft_strlen(sv->var)] == '\0')
-		{
-			free_var_value(sv->var, sv->value);
-			return (0);
-		}
-		if (add_var(*env, sv->var, sv->value, sv->s))
-		{
-			free_var_value(sv->var, sv->value);
-			return (1);
-		}
-		if (add_var(*xenv, sv->var, sv->value, sv->s))
-		{
-			free_var_value(sv->var, sv->value);
-			return (1);
-		}
-		free_var_value(sv->var, sv->value);
-		return (0);
+		free(var);
+		return (1);
 	}
 	return (0);
 }
 
-
-
-
-
-
-
-
-int set_var(t_list *list, char ***env, char ***xenv)
+char	*extract_value(t_list *list, int start)
 {
-  char *var;
-  char *value;
-  int len;
-  int s;
+	int		len;
+	char	*value;
 
-  len = 0;
-  s = 0;
-  while (list->content[len] && list->content[len] != '=')
-    len++;
-  var = ft_substr(list->content, 0, len);
-  if(var == NULL)
-    return(1);
-  remove_quotes_string(var);
-  if((!ft_isalpha(var[0]) && var[0] != '_' ) || check_content(var))
-  {
-    free(var);
-    return(1);
-  }
-  if (list->content[len] != '\0')
-  {
-    if(list->content[len - 1] == ' ')
-      return(1);
-    len++;
-  }
-  s = len;
-  while (list->content[len])
-    len++;
-  value = ft_substr(list->content, s, len - s);
-  remove_quotes_string(value);
-  s = 0;
-  while (*env != NULL && (*env)[s] != NULL)
-  {
-    if (!ft_strncmp((*env)[s], var, ft_strlen(var)) && ((*env)[s][ft_strlen(var)] == '=' || (*env)[s][ft_strlen(var)] == '\0'))
-    {
-      if(list->content[ft_strlen(var)] == '\0')
-      {
-        free(var);
-        free(value);
-        return(0);
-      }
-      if(add_var(*env, var, value, s))
-      {
-        free(var);
-        free(value);
-        return(1);
-      }
-      if(add_var(*xenv, var, value, s))
-      {
-        free(var);
-        free(value);
-        return(1);
-      }
-      free(var);
-      free(value);
-      return(0);
-    }
-    s++;
-  }
-  *env = add_new_env(*env, s, var, value, 0);
-  *xenv = add_new_env(*xenv, s, var, value, 1);
-  if(*env == NULL || *xenv == NULL)
-  {
-    free(var);
-    free(value);
-    return(1);
-  }
-  free(var);
-  free(value);
-  return(0);
+	len = start;
+	while (list->content[len])
+		len++;
+	value = ft_substr(list->content, start, len - start);
+	remove_quotes_string(value);
+	return (value);
 }
 
+int	check_and_update_env(char ***env, char ***xenv, char *var, char *value,
+		t_list *list)
+{
+	int	s;
 
+	s = 0;
+	while (*env != NULL && (*env)[s] != NULL)
+	{
+		if (!ft_strncmp((*env)[s], var, ft_strlen(var)) &&
+			((*env)[s][ft_strlen(var)] == '='
+					|| (*env)[s][ft_strlen(var)] == '\0'))
+		{
+			if (list->content[ft_strlen(var)] == '\0')
+			{
+				free(var);
+				free(value);
+				return (-2);
+			}
+			if (add_var(*env, var, value, s))
+			{
+				free(var);
+				free(value);
+				return (-1);
+			}
+			if (add_var(*xenv, var, value, s))
+			{
+				free(var);
+				free(value);
+				return (-1);
+			}
+			free(var);
+			free(value);
+			return (-2);
+		}
+		s++;
+	}
+	return (s);
+}
 
+int	add_new_var_to_env(char ***env, char ***xenv, char *var, char *value, int s)
+{
+	*env = add_new_env(*env, s, var, value, 0);
+	*xenv = add_new_env(*xenv, s, var, value, 1);
+	if (*env == NULL || *xenv == NULL)
+	{
+		free(var);
+		free(value);
+		return (1);
+	}
+	return (0);
+}
 
+int	set_var(t_list *list, char ***env, char ***xenv)
+{
+	char	*var;
+	char	*value;
+	int		len;
+	int		s;
 
-
-
-
-
-
-//int	set_var(t_list *list, char ***env, char ***xenv)
-//{
-//	t_set_var	sv;
-//
-//	if (validate_var(list, &sv))
-//		return (1);
-//	sv.s = 0;
-//	while (*env != NULL && (*env)[sv.s] != NULL)
-//	{
-//		if (update_existing_var(env, &sv, xenv, list))
-//			return (1);
-//		sv.s++;
-//	}
-//	*env = add_new_env(*env, sv.s, sv, 0);
-//	*xenv = add_new_env(*xenv, sv.s, sv, 1);
-//	if (*env == NULL || *xenv == NULL)
-//	{
-//		free_var_value(sv.var, sv.value);
-//		return (1);
-//	}
-//	free_var_value(sv.var, sv.value);
-//	return (0);
-//}
+	len = extract_var_name(list, &var);
+	if (len == 0 || validate_var_name(var))
+		return (1);
+	if (list->content[len] != '\0')
+	{
+		if (list->content[len - 1] == ' ')
+			return (1);
+		len++;
+	}
+	value = extract_value(list, len);
+	s = check_and_update_env(env, xenv, var, value, list);
+	if (s == -1)
+		return (1);
+	else if (s == -2)
+		return (0);
+	if (add_new_var_to_env(env, xenv, var, value, s))
+		return (1);
+	free(var);
+	free(value);
+	return (0);
+}
 
 int	check_cmd_export(t_list *list)
 {

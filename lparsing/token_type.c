@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:45 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 21:59:19 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/22 06:09:14 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	set_1(t_list *list)
 {
-	if (list->content[0] == '|' && list->content[1] == '|'
-		&& list->content[2] == '\0')
+	if (list->content[0] == '|' && list->content[1] == '|' \
+			&& list->content[2] == '\0')
 		return (list->type = OR, 1);
-	else if (list->content[0] == '&' && list->content[1] == '&'
+	else if (list->content[0] == '&' && list->content[1] == '&' \
 			&& list->content[2] == '\0')
 		return (list->type = AND, 1);
-	else if (list->content[0] == '<' && list->content[1] == '<'
+	else if (list->content[0] == '<' && list->content[1] == '<' \
 			&& list->content[2] == '\0')
 		return (list->type = HEREDOC, 1);
-	else if (list->content[0] == '>' && list->content[1] == '>'
+	else if (list->content[0] == '>' && list->content[1] == '>' \
 			&& list->content[2] == '\0')
 		return (list->type = APPEND, 1);
 	else if (list->content[0] == '|' && list->content[1] == '\0')
@@ -32,7 +32,7 @@ int	set_1(t_list *list)
 		return (list->type = OUTPUT, 1);
 	else if (list->content[0] == '<' && list->content[1] == '\0')
 		return (list->type = INPUT, 1);
-	else if ((list->content[0] == ')' && list->content[1] == '\0')
+	else if ((list->content[0] == ')' && list->content[1] == '\0') \
 			|| (list->content[0] == '(' && list->content[1] == '\0'))
 		return (list->type = PARENTHESIS, 1);
 	else if (list->back != NULL && list->back->type == HEREDOC)
@@ -42,14 +42,14 @@ int	set_1(t_list *list)
 
 int	set_2(t_list *list)
 {
-	if (list->back != NULL && (list->back->type == OUTPUT
-			|| list->back->type == APPEND || list->back->type == INPUT))
+	if (list->back != NULL && (list->back->type == OUTPUT \
+				|| list->back->type == APPEND || list->back->type == INPUT))
 		return (list->type = PATH, 1);
-	else if (list->back != NULL &&
-				(list->back->type == COMMAND || list->back->type == OPTIONS
-						|| list->back->type == PATH_COMMAND))
+	else if (list->back != NULL && \
+			(list->back->type == COMMAND || list->back->type == OPTIONS \
+			|| list->back->type == PATH_COMMAND))
 		return (list->type = OPTIONS, 1);
-	else if (list->content[0] == '/' || list->content[0] == '~'
+	else if (list->content[0] == '/' || list->content[0] == '~' \
 			|| !ft_strncmp(list->content, "./", 2))
 	{
 		if (list->back != NULL)

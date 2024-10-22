@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:47:38 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:58:50 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/22 06:09:51 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ int	write_to_file(t_open_file *of, t_list *delimiter)
 		if (of->line[0] == '\0')
 			return (1);
 	}
-	else if (!ft_strncmp(of->line, delimiter->content,
-				ft_strlen(delimiter->content))
+	else if (!ft_strncmp(of->line, delimiter->content, \
+				ft_strlen(delimiter->content)) \
 			&& ft_strlen(of->line) == ft_strlen(delimiter->content))
 		return (1);
 	return (0);

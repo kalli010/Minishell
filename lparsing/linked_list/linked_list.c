@@ -12,10 +12,11 @@
 
 #include <minishell.h>
 
-void	set_lst_null(t_list **tmp, t_list **list)
+void	set_lst_null(t_list **tmp, t_list **list, t_list **n_list)
 {
 	*tmp = NULL;
 	*list = NULL;
+  *n_list = NULL;
 }
 
 int	recreate_linked_list(t_list *list, t_list **lst)
@@ -24,7 +25,7 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 	t_list	*tmp;
 	t_list	*start;
 
-	set_lst_null(&tmp, &start);
+	set_lst_null(&tmp, &start, &n_list);
 	while (list)
 	{
 		if (list->type == INPUT || list->type == OUTPUT)
@@ -40,9 +41,9 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 				return (1);
 			}
 		}
-		list = list->next;
-		if (list)
-			free(list->back);
+		tmp = list;
+    list = list->next;
+		free(tmp);
 	}
 	set_token_types(tmp, n_list, lst);
 	return (0);

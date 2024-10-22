@@ -47,6 +47,7 @@ int	creat_linked_list(t_list **list, char **tokens)
 			tmp = tmp->next;
 		token_type(tmp);
 	}
+  free(tokens);
 	return (0);
 }
 
@@ -69,6 +70,8 @@ int	check_red_with_cmd(t_list *list)
 int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 		t_list *start)
 {
+  t_list *end;
+
 	tmp = list->next;
 	while (tmp && (tmp->type == PATH || tmp->type == PATH_COMMAND
 			|| tmp->type == INPUT || tmp->type == OUTPUT
@@ -77,6 +80,7 @@ int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 	if (tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
 	{
 		start = tmp;
+    end = tmp;
 		while (tmp && (tmp->type == COMMAND || tmp->type == OPTIONS))
 		{
 			if (ft_lstadd_back(n_list, ft_lstnew(tmp->content)))
@@ -94,6 +98,12 @@ int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 		free_list(*n_list);
 		return (1);
 	}
+  while(end)
+  {
+    tmp = end;
+    end = end->next;
+    free(tmp);
+  }
 	return (0);
 }
 

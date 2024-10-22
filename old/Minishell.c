@@ -71,7 +71,6 @@ int ft_minishell(char *line)
     return(1);
   }
   clean_linked_list(&g_helper.list);
-  free(tokens);
   tmp = g_helper.list;
   while(tmp)
   {
