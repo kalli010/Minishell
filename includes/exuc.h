@@ -13,8 +13,8 @@
 #ifndef EXUC_H
 # define EXUC_H
 
-# include <dirent.h>
 # include <minishell.h>
+# include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 

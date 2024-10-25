@@ -43,36 +43,6 @@ char	*get_new_list(char *fstr, char *var, char *tstr)
 	return (n_list);
 }
 
-char	*ft_getenv(char **env, char *str, int s)
-{
-	int		i;
-	int		st;
-	char	*new_var;
-
-	if (str == NULL)
-		return (NULL);
-	new_var = NULL;
-	while (env != NULL && env[++s])
-	{
-		if (!ft_strncmp(env[s], str, ft_strlen(str))
-			&& env[s][ft_strlen(str)] == '=')
-		{
-			st = ft_strlen(str);
-			st++;
-			i = -1;
-			while (env[s][++i])
-				;
-			new_var = (char *)malloc(sizeof(char) * (i - st + 1));
-			if (new_var == NULL)
-				return (NULL);
-			new_var[0] = '\0';
-			ft_cpy(new_var, &env[s][st]);
-			new_var[i - st] = '\0';
-		}
-	}
-	return (new_var);
-}
-
 int	creat_sstr(t_list **list, int *len, char **sstr, int s)
 {
 	if ((*list)->content[*len] == '$')

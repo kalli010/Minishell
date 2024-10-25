@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs_helper.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/25 14:27:59 by zelkalai          #+#    #+#             */
+/*   Updated: 2024/10/25 14:28:00 by zelkalai         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCTS_HELPER_H
 # define STRUCTS_HELPER_H
 
@@ -97,12 +109,13 @@ typedef struct s_tokenizer
 	int		*j;
 }			t_tokenizer;
 
-typedef struct s_add_env_params {
-  char **env_or_xenv;
-  int s;
-  char *var;
-  char *value;
-  int check;
-} t_add_env_params;
+typedef struct s_add_env_params
+{
+	char	**env_or_xenv;
+	int		s;
+	char	*var;
+	char	*value;
+	int		check;
+}			t_add_env_params;
 
 #endif
