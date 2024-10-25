@@ -49,33 +49,6 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 	return (0);
 }
 
-void clean_linked_list_par(t_list **list)
-{
-  t_list *tmp;
-  t_list *back;
-  t_list *next;
-
-  tmp = *list;
-  while(tmp)
-  {
-    if(tmp->content[0] == 40 || tmp->content[0] == 41)
-    {
-      back = tmp->back;
-      next = tmp->next;
-      free(tmp->content);
-      free(tmp);
-      if(back == NULL)
-        *list = next;
-      else
-        back->next = next;
-      if(next != NULL)
-        next->back = back;
-      tmp = *list;
-    }
-    else
-      tmp = tmp->next;
-  }
-}
 void	clean_linked_list(t_list **list)
 {
 	t_list	*tmp;
@@ -86,6 +59,33 @@ void	clean_linked_list(t_list **list)
 	while (tmp)
 	{
 		if (tmp->content[0] == '\0')
+		{
+      back = tmp->back;
+      next = tmp->next;
+      free(tmp->content);
+      free(tmp);
+			if (back == NULL)
+				*list = next;
+			else
+				back->next = next;
+			if (next != NULL)
+				next->back = back;
+			tmp = *list;
+		}
+		else
+			tmp = tmp->next;
+	}
+}
+void	clean_linked_list_par(t_list **list)
+{
+	t_list	*tmp;
+	t_list	*back;
+	t_list	*next;
+
+	tmp = *list;
+	while (tmp)
+	{
+		if (tmp->content[0] == 40 || tmp->content[0] == 41)
 		{
 			back = tmp->back;
 			next = tmp->next;

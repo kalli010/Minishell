@@ -28,13 +28,19 @@ t_tree	*or_and_tree(t_list **lst, t_tree **l_node, t_tree **root,
 			|| (*l_node)->content->type == AND))
 	{
 		*root = *l_node;
-		while ((*l_node)->first_child->first_child)
-			*l_node = (*l_node)->first_child;
-		add_child_to_tree(*n_node, (*l_node)->first_child);
-		add_sibling_to_child(*n_node, (*l_node)->first_child->next_sibling);
-		(*l_node)->first_child->next_sibling = NULL;
-		(*l_node)->first_child = *n_node;
-	}
+		// if((*l_node)->first_child && (*l_node)->first_child->first_child->content)
+		//   {
+		//     while ((*l_node)->first_child->first_child->content->type != COMMAND)
+		//       *l_node = (*l_node)->first_child;
+		//   }
+    add_child_to_tree(*n_node, (*l_node)->first_child);
+    if((*l_node)->first_child)
+    {
+      add_sibling_to_child(*n_node, (*l_node)->first_child->next_sibling);
+      (*l_node)->first_child->next_sibling = NULL;
+    }
+    (*l_node)->first_child = *n_node;
+  }
 	else
 		add_child_to_tree(*n_node, *l_node);
 	return (*root);
