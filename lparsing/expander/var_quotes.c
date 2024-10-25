@@ -69,6 +69,7 @@ int	replace_list_node(t_list **list, char **array, t_list **n_list,
 		*list = back;
 		ft_lstadd_back(list, *n_list);
 		*list = (*list)->next;
+    token_type(*list);
 	}
 	else
 		(*list) = *n_list;

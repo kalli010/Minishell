@@ -42,9 +42,15 @@ int	symbols_check(t_list *list)
 {
 	if (list == NULL)
 		return (0);
-	if (list->type == PIPE)
+	if (list->type == PIPE || list->type == OR || list->type == AND)
 	{
 		printf("10\n");
+		printf("syntax error\n");
+		return (1);
+	}
+  if(list->content[0] == '&' && list->content[1] == '\0')
+	{
+		printf("20\n");
 		printf("syntax error\n");
 		return (1);
 	}
@@ -69,11 +75,16 @@ int	check_back_1(t_list *node)
 
 int	check_back_2(t_list *list, int *p)
 {
-	if (list->next != NULL && ((list->back && list->back->type \
+	if ((list->back && list->back->type \
 					!= COMMAND && list->back->type != OPTIONS \
+          && list->back->type != PATH \
+          && list->back->type != PATH_COMMAND \
+          && list->back->type != DELIMITER \
 					&& list->back->content[0] != 41) \
-				|| (list->next->type == COMMAND \
-					|| list->next->type == OPTIONS)))
+				|| (list->next != NULL \
+          && (list->next->type == COMMAND \
+					|| list->next->type == OPTIONS \
+            || list->next->type == PATH_COMMAND)))
 		return (1);
 	(*p)--;
 	return (0);

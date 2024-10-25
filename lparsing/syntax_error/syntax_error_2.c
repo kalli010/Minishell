@@ -41,6 +41,12 @@ int	check_1(t_list *list)
 		printf("syntax error\n");
 		return (1);
 	}
+  else if(list->content[0] == '&' && list->content[1] == '\0')
+	{
+		printf("20\n");
+		printf("syntax error\n");
+		return (1);
+	}
 	return (0);
 }
 

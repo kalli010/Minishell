@@ -28,8 +28,6 @@ typedef enum s_ttype
 	APPEND,
 	OPTIONS,
 	PATH,
-	VAR,
-	SET_VAR,
 	PATH_COMMAND,
 	DELIMITER,
 	PARENTHESIS,

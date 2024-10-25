@@ -72,6 +72,7 @@ int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 {
   t_list *end;
 
+  end = NULL;
 	tmp = list->next;
 	while (tmp && (tmp->type == PATH || tmp->type == PATH_COMMAND
 			|| tmp->type == INPUT || tmp->type == OUTPUT
