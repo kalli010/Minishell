@@ -12,9 +12,9 @@
 
 #include <minishell.h>
 
-int	finalize_token(int start, int end, t_tokenizer *tk)
+int	finalize_token(int start, int end, t_tokenizer *tk, char *str)
 {
-	(*tk->tokens)[*tk->j] = ft_substr(tk->str, start, end - start);
+	(*tk->tokens)[*tk->j] = ft_substr(str, start, end - start);
 	if ((*tk->tokens)[*tk->j] == NULL)
 	{
 		free_all_tokens(*tk->tokens, *tk->j);
@@ -38,29 +38,29 @@ void	free_all_tokens(char **tokens, int j)
 		free(tokens[i]);
 }
 
-int	process_token_2(int *i, int *x, t_tokenizer *tk)
+int	process_token_2(int *i, int *x, t_tokenizer *tk, char *str)
 {
 	int	s;
 
 	s = *i;
-	if (is_special_symbol(tk->str[*i]))
+	if (is_special_symbol(str[*i]))
 	{
 		*x = -1;
-		handle_special_symbol(tk->str, i);
+		handle_special_symbol(str, i);
 	}
 	else
 	{
 		if (*x == 0)
-			handle_normal_token(tk->str, i);
+			handle_normal_token(str, i);
 		else
-			handle_post_symbol_token(tk->str, i, x);
+			handle_post_symbol_token(str, i, x);
 	}
-	if (finalize_token(s, *i, tk) != 0)
+	if (finalize_token(s, *i, tk, str) != 0)
 		return (1);
 	(*x)++;
-	if (is_special_symbol(tk->str[*i]))
+	if (is_special_symbol(str[*i]))
 		(*i)--;
-	if (tk->str[*i] == '\0')
+	if (str[*i] == '\0')
 		(*i)--;
 	return (0);
 }
@@ -77,7 +77,7 @@ int	echo_create_tokens(char *str, t_tokenizer *tk)
 	{
 		if (str[i] != ' ')
 		{
-			result = process_token_2(&i, &x, tk);
+			result = process_token_2(&i, &x, tk, str);
 			if (result != 0)
 				return (result);
 		}

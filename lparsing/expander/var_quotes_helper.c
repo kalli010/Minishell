@@ -57,13 +57,13 @@ int	count_quotes(char *str)
 	return (q_n);
 }
 
-void	check_qts(char **str, int *j, int *q_n, char q)
+int	check_qts(char **str, int *j, int *q_n, char q)
 {
 	if ((*str)[*j] == '"' || (*str)[*j] == '\'')
 	{
 		q = (*str)[*j];
 		if ((*str)[*j + 1] == q)
-			return ;
+			return (1);
 		(*str)[*j] = (*str)[*j + 1];
 		while ((*str)[*j + 1])
 		{
@@ -76,7 +76,7 @@ void	check_qts(char **str, int *j, int *q_n, char q)
 		if ((*str)[*j] == '\0')
 		{
 			(*str)[*j - 1] = '\0';
-			return ;
+			return (1);
 		}
 		while ((*str)[++(*j)])
 			(*str)[*j - 2] = (*str)[*j];
@@ -84,6 +84,7 @@ void	check_qts(char **str, int *j, int *q_n, char q)
 		(*q_n)--;
 		*j = -1;
 	}
+  return(0);
 }
 
 void	remove_quotes_string(char *str)
@@ -98,7 +99,10 @@ void	remove_quotes_string(char *str)
 		return ;
 	q_n = count_quotes(str);
 	while (str[++j] && q_n != 0)
-		check_qts(&str, &j, &q_n, q);
+  {
+    if(check_qts(&str, &j, &q_n, q))
+      return ;
+  }
 }
 
 int	set_words(char **str, t_var_split *vs, char **list)

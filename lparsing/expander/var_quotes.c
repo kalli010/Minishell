@@ -57,7 +57,7 @@ int	replace_list_node(t_list **list, char **array, t_list **n_list,
 		free(array);
 		return (2);
 	}
-	free(array);
+	 // free(array);
 	*tmp = (*list)->next;
 	back = (*list)->back;
 	if ((*list)->back != NULL)
