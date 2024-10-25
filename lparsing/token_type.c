@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:45 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/22 06:09:14 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:46:13 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	set_1(t_list *list)
 {
-	if (list->content[0] == '|' && list->content[1] == '|' \
-			&& list->content[2] == '\0')
+	if (list->content[0] == '|' && list->content[1] == '|'
+		&& list->content[2] == '\0')
 		return (list->type = OR, 1);
 	else if (list->content[0] == '&' && list->content[1] == '&' \
 			&& list->content[2] == '\0')

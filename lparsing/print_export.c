@@ -28,8 +28,8 @@ int	get_var_value(char *env, char **var, char **value)
 	s = i;
 	while (env[i])
 		i++;
-  if(env[i - 1] == '=')
-    i++;
+	if (env[i - 1] == '=')
+		i++;
 	*value = ft_substr(env, s, i - s);
 	return (0);
 }

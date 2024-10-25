@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:32 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 21:46:13 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 13:27:14 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	update_str(t_split_symbols *ss, char *str)
 	return (0);
 }
 
-void	insert_symbol_with_spaces(t_split_symbols *ss, char *str, int *i,
-		int *s)
+void	insert_symbol_with_spaces(\
+		t_split_symbols *ss, char *str, int *i, int *s)
 {
 	ss->check = parse_symbols_2(&str[*i], i);
 	if (ss->check == 1)

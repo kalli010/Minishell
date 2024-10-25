@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:47:59 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:48:00 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 13:26:41 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ int	open_file(char *redfile, t_heredoc *hd)
 	return (0);
 }
 
-int	update_list_with_redirection(t_imp_hc *imh, t_list **list, char ***redfile,
-		int i)
+int	update_list_with_redirection(\
+		t_imp_hc *imh, t_list **list, char ***redfile, int i)
 {
 	if (imh->back != NULL)
 		imh->back->next = NULL;

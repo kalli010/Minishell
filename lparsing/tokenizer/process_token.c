@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:48:13 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:48:14 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 12:45:42 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,8 @@ int	create_tokens_loop(t_tokenizer *tk)
 			s = i;
 			skip_non_whitespace(tk->str, &i);
 			ec = handle_echo_token(s, tk);
-			if (ec == 1)
-				return (1);
-			else if (ec == 0)
-				return (0);
+			if (ec == 1 || ec == 0)
+				return (ec);
 			if (process_token(&i, s, tk) != 0)
 				return (1);
 			if (tk->str[i] == '\0')

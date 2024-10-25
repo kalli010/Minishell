@@ -88,7 +88,6 @@ typedef struct s_set_var
 {
 	char	*var;
 	char	*value;
-	int		s;
 }			t_set_var;
 
 typedef struct s_tokenizer
@@ -97,5 +96,13 @@ typedef struct s_tokenizer
 	char	***tokens;
 	int		*j;
 }			t_tokenizer;
+
+typedef struct s_add_env_params {
+  char **env_or_xenv;
+  int s;
+  char *var;
+  char *value;
+  int check;
+} t_add_env_params;
 
 #endif

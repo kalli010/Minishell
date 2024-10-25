@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:58 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 21:44:20 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 12:48:08 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	set_lst_null(t_list **tmp, t_list **list, t_list **n_list)
 {
 	*tmp = NULL;
 	*list = NULL;
-  *n_list = NULL;
+	*n_list = NULL;
 }
 
 int	recreate_linked_list(t_list *list, t_list **lst)
@@ -42,11 +42,10 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 			}
 		}
 		tmp = list;
-    list = list->next;
+		list = list->next;
 		free(tmp);
 	}
-	set_token_types(tmp, n_list, lst);
-	return (0);
+	return (set_token_types(tmp, n_list, lst), 0);
 }
 
 void	clean_linked_list(t_list **list)
@@ -60,10 +59,10 @@ void	clean_linked_list(t_list **list)
 	{
 		if (tmp->content[0] == '\0')
 		{
-      back = tmp->back;
-      next = tmp->next;
-      free(tmp->content);
-      free(tmp);
+			back = tmp->back;
+			next = tmp->next;
+			free(tmp->content);
+			free(tmp);
 			if (back == NULL)
 				*list = next;
 			else
@@ -76,6 +75,7 @@ void	clean_linked_list(t_list **list)
 			tmp = tmp->next;
 	}
 }
+
 void	clean_linked_list_par(t_list **list)
 {
 	t_list	*tmp;

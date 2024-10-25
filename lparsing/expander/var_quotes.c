@@ -6,11 +6,18 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:47:08 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:47:08 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 13:12:57 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+void	init_vs(t_var_split *vs, int *cw, int *end)
+{
+	vs->c = cw;
+	*end = 0;
+	vs->end = end;
+}
 
 int	var_split(char *str, char ***array)
 {
@@ -20,9 +27,7 @@ int	var_split(char *str, char ***array)
 	int			end;
 	int			cw;
 
-	vs.c = &cw;
-	end = 0;
-	vs.end = &end;
+	init_vs(&vs, &cw, &end);
 	remove_quotes_string(str);
 	cw = count_words(str);
 	vs.list = (char **)malloc(sizeof(char *) * (*vs.c + 1));
@@ -40,9 +45,7 @@ int	var_split(char *str, char ***array)
 		else if (s == 1)
 			break ;
 	}
-	vs.list[*vs.c] = NULL;
-	*array = vs.list;
-	return (0);
+	return (vs.list[*vs.c] = NULL, *array = vs.list, 0);
 }
 
 int	replace_list_node(t_list **list, char **array, t_list **n_list,
@@ -57,7 +60,6 @@ int	replace_list_node(t_list **list, char **array, t_list **n_list,
 		free(array);
 		return (2);
 	}
-	 // free(array);
 	*tmp = (*list)->next;
 	back = (*list)->back;
 	if ((*list)->back != NULL)
@@ -69,7 +71,7 @@ int	replace_list_node(t_list **list, char **array, t_list **n_list,
 		*list = back;
 		ft_lstadd_back(list, *n_list);
 		*list = (*list)->next;
-    token_type(*list);
+		token_type(*list);
 	}
 	else
 		(*list) = *n_list;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntax_error.c                                     :+:      :+:    :+:   */
+/*   syntax_error_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:37 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/20 09:47:22 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/25 10:52:23 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	symbols_check(t_list *list)
 		printf("syntax error\n");
 		return (1);
 	}
-  if(list->content[0] == '&' && list->content[1] == '\0')
+	if (list->content[0] == '&' && list->content[1] == '\0')
 	{
 		printf("20\n");
 		printf("syntax error\n");
@@ -75,16 +75,15 @@ int	check_back_1(t_list *node)
 
 int	check_back_2(t_list *list, int *p)
 {
-	if ((list->back && list->back->type \
-					!= COMMAND && list->back->type != OPTIONS \
-          && list->back->type != PATH \
-          && list->back->type != PATH_COMMAND \
-          && list->back->type != DELIMITER \
-					&& list->back->content[0] != 41) \
-				|| (list->next != NULL \
-          && (list->next->type == COMMAND \
-					|| list->next->type == OPTIONS \
-            || list->next->type == PATH_COMMAND)))
+	if ((list->back && list->back->type != COMMAND \
+				&& list->back->type != OPTIONS && list->back->type != PATH \
+				&& list->back->type != PATH_COMMAND \
+				&& list->back->type != DELIMITER \
+				&& list->back->content[0] != 41) \
+			|| (list->next != NULL \
+					&& (list->next->type == COMMAND \
+						|| list->next->type == OPTIONS \
+						|| list->next->type == PATH_COMMAND)))
 		return (1);
 	(*p)--;
 	return (0);

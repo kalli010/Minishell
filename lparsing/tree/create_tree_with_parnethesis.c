@@ -12,7 +12,6 @@
 
 #include <minishell.h>
 
-//tree_operations
 void	if_root_null(t_tree **r_tree, t_tree **l_node, t_list *list,
 		t_tree **root)
 {
