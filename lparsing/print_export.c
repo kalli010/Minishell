@@ -26,8 +26,10 @@ int	get_var_value(char *env, char **var, char **value)
 	if (env[i] != '\0')
 		i++;
 	s = i;
-	while (env[i++])
-		;
+	while (env[i])
+		i++;
+  if(env[i - 1] == '=')
+    i++;
 	*value = ft_substr(env, s, i - s);
 	return (0);
 }
@@ -44,7 +46,7 @@ int	export(char **env)
 		if (get_var_value(env[i], &var, &value))
 			return (1);
 		ft_putstr_fd(var, STDOUT_FILENO);
-		if (value[0] != '\0')
+		if (value != NULL)
 		{
 			ft_putchar_fd('=', STDOUT_FILENO);
 			ft_putchar_fd('"', STDOUT_FILENO);

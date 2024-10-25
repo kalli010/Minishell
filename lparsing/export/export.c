@@ -44,6 +44,8 @@ char	*extract_value(t_list *list, int start)
 	len = start;
 	while (list->content[len])
 		len++;
+  if(list->content[start - 1] == '=')
+    len++;
 	value = ft_substr(list->content, start, len - start);
 	remove_quotes_string(value);
 	return (value);

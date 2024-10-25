@@ -97,7 +97,11 @@ int	check_content(char *str)
 	while (str[++i])
 	{
 		if (!ft_isalpha(str[i]) && !ft_isdigit(str[i]) && str[i] != '_')
+    {
+      if(str[i] == '=' && str[i + 1] == '\0')
+        return(0);
 			return (1);
-	}
+    }
+  }
 	return (0);
 }

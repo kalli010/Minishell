@@ -23,7 +23,7 @@ void	skip_quoted_section(int *c, char *str, int *i, int *in_word)
 			;
 	}
 	if (str[*i] == ' ')
-		in_word = 0;
+		*in_word = 0;
 	else if (str[*i] != ' ' && *in_word == 0)
 	{
 		(*c)++;
