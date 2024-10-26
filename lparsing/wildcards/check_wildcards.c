@@ -20,7 +20,7 @@ int	check_wildcards(t_list *list)
 	while (list)
 	{
 		i = -1;
-		while (list->content[++i])
+		while (list->content && list->content[++i])
 		{
 			if (list->content[i] == '"' || list->content[i] == '\'')
 			{

@@ -69,7 +69,6 @@ int	check_and_expand_symbols(void)
 		free_list(g_helper.list);
 		return (EXIT_FAILURE);
 	}
-	clean_linked_list(&g_helper.list);
 	return (EXIT_SUCCESS);
 }
 

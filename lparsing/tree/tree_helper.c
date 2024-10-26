@@ -71,7 +71,7 @@ int	check_parenthesis(t_list *list)
 	c = 0;
 	while (list)
 	{
-		if (list->content[0] == 40 || list->content[0] == 41)
+		if (list->content != NULL && (list->content[0] == 40 || list->content[0] == 41))
 		{
 			c++;
 			return (c);

@@ -81,8 +81,11 @@ void	execute_child_process(t_tree *root, t_helper *helper, t_tree **rt)
 	}
 	free_redirect_list(&redlst);
 	if (find_command(root, helper, rt))
-		exit(EXIT_FAILURE);
-	cleanup(helper, rt);
+	{
+    cleanup(helper, rt);
+    exit(EXIT_FAILURE);
+  }
+  cleanup(helper, rt);
 	exit(EXIT_SUCCESS);
 }
 

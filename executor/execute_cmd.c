@@ -82,6 +82,8 @@ int	execute(t_tree *root, t_helper *helper, t_tree **rt)
 {
 	pid_t	pid;
 
+  if(root->content->content == NULL)
+    return(0);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), EXIT_FAILURE);

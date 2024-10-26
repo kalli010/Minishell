@@ -14,6 +14,8 @@
 
 int	is_builtins(t_tree *root)
 {
+  if(root->content->content == NULL)
+    return(false);
 	if (!ft_strncmp("echo", root->content->content, sizeof("echo")))
 		return (true);
 	else if (!ft_strncmp("cd", root->content->content, sizeof("cd")))

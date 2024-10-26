@@ -17,14 +17,6 @@ char	**get_envp(char **env)
 	char	*path;
 	char	**split_path;
 
-	if (env[0] == NULL)
-	{
-		path = ft_strdup(DEFAULT_PATH);
-		path = check_path(path);
-		split_path = ft_split(path, ':');
-		free(path);
-		return (split_path);
-	}
 	path = ft_getenv(env, "PATH", -1);
 	if (path == NULL)
 		return (NULL);

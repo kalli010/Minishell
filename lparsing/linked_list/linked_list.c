@@ -61,16 +61,27 @@ void	clean_linked_list(t_list **list)
 		{
 			back = tmp->back;
 			next = tmp->next;
-			free(tmp->content);
-			free(tmp);
-			if (back == NULL)
-				*list = next;
-			else
-				back->next = next;
-			if (next != NULL)
-				next->back = back;
-			tmp = *list;
-		}
+      if(next == NULL || next->type != PIPE)
+      {
+        if(next != NULL && next->type == OPTIONS)
+          next->type = tmp->type;
+        free(tmp->content);
+        free(tmp);
+        if (back == NULL)
+          *list = next;
+        else
+          back->next = next;
+        if (next != NULL)
+          next->back = back;
+        tmp = *list;
+		  }
+      else
+      {
+        free(tmp->content);
+        tmp->content = NULL;
+        tmp = tmp->next;
+      }
+    }
 		else
 			tmp = tmp->next;
 	}
@@ -85,7 +96,7 @@ void	clean_linked_list_par(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if (tmp->content[0] == 40 || tmp->content[0] == 41)
+		if (tmp->content != NULL && (tmp->content[0] == 40 || tmp->content[0] == 41))
 		{
 			back = tmp->back;
 			next = tmp->next;

@@ -50,7 +50,7 @@ t_tree	*creat_tree(t_list *lst)
 	set_to_null(&root, &n_node, &l_node);
 	while (lst)
 	{
-		if (lst->content[0] == 41 || lst->content[0] == 40)
+		if (lst->content && (lst->content[0] == 41 || lst->content[0] == 40))
 			return (root);
 		n_node = create_tree_node(lst);
 		if (root == NULL)
