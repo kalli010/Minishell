@@ -12,6 +12,21 @@
 
 #include <minishell.h>
 
+t_list	*ft_lstnew_2(char *content)
+{
+	t_list	*a;
+
+	a = malloc(sizeof(t_list));
+	if (!a)
+		return (NULL);
+	a->content = ft_substr(content, 0, ft_strlen(content));
+	a->next = NULL;
+	a->back = NULL;
+	a->i = 0;
+	a->in = 0;
+	return (a);
+}
+
 void	wildcards_linked_list(t_list *list, char *str)
 {
 	t_list	*next;
@@ -35,7 +50,8 @@ void	clean_wildcards(t_list **list)
 
 	back = (*list)->back;
 	next = (*list)->next;
-	next->type = COMMAND;
+	if (back == NULL)
+		next->type = COMMAND;
 	free((*list)->content);
 	free(*list);
 	if (back)

@@ -36,7 +36,6 @@ void	skip_wildcards(t_list **list, t_list **tmp, int d)
 			*list = (*list)->next;
 			d--;
 		}
-		//break ;
 	}
 }
 
@@ -62,6 +61,7 @@ void	process_wildcard_for_entry(t_list **list, t_list **tmp, DIR *dir)
 				entry = readdir(dir);
 			}
 			skip_wildcards(list, tmp, d);
+			break ;
 		}
 		if (*list)
 			*list = (*list)->next;
