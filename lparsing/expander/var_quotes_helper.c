@@ -39,7 +39,7 @@ int	count_quotes(char *str)
 
 	q_n = 0;
 	i = -1;
-	while (str[++i])
+	while (str && str[++i])
 	{
 		if (str[i] == '"' || str[i] == '\'')
 		{

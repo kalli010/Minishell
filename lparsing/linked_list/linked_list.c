@@ -57,7 +57,7 @@ void	clean_linked_list(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if (tmp->content[0] == '\0')
+		if (tmp->content && tmp->content[0] == '\0')
 		{
 			back = tmp->back;
 			next = tmp->next;

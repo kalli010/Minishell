@@ -46,8 +46,12 @@ int	check_cmd_export(t_list *list)
 	while (list)
 	{
 		if (list->type != OPTIONS)
+    {
+      if(list->type == AND)
+        return(0);
 			return (1);
-		list = list->next;
+    }
+    list = list->next;
 	}
 	return (0);
 }
@@ -55,16 +59,21 @@ int	check_cmd_export(t_list *list)
 int	check_var(t_list *list, char ***env, char ***xenv)
 {
 	g_helper.exit_status = 0;
-	if (list->back && (list->back->back != NULL || check_cmd_export(list)))
-		return (g_helper.exit_status);
-	while (list)
-	{
-		if (set_var(list, env, xenv))
-		{
-			printf("not a valid identifier\n");
-			g_helper.exit_status = 1;
-		}
-		list = list->next;
-	}
-	return (g_helper.exit_status);
+   if(list && list->content && \
+    ft_strncmp("export", list->content, sizeof("export")) \
+    && list->back == NULL && !check_cmd_export(list->next)) 
+  {
+    while (list)
+    {
+      if(list->type == AND)
+        break ;
+      if (set_var(list, env, xenv))
+      {
+        printf("not a valid identifier\n");
+        g_helper.exit_status = 1;
+      }
+      list = list->next;
+    }
+  }
+	return (0);
 }

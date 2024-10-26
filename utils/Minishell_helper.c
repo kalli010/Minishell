@@ -63,6 +63,12 @@ int	check_and_expand_symbols(void)
 		free_list(g_helper.list);
 		return (EXIT_FAILURE);
 	}
+  if(check_var(g_helper.list, &g_helper.envp, &g_helper.xenv))
+  {
+		printf("malloc failed.\n");
+		free_list(g_helper.list);
+		return (EXIT_FAILURE);
+  }
 	if (check_expander(g_helper.envp, &g_helper.list))
 	{
 		printf("malloc failed.\n");

@@ -42,7 +42,7 @@ void	remove_quotes(t_list *list)
 	{
 		q_n = count_quotes(list->content);
 		j = -1;
-		while (list->content[++j] && q_n != 0)
+		while (list->content && list->content[++j] && q_n != 0)
 		{
 			if (list->content[j] == '"' || list->content[j] == '\'')
 			{

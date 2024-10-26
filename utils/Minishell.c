@@ -52,8 +52,8 @@ int	ft_minishell(char *line)
 	hd = check_heredoc(g_helper.list);
 	if (process_heredocs(hd, &hdc))
 		return (g_helper.exit_status = 2,2);
-	remove_quotes(g_helper.list);
 	clean_linked_list(&g_helper.list);
+	remove_quotes(g_helper.list);
 	if (build_and_execute_tree(hd))
 		return (g_helper.exit_status = 2,2);
 	my_free(&g_helper);
