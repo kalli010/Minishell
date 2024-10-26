@@ -64,15 +64,15 @@ int	find_command(t_tree *root, t_helper *helper, t_tree **rt)
 		root->content->in = 0;
 		return (execute_parenthesis(root, helper, rt));
 	}
-	if (handle_redirection_and_pipes(root, helper, rt) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
 	if (root->content->type == AND || root->content->type == OR)
 		return (check_and_or(root, helper, rt));
+	if (handle_redirection_and_pipes(root, helper, rt))
+		return (EXIT_FAILURE);
 	if (root->content->type == COMMAND || root->content->type == PATH_COMMAND)
 	{
 		if (is_builtins(root) == true)
 			return (run_builtins(root, helper));
 		return (execute(root, helper, rt));
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
