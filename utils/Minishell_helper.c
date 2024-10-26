@@ -75,7 +75,7 @@ int	check_and_expand_symbols(void)
 
 int	process_heredocs(int hd, t_heredoc *hdc)
 {
-  int i;
+	int	i;
 
 	if (hd > 16)
 	{
@@ -88,12 +88,12 @@ int	process_heredocs(int hd, t_heredoc *hdc)
 		hdc->xenv = g_helper.xenv;
 		init_hd(hdc, &g_helper.list, &g_helper.redfile);
 		if (heredoc(hdc, hd))
-    {
-      i = -1;
-      free(g_helper.redfile);
-      free_list(*hdc->list);
+		{
+			i = -1;
+			free(g_helper.redfile);
+			free_list(*hdc->list);
 			return (EXIT_FAILURE);
-    }
-  }
+		}
+	}
 	return (EXIT_SUCCESS);
 }

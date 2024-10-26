@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/16 19:24:41 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/26 14:46:13 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ typedef struct helper
 	int					fd;
 	int					cd;
 }						t_helper;
-
-extern t_helper			g_helper;
 
 typedef struct s_file
 {

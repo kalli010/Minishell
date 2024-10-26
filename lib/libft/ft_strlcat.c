@@ -38,4 +38,3 @@ size_t	ft_strlcat(char *dest, const char *src, size_t dstsize)
 	dest[d] = '\0';
 	return (dlen + slen);
 }
-

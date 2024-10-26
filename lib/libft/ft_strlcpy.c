@@ -18,7 +18,7 @@ size_t	ft_strlcpy(char **dest, const char *src, size_t dstsize)
 	i = 0;
 	if (dstsize == 0)
 		return (ft_strlen(src));
-  *dest = (char *)malloc(sizeof(char) * dstsize);
+	*dest = (char *)malloc(sizeof(char) * dstsize);
 	while (i < dstsize - 1 && src[i] != '\0')
 	{
 		dest[0][i] = src[i];

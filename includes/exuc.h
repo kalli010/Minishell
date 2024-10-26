@@ -18,7 +18,6 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 
-extern t_helper	g_helper;
 # define DEFAULT_PATH \
 	"/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin\
 :/usr/local/sbin:/opt/bin:/opt/sbin"

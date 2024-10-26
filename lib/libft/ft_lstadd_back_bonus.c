@@ -23,12 +23,12 @@ int	ft_lstadd_back(t_list **lst, t_list *new)
 	if (*lst == NULL)
 	{
 		*lst = new;
-    	return (0);
+		return (0);
 	}
 	p = *lst;
 	while (p->next != NULL)
 		p = p->next;
-  new->back = p;
-  p->next = new;
-  return(0);
+	new->back = p;
+	p->next = new;
+	return (0);
 }
