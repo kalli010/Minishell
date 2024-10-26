@@ -35,7 +35,7 @@ int	open_file(char *redfile, t_heredoc *hd)
 	else
 	{
 		waitpid(of.pid, &of.status, 0);
-		if (WIFSIGNALED(of.status) && WTERMSIG(of.status) == SIGINT)
+		if (of.status == 256)
 		{
 			printf("^C\n");
 			close(of.fd);
@@ -46,8 +46,8 @@ int	open_file(char *redfile, t_heredoc *hd)
 	return (0);
 }
 
-int	update_list_with_redirection(\
-		t_imp_hc *imh, t_list **list, char ***redfile, int i)
+int	update_list_with_redirection(
+	t_imp_hc *imh, t_list **list, char ***redfile, int i)
 {
 	if (imh->back != NULL)
 		imh->back->next = NULL;

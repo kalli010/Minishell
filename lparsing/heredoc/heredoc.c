@@ -73,6 +73,7 @@ int	heredoc(t_heredoc *hd, int size)
 			hd->delimiter = hd->delimiter->next;
 			if (open_file((*hd->rf)[++hd->i], hd))
 			{
+				implementing_heredoc(hd->list, hd->rf);
 				clean_heredoc(*hd->rf, 1);
 				return (1);
 			}
