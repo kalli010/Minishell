@@ -55,7 +55,7 @@ int	handle_redirection_and_pipes(t_tree *root, t_helper *helper, t_tree **rt)
 int	find_command(t_tree *root, t_helper *helper, t_tree **rt)
 {
 	if (!root)
-		return (EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	g_helper.exit_status = check_root_content(root);
 	if (g_helper.exit_status != 0)
 		return (g_helper.exit_status);

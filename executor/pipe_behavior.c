@@ -67,23 +67,23 @@ int	execute_pipe(t_tree *root, t_helper *helper, t_tree **rt)
 	pid_t	l_fork;
 
 	status = 0;
-	if (root->first_child && root->first_child->next_sibling)
-	{
-		if (pipe(fd) == -1)
-			return (perror("pipe"), EXIT_FAILURE);
-		l_fork = fork();
-		if (l_fork < 0)
-			return (perror("fork"), EXIT_FAILURE);
-		if (l_fork == 0)
-			left_pipe(fd, root->first_child, helper, rt);
-		r_fork = fork();
-		if (r_fork < 0)
-			return (perror("fork"), EXIT_FAILURE);
-		if (r_fork == 0)
-			right_pipe(fd, root->first_child->next_sibling, helper, rt);
-		close(fd[0]);
-		close(fd[1]);
-		status = wait_for_finished(l_fork, r_fork);
-	}
+  if (pipe(fd) == -1)
+    return (perror("pipe"), EXIT_FAILURE);
+  l_fork = fork();
+  if (l_fork < 0)
+    return (perror("fork"), EXIT_FAILURE);
+  if (l_fork == 0)
+    left_pipe(fd, root->first_child, helper, rt);
+  r_fork = fork();
+  if (r_fork < 0)
+    return (perror("fork"), EXIT_FAILURE);
+  if (r_fork == 0)
+  {
+    if(root->first_child != NULL)
+      right_pipe(fd, root->first_child->next_sibling, helper, rt);
+  }
+  close(fd[0]);
+  close(fd[1]);
+  status = wait_for_finished(l_fork, r_fork);
 	return (status);
 }
