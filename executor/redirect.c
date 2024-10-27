@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 05:44:58 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/21 01:34:47 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/28 00:06:16 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,11 @@ void	execute_child_process(t_tree *root, t_helper *helper, t_tree **rt)
 		exit(g_helper.exit_status);
 	}
 	free_redirect_list(&redlst);
-	if (find_command(root, helper, rt))
+	g_helper.exit_status = find_command(root, helper, rt);
+	if (g_helper.exit_status)
 	{
 		cleanup(helper, rt);
-		exit(EXIT_FAILURE);
+		exit(g_helper.exit_status);
 	}
 	cleanup(helper, rt);
 	exit(EXIT_SUCCESS);
