@@ -6,9 +6,7 @@ CFLAGS = -Wall -Wextra -Werror -I./includes -I$(LIBFT_SRC) -g #-fsanitize=addres
 LIBFT_SRC = ./lib/libft
 LIBFT = $(LIBFT_SRC)/libft.a
 
-#
-
-DIRS = bonus  bulutins  executor  signal  utils libft lparsing lparsing/tree lparsing/linked_list lparsing/wildcards lparsing/tokenizer lparsing/expander lparsing/heredoc lparsing/export lparsing/syntax_error
+DIRS = bulutins  executor  signal  utils libft lparsing lparsing/tree lparsing/linked_list lparsing/wildcards lparsing/tokenizer lparsing/expander lparsing/heredoc lparsing/export lparsing/syntax_error
 OBJDIR = bin
 
 src = $(foreach dir, $(DIRS), $(wildcard $(dir)/*.c))
@@ -21,9 +19,6 @@ all: compile
 
 $(NAME): $(obj) $(LIBFT)
 	$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME) -lreadline
-
-#bin/check_logical.o : bonus/check_logical.c | $(OBJDIR)
-#    $(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
