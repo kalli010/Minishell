@@ -35,8 +35,8 @@ int	update_str(t_split_symbols *ss, char *str)
 	return (0);
 }
 
-void	insert_symbol_with_spaces(\
-		t_split_symbols *ss, char *str, int *i, int *s)
+void	insert_symbol_with_spaces(
+	t_split_symbols *ss, char *str, int *i, int *s)
 {
 	ss->check = parse_symbols_2(&str[*i], i);
 	if (ss->check == 1)

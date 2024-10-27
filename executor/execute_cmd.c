@@ -46,7 +46,7 @@ int	prepare_command(t_tree *root, t_helper *helper)
 	{
 		helper->cmd = get_path_of_cpath(root->content);
 		if (!helper->cmd)
-      return (free(path), no_file_no_dir(root->content->content));
+			return (free(path), no_file_no_dir(root->content->content));
 	}
 	else
 		helper->cmd = get_path(helper, root->content);
@@ -81,8 +81,8 @@ int	execute(t_tree *root, t_helper *helper, t_tree **rt)
 {
 	pid_t	pid;
 
-  if(root->content->content == NULL)
-    return(0);
+	if (root->content->content == NULL)
+		return (0);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), EXIT_FAILURE);

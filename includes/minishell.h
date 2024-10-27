@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:28:06 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/26 14:54:27 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:33:55 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	**add_new_env(t_add_env_params *params);
 int		check_content(char *str);
 int		set_var(t_list *list, char ***env, char ***xenv);
 int		check_cmd_export(t_list *list);
-int   check_cmd_export_2(t_list *list);
+int		check_cmd_export_2(t_list *list);
 int		check_var(t_list *list, char ***env, char ***xenv);
 void	init_params(\
 		t_add_env_params *p_env, char **env, char *var, char *value);
@@ -191,6 +191,7 @@ int		collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 void	set_token_types(t_list *tmp, t_list *n_list, t_list **lst);
 void	set_lst_null(t_list **tmp, t_list **list, t_list **n_list);
 int		recreate_linked_list(t_list *list, t_list **lst);
+void	check_clean_linked_list(t_list **list, t_list **tmp);
 void	clean_linked_list(t_list **list);
 void	clean_linked_list_par(t_list **list);
 void	free_list(t_list *list);

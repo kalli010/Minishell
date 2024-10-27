@@ -36,9 +36,9 @@ int	get_permission(char *file)
 
 int	command_not_found(char *cmd)
 {
+  (void)cmd;
 	write(2, M_SHELL, 23);
-	write(2, cmd, ft_strlen(cmd));
-	write(2, ": command not found\n", 20);
+	write(2, "command not found\n", 18);
 	g_helper.exit_status = 127;
 	return (g_helper.exit_status);
 }

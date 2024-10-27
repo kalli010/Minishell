@@ -39,8 +39,7 @@ int	is_only_bs(t_tree *root)
 		i++;
 	}
 	write(2, M_SHELL, 23);
-	write(2, str, ft_strlen(str));
-	write(2, " : command not found\n", 22);
+	write(2, "command not found\n", 19);
 	return (EXIT_FAILURE);
 }
 

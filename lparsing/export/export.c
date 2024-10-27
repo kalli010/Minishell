@@ -46,39 +46,40 @@ int	check_cmd_export(t_list *list)
 	while (list)
 	{
 		if (list->type != OPTIONS)
-    {
-      if (list && (list->type == AND || list->type == OR))
-        return(0);
+		{
+			if (list && (list->type == AND || list->type == OR))
+				return (0);
 			return (1);
-    }
-    list = list->next;
+		}
+		list = list->next;
 	}
 	return (0);
 }
 
 int	check_cmd_export_2(t_list *list)
 {
-  if(list->back != NULL && (list->back->type == OR || list->back->type == AND))
-  {
-    list->e = 1;
-    return(1);
-  }
-  return (0);
+	if (list->back != NULL && (list->back->type == OR
+			|| list->back->type == AND))
+	{
+		list->e = 1;
+		return (1);
+	}
+	return (0);
 }
 
 int	check_var(t_list *list, char ***env, char ***xenv)
 {
 	g_helper.exit_status = 0;
-	if (list == NULL || ft_strncmp("export", \
-                        list->content, sizeof("export")) \
-    || ((list->back != NULL || list->e == 1) && check_cmd_export(list->next)))
+	if (list == NULL || ft_strncmp("export", list->content, sizeof("export"))
+		|| ((list->back == NULL || list->e == 1)
+			&& check_cmd_export(list->next)))
 		return (g_helper.exit_status);
-  list = list->next;
+	list = list->next;
 	while (list)
 	{
-    if(list->type == OR || list->type == AND)
-		  break ;
-    if (set_var(list, env, xenv))
+		if (list->type == OR || list->type == AND)
+			break ;
+		if (set_var(list, env, xenv))
 		{
 			printf("not a valid identifier\n");
 			g_helper.exit_status = 1;

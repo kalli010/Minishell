@@ -14,8 +14,8 @@
 
 int	check_root_content(t_tree *root)
 {
-  if(root->content->content == NULL)
-    return(0);
+	if (root->content->content == NULL)
+		return (0);
 	if (!ft_strncmp(root->content->content, ".", sizeof(".")))
 	{
 		printf("minishell : .: filename argument required\n");

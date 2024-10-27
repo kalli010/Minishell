@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 06:06:59 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 10:51:37 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:19:47 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	check_list(t_list *list)
 {
-	return (list->type != WORD && list->type != COMMAND && list->type != OPTIONS
-		&& list->type != PATH && list->type != PATH_COMMAND
-		&& list->type != DELIMITER && list->type != PARENTHESIS);
+	return (list->type != WORD \
+			&& list->type != COMMAND && list->type != OPTIONS \
+			&& list->type != PATH && list->type != PATH_COMMAND \
+			&& list->type != DELIMITER && list->type != PARENTHESIS);
 }
 
 int	check_1(t_list *list)

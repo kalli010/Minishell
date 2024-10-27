@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:12:54 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/26 14:46:13 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:33:34 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_list
 	struct s_list		*back;
 	int					i;
 	int					in;
-  int         e;
+	int					e;
 }						t_list;
 
 typedef struct s_tree

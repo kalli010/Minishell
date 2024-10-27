@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:45 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 10:46:13 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:22:05 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	set_1(t_list *list)
 {
-	if (list->content[0] == '|' && list->content[1] == '|'
-		&& list->content[2] == '\0')
+	if (list->content[0] == '|' && list->content[1] == '|' \
+			&& list->content[2] == '\0')
 		return (list->type = OR, 1);
 	else if (list->content[0] == '&' && list->content[1] == '&' \
 			&& list->content[2] == '\0')
@@ -42,8 +42,8 @@ int	set_1(t_list *list)
 
 int	set_2(t_list *list)
 {
-	if (list->back != NULL && (list->back->type == OUTPUT \
-				|| list->back->type == APPEND || list->back->type == INPUT))
+	if (list->back != NULL && (list->back->type == OUTPUT
+			|| list->back->type == APPEND || list->back->type == INPUT))
 		return (list->type = PATH, 1);
 	else if (list->back != NULL && \
 			(list->back->type == COMMAND || list->back->type == OPTIONS \

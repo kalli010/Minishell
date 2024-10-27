@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:51:37 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 10:52:23 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:19:10 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	checks(t_list *list)
 	}
 	if (check_list(list))
 	{
-		printf("1\n");
 		printf("syntax error\n");
 		return (1);
 	}
@@ -44,13 +43,11 @@ int	symbols_check(t_list *list)
 		return (0);
 	if (list->type == PIPE || list->type == OR || list->type == AND)
 	{
-		printf("10\n");
 		printf("syntax error\n");
 		return (1);
 	}
 	if (list->content[0] == '&' && list->content[1] == '\0')
 	{
-		printf("20\n");
 		printf("syntax error\n");
 		return (1);
 	}
@@ -79,8 +76,7 @@ int	check_back_2(t_list *list, int *p)
 				&& list->back->type != OPTIONS && list->back->type != PATH \
 				&& list->back->type != PATH_COMMAND \
 				&& list->back->type != DELIMITER \
-				&& list->back->content[0] != 41) \
-			|| (list->next != NULL \
+				&& list->back->content[0] != 41) || (list->next != NULL \
 					&& (list->next->type == COMMAND \
 						|| list->next->type == OPTIONS \
 						|| list->next->type == PATH_COMMAND)))

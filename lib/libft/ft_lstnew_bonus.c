@@ -25,5 +25,5 @@ t_list	*ft_lstnew(char *content)
 	a->i = 0;
 	a->in = 0;
 	a->e = 0;
-  return (a);
+	return (a);
 }
