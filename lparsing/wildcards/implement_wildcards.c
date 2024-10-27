@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   implement_wildcardsi.c                             :+:      :+:    :+:   */
+/*   implement_wildcards.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 00:38:43 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/20 00:38:46 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:26:15 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	process_substring(char *wc, const char *filename, int *i, int *len)
 
 	flag = -1;
 	s = *len;
+	check_flag(len, &flag, wc);
 	while (wc[*len] != '*' && wc[*len] != '\0')
 		(*len)++;
-	check_flag(len, &flag, wc);
 	str = ft_substr(wc, s, *len - s);
 	if (str != NULL)
 	{

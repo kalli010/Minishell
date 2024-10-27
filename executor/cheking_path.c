@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cheking_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 13:17:41 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/13 20:50:42 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/27 22:52:39 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ char	*check_path(char *path)
 {
 	char	*new_path;
 
+	if(path && path[0] == '\0')
+	{
+		new_path = (char *)malloc(sizeof(char) * 2);
+		return(ft_memcpy(new_path, ".", 2));
+	}
 	new_path = allocate_path(path);
 	if (!new_path)
 		return (NULL);

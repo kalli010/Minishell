@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/21 00:51:39 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:06:43 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ char	**get_envp(char **env)
 	path = ft_getenv(env, "PATH", -1);
 	if (path == NULL)
 		return (NULL);
+	path = check_path(path);
 	split_path = ft_split(path, ':');
+	
 	free(path);
 	return (split_path);
 }

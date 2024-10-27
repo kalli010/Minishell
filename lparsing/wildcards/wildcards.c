@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:52:13 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 22:03:21 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:43:56 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	process_wildcard_for_entry(t_list **list, t_list **tmp, DIR *dir)
 	{
 		if (has_wildcard(*list))
 		{
+			*tmp = (*list)->back;
 			d = 0;
 			rewinddir(dir);
 			entry = readdir(dir);
@@ -70,6 +71,8 @@ void	process_wildcard_for_entry(t_list **list, t_list **tmp, DIR *dir)
 
 void	reset_linked_list(t_list **list, t_list *tmp)
 {
+	if(tmp == NULL)
+		return ;
 	*list = tmp;
 	while ((*list)->back)
 		*list = (*list)->back;
@@ -80,6 +83,7 @@ int	wildcards(t_list **list)
 	DIR		*dir;
 	t_list	*tmp;
 
+	tmp = NULL;
 	dir = opendir(".");
 	if (dir == NULL)
 		return (1);

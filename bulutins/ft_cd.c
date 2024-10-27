@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 23:46:23 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/20 23:19:51 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:13:04 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	change_directory(char *go_path)
 {
 	struct stat	path_stat;
 
+	path_stat.st_mode = 0;
 	if (!stat(go_path, &path_stat) && !S_ISDIR(path_stat.st_mode))
 	{
 		handle_cd_error(go_path, 3);

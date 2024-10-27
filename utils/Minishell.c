@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:47:25 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/26 14:56:27 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 21:43:31 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	build_and_execute_tree(int hd)
 	else
 		g_helper.root = creat_tree(g_helper.list);
 	clean_linked_list_par(&g_helper.list);
+	print_tree(g_helper.root, 0);
 	find_command(g_helper.root, &g_helper, &g_helper.root);
 	check_signal();
 	if (hd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:51:28 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/26 14:54:13 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:13:22 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(int ac, char **av, char **envp)
 			add_history(line);
 		if (line)
 			ft_minishell(line);
+		printf("exit status: %d\n", g_helper.exit_status);
 	}
 	return (EXIT_SUCCESS);
 }

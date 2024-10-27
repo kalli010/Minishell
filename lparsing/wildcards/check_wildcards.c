@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heck_wildcards.c                                   :+:      :+:    :+:   */
+/*   check_wildcards.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:49:06 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:49:08 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/27 23:04:26 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	find_exact_match(const char *filename, char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] == filename[i])
+	while (str[i] != '\0' && filename[i] != '\0' && str[i] == filename[i])
 		i++;
 	if (str[i] == '\0')
 		return (i);
