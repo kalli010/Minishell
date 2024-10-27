@@ -53,6 +53,7 @@ typedef struct s_list
 	struct s_list		*back;
 	int					i;
 	int					in;
+  int         e;
 }						t_list;
 
 typedef struct s_tree

@@ -62,8 +62,6 @@ int	check_qts(char **str, int *j, int *q_n, char q)
 	if ((*str)[*j] == '"' || (*str)[*j] == '\'')
 	{
 		q = (*str)[*j];
-		if ((*str)[*j + 1] == q)
-			return (1);
 		(*str)[*j] = (*str)[*j + 1];
 		while ((*str)[*j + 1])
 		{

@@ -48,9 +48,15 @@ int	run_builtins(t_tree *root, t_helper *helper)
 		return (ft_unset(root->content, helper));
 	else if (!ft_strncmp("export", root->content->content, sizeof("export")))
 	{
-		if (root->content->next && root->content->next->type == OPTIONS)
-			return (EXIT_SUCCESS);
-		else
+		if (root->content->next \
+    && root->content->next->type == OPTIONS)
+    {
+      if(check_cmd_export_2(root->content))
+			  return (check_var(root->content, &g_helper.envp, &g_helper.xenv));
+      else
+        return(EXIT_SUCCESS);
+    }
+    else
 			return (export(helper->envp));
 	}
 	else if (!ft_strncmp("exit", root->content->content, sizeof("exit")))

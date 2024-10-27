@@ -46,8 +46,7 @@ int	prepare_command(t_tree *root, t_helper *helper)
 	{
 		helper->cmd = get_path_of_cpath(root->content);
 		if (!helper->cmd)
-			return (no_file_no_dir(root->content->content));
-		free(path);
+      return (free(path), no_file_no_dir(root->content->content));
 	}
 	else
 		helper->cmd = get_path(helper, root->content);

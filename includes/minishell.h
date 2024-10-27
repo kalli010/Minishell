@@ -98,6 +98,7 @@ char	**add_new_env(t_add_env_params *params);
 int		check_content(char *str);
 int		set_var(t_list *list, char ***env, char ***xenv);
 int		check_cmd_export(t_list *list);
+int   check_cmd_export_2(t_list *list);
 int		check_var(t_list *list, char ***env, char ***xenv);
 void	init_params(\
 		t_add_env_params *p_env, char **env, char *var, char *value);
