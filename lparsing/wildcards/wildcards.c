@@ -6,7 +6,7 @@
 /*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:52:13 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/27 23:43:56 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:00:43 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	process_wildcard_for_entry(t_list **list, t_list **tmp, DIR *dir)
 				entry = readdir(dir);
 			}
 			skip_wildcards(list, tmp, d);
-			break ;
 		}
 		if (*list)
 			*list = (*list)->next;
@@ -71,7 +70,7 @@ void	process_wildcard_for_entry(t_list **list, t_list **tmp, DIR *dir)
 
 void	reset_linked_list(t_list **list, t_list *tmp)
 {
-	if(tmp == NULL)
+	if (tmp == NULL)
 		return ;
 	*list = tmp;
 	while ((*list)->back)

@@ -6,7 +6,7 @@
 /*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 13:17:41 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/28 00:19:47 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:01:32 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ char	*check_path(char *path)
 {
 	char	*new_path;
 
-	if((path && path[0] == '\0') || !path)
+	if ((path && path[0] == '\0') || !path)
 	{
 		new_path = (char *)malloc(sizeof(char) * 2);
-		return(ft_memcpy(new_path, ".", 2));
+		return (ft_memcpy(new_path, ".", 2));
 	}
 	new_path = allocate_path(path);
 	if (!new_path)

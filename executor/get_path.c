@@ -6,7 +6,7 @@
 /*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:44:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/28 00:18:53 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/10/28 02:01:17 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	**get_envp(char **env)
 	path = ft_getenv(env, "PATH", -1);
 	path = check_path(path);
 	split_path = ft_split(path, ':');
-	
 	free(path);
 	return (split_path);
 }
