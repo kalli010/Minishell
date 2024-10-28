@@ -21,7 +21,7 @@ int	tokenizer(char *str, char ***tokens)
 	tk.tokens = tokens;
 	tc = token_count(str);
 	*tokens = (char **)malloc(sizeof(char *) * (tc + 1));
-	if (tokens == NULL)
+	if (*tokens == NULL)
 		return (1);
 	if (create_tokens_loop(&tk))
 		return (1);

@@ -31,7 +31,7 @@ int	get_permission(char *file)
 		write(2, " : Permission denied\n", 22);
 		return (g_helper.exit_status);
 	}
-	return (g_helper.exit_status);
+	return (0);
 }
 
 int	command_not_found(char *cmd)
