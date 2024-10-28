@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:43 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 21:38:22 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/10/28 01:18:49 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,10 @@ int	check_cmd_export_2(t_list *list)
 
 int	check_var(t_list *list, char ***env, char ***xenv)
 {
-	g_helper.exit_status = 0;
 	if (list == NULL || ft_strncmp("export", list->content, sizeof("export"))
 		|| ((list->back == NULL || list->e == 1)
 			&& check_cmd_export(list->next)))
-		return (g_helper.exit_status);
+		return (0);
 	list = list->next;
 	while (list)
 	{

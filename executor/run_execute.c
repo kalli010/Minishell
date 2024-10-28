@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/21 01:40:14 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/28 01:39:52 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,16 @@ int	handle_redirection_and_pipes(t_tree *root, t_helper *helper, t_tree **rt)
 
 int	find_command(t_tree *root, t_helper *helper, t_tree **rt)
 {
+	int status;
+	
 	if (!root)
 		return (EXIT_SUCCESS);
-	g_helper.exit_status = check_root_content(root);
-	if (g_helper.exit_status != 0)
+	status = check_root_content(root);
+	if (status)
+	{
+		g_helper.exit_status = status;
 		return (g_helper.exit_status);
+	}
 	if (root->content->in == 1)
 	{
 		root->content->in = 0;

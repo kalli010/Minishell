@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_status.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 03:25:21 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/21 01:08:52 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/10/28 00:28:11 by iboutadg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int	get_permission(char *file)
 
 int	command_not_found(char *cmd)
 {
-  (void)cmd;
 	write(2, M_SHELL, 23);
-	write(2, "command not found\n", 18);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": command not found\n", 21);
 	g_helper.exit_status = 127;
 	return (g_helper.exit_status);
 }
