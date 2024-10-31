@@ -54,7 +54,7 @@ void	handle_complex_token(char *str, int *i)
 		}
 		(*i)++;
 	}
-	while (str[--(*i)] == ' ' && (str[*i] < 9 || str[*i] > 13))
+	while (str[--(*i)] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
 		;
 	(*i)++;
 }

@@ -80,8 +80,6 @@ int	check_and_expand_symbols(void)
 
 int	process_heredocs(int hd, t_heredoc *hdc)
 {
-	int	i;
-
 	if (hd > 16)
 	{
 		printf("Error.\n");
@@ -94,7 +92,6 @@ int	process_heredocs(int hd, t_heredoc *hdc)
 		init_hd(hdc, &g_helper.list, &g_helper.redfile);
 		if (heredoc(hdc, hd))
 		{
-			i = -1;
 			free(g_helper.redfile);
 			free_list(*hdc->list);
 			return (EXIT_FAILURE);
