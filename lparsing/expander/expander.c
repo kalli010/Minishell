@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:38 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 21:25:12 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/02 17:03:09 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	expander(char **env, t_list **list, int d)
 
 int	check_d(char *str, int i)
 {
-  if (str[0] == '\0')
-    return (i);
+	if (str[0] == '\0')
+		return (i);
 	while (str[++i])
 	{
 		if (str[i + 1] && str[i] == '$' && str[i + 1] != '$')

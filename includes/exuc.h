@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/21 02:31:38 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/02 17:02:20 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-
 
 # define GREEN "\033[1;32m"
 # define RED "\033[1;31m"

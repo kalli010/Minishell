@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:47:48 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:47:49 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/02 17:03:27 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,6 @@ int	expand_line(char **env, char **str, int d)
 		xl.var = ft_getenv(env, xl.sstr, -1);
 	free(*str);
 	*str = NULL;
-  *str = get_new_list(xl.fstr, xl.var, xl.tstr);
+	*str = get_new_list(xl.fstr, xl.var, xl.tstr);
 	return (free_xl(&xl), 0);
 }
