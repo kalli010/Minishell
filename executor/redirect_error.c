@@ -25,7 +25,7 @@ int	check_existence(char *file, int flag)
 		}
 		return (g_helper.exit_status);
 	}
-	return (g_helper.exit_status);
+	return (0);
 }
 
 int	check_read(char *file)
@@ -38,7 +38,7 @@ int	check_read(char *file)
 		write(2, " : Permission denied\n", 22);
 		return (g_helper.exit_status);
 	}
-	return (g_helper.exit_status);
+	return (0);
 }
 
 int	check_write_and_dir(char *file)
@@ -61,7 +61,7 @@ int	check_write_and_dir(char *file)
 		write(2, " : Permission denied\n", 22);
 		return (g_helper.exit_status);
 	}
-	return (g_helper.exit_status);
+	return (0);
 }
 
 int	check_permission(char *file)
@@ -74,5 +74,5 @@ int	check_permission(char *file)
 		write(2, " : Permission denied\n", 22);
 		return (g_helper.exit_status);
 	}
-	return (g_helper.exit_status);
+	return (0);
 }

@@ -96,10 +96,10 @@ int	exec_redirections(t_redirect *redlst, t_helper *helper)
 	{
 		status = check_file(redlst->type, redlst->filename, redlst->flag);
 		if (status != EXIT_SUCCESS)
-			return (status);
+			return (g_helper.exit_status = 1, 1);
 		status = open_fd(redlst->filename, redlst->type);
 		if (status != EXIT_SUCCESS)
-			return (status);
+			return (g_helper.exit_status = 1, 1);
 		redlst = redlst->next;
 	}
 	return (EXIT_SUCCESS);

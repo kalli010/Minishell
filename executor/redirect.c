@@ -35,7 +35,7 @@ int	open_files(char *file, int type)
 	int	fd;
 
 	if (!file || !*file)
-		return (errors("Invalid file\n", 0, -1), -1);
+		return (errors(" ", 0, -1), -1);
 	if (type == APPEND)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == OUTPUT)
@@ -45,7 +45,7 @@ int	open_files(char *file, int type)
 	else
 		return (errors("Invalid file type\n", 0, -1), -1);
 	if (fd == -1)
-		return (errors("Invalid file\n", 0, -1), -1);
+		return (errors(" ", 0, -1), -1);
 	return (fd);
 }
 

@@ -18,24 +18,24 @@ static int	ft_all_isdigit(char *data)
 
 	i = 0;
 	while (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
-	  i++;
-  if (data[i] == '-')
+		i++;
+	if (data[i] == '-')
 		i++;
 	while (data[i])
 	{
-    if (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
-    {
-      while (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
-        i++;
-      if (data[i] != '\0')
-        return (0);
-      else
-        return (1);
-    }
-    if (!ft_isdigit(data[i]))
+		if (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
+		{
+			while (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
+				i++;
+			if (data[i] != '\0')
+				return (0);
+			else
+				return (1);
+		}
+		if (!ft_isdigit(data[i]))
 			return (0);
-    if(data[i] != '\0')
-		  i++;
+		if (data[i] != '\0')
+			i++;
 	}
 	return (1);
 }
