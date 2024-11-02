@@ -65,7 +65,7 @@ int	expand_line(char **env, char **str, int d)
 	else
 		xl.var = ft_getenv(env, xl.sstr, -1);
 	free(*str);
-	*str = get_new_list(xl.fstr, xl.var, xl.tstr);
-	free_xl(&xl);
-	return (0);
+	*str = NULL;
+  *str = get_new_list(xl.fstr, xl.var, xl.tstr);
+	return (free_xl(&xl), 0);
 }
