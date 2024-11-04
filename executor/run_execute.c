@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/11/04 07:40:03 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 09:04:07 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,6 @@ int	check_root_content(t_tree *root)
 	{
 		printf("..: command not found\n");
 		return (127);
-	}
-	if (!ft_strncmp(root->content->content, "//", 1) && has_slash(root->content->content))
-	{
-		printf("minishell: %s: Is a directory\n", root->content->content);
-		return (126);
 	}
 	if (is_only_bs(root))
 		return (127);

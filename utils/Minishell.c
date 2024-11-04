@@ -23,7 +23,6 @@ int	build_and_execute_tree(int hd)
 	else
 		g_helper.root = creat_tree(g_helper.list);
 	clean_linked_list_par(&g_helper.list);
-	print_tree(g_helper.root,0);
 	status = find_command(g_helper.root, &g_helper, &g_helper.root);
 	if (status == 130)
 		write(1,"\n",1);
