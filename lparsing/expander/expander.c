@@ -49,28 +49,24 @@ int	check_d(char *str, int i)
 
 int	check_squotes(char *str, int i)
 {
-	int	s;
+  int k;
+  char q;
 
-	s = 0;
-	while (--i >= 0)
+  k = 0;
+	while (k <= i)
 	{
-		if (str[i] == '\'')
+		if (str[k] == '\'' || str[k] == '"')
 		{
-			s++;
-			while (--i >= 0)
-			{
-				if (str[i] == '\'')
-					s++;
-			}
-			if (s % 2 == 0)
-				return (1);
-			else
-				return (0);
+      q = str[k];
+			while (str[++k] != q);
 		}
-		else if (str[i] == '"')
-			return (1);
-	}
-	return (1);
+	  k++;
+  }
+  if (q == '"')
+	  return (1);
+  else {
+    return (0);
+  }
 }
 
 int	process_expansion(char **env, t_list **list, int i)
@@ -111,10 +107,11 @@ int	check_expander(char **env, t_list **list)
 	while (*list)
 	{
 		i = check_d((*list)->content, -1);
-		if (process_expansion(env, list, i))
-			return (1);
-		tmp = *list;
-		if (*list != NULL)
+    if ((*list)->back == NULL || (*list)->back->type != HEREDOC)
+      if (process_expansion(env, list, i))
+        return (1);
+    tmp = *list;
+    if (*list != NULL)
 			(*list) = (*list)->next;
 	}
 	*list = tmp;
