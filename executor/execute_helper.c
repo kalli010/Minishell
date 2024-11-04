@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 00:42:50 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/12 21:41:15 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 07:42:14 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,6 @@ int	is_only_bs(t_tree *root)
 	}
 	write(2, M_SHELL, 23);
 	write(2, "command not found\n", 19);
-	return (EXIT_FAILURE);
-}
-
-int	is_only_slashes(t_tree *root)
-{
-	char	*str;
-	int		i;
-
-	str = root->content->content;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != '/')
-			return (EXIT_SUCCESS);
-		i++;
-	}
 	return (EXIT_FAILURE);
 }
 

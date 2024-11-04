@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/27 23:44:56 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/11/04 07:39:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
 
 static int	finish_status(pid_t pid)
 {
@@ -47,7 +48,8 @@ int	prepare_helper(t_tree *root, t_helper *helper)
 	{
 		if (g_helper.flag == 1)
 			return (no_file_no_dir(root->content->content));
-		if (root->content->content[len - 1] == '/')
+		if (root->content->content[len - 1] == '/' ||
+		has_slash(root->content->content))
 		{
 			if (stat(root->content->content, &path_stat) == 0
 				&& S_ISDIR(path_stat.st_mode))

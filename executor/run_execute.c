@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:21:08 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/28 02:01:07 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/11/04 07:40:03 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	check_root_content(t_tree *root)
 		printf("..: command not found\n");
 		return (127);
 	}
-	if (!ft_strncmp(root->content->content, "//", 1) && is_only_slashes(root))
+	if (!ft_strncmp(root->content->content, "//", 1) && has_slash(root->content->content))
 	{
 		printf("minishell: %s: Is a directory\n", root->content->content);
 		return (126);

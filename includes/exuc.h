@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/11/02 17:02:20 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 07:41:56 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <stdbool.h>
 
 # define GREEN "\033[1;32m"
 # define RED "\033[1;31m"
@@ -37,6 +38,7 @@
 # define CHILD 666
 # define IN_HERE_DOC 555
 
+int 			has_slash(char *str);
 char			*get_path(t_helper *help, t_list *list);
 int				find_command(t_tree *root, t_helper *helper, t_tree **rt);
 char			**get_options(t_helper *helper, t_list *list);
@@ -61,13 +63,10 @@ int				ft_unset(t_list *list, t_helper *helper);
 void			ctr_c(int sig);
 void			signal_handeler(int place);
 int				is_only_bs(t_tree *root);
-int				is_only_slashes(t_tree *root);
 void			handle_cd_error(const char *path, int error_type);
 char			*get_target_path(t_list *list, t_helper *helper);
 int				errors(char *file, int status, int fd);
 int				prepare_command(t_tree *root, t_helper *helper);
-void			check_signal(void);
-int				has_slash(char *str);
 int				check_write_and_dir(char *file);
 int				check_read(char *file);
 int				check_permission(char *file);
