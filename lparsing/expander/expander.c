@@ -94,7 +94,9 @@ int	process_expansion(char **env, t_list **list, int i)
 		}
 		else
 			i = check_d((*list)->content, i);
-	}
+    if(i == -1)
+      break ;
+  }
 	return (0);
 }
 

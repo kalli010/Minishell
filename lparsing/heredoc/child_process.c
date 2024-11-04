@@ -77,7 +77,7 @@ void	heredoc_child_process(t_open_file *of, t_heredoc *hd)
 		if (of->i == 1)
 		{
 			of->d = check_d(of->line, -1);
-			while (of->line[of->d])
+			while (of->line[0] && of->line[of->d])
 			{
 				if (expand_line(hd->env, &of->line, of->d))
 				{

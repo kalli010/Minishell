@@ -19,6 +19,8 @@ static int	ft_all_isdigit(char *data)
 	i = 0;
 	while (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
 		i++;
+  if(data[i] == '\0')
+    return (0);
 	if (data[i] == '-')
 		i++;
 	while (data[i])
