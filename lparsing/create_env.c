@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:09 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 20:50:10 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:53:26 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,15 @@ void	clean_env(char **env)
 {
 	int	i;
 
-	i = -1;
-	while (env[++i])
+	i = 0;
+	while (env[i])
+	{
 		free(env[i]);
+		env[i] = NULL;
+		i++;
+	}
 	free(env);
+	env = NULL;
 }
 
 int	env_size(char **str)

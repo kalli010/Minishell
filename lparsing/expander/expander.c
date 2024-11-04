@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:38 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/11/02 17:03:09 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:12:50 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,31 +49,29 @@ int	check_d(char *str, int i)
 
 int	check_squotes(char *str, int i)
 {
-  int k;
-  char q;
+	int		k;
+	char	q;
 
-  k = 0;
-  q = '\0';
+	k = 0;
+	q = '\0';
 	while (k <= i)
 	{
 		if (str[k] == '\'' || str[k] == '"')
 		{
-      q = str[k];
-			while (str[++k] != q);
+			q = str[k];
+			while (str[++k] != q)
+				;
 		}
-	  k++;
-  }
-  if (q == '"' || q == '\0')
-	  return (1);
-  else {
-    return (0);
-  }
+		k++;
+	}
+	if (q == '"' || q == '\0')
+		return (1);
+	else
+		return (0);
 }
 
-int	process_expansion(char **env, t_list **list, int i)
+int	process_expansion(char **env, t_list **list, int i, int status)
 {
-	int	status;
-
 	while ((*list)->content[i])
 	{
 		if (check_squotes((*list)->content, i))
@@ -94,9 +92,9 @@ int	process_expansion(char **env, t_list **list, int i)
 		}
 		else
 			i = check_d((*list)->content, i);
-    if(i == -1)
-      break ;
-  }
+		if (i == -1)
+			break ;
+	}
 	return (0);
 }
 
@@ -110,11 +108,11 @@ int	check_expander(char **env, t_list **list)
 	while (*list)
 	{
 		i = check_d((*list)->content, -1);
-    if ((*list)->back == NULL || (*list)->back->type != HEREDOC)
-      if (process_expansion(env, list, i))
-        return (1);
-    tmp = *list;
-    if (*list != NULL)
+		if ((*list)->back == NULL || (*list)->back->type != HEREDOC)
+			if (process_expansion(env, list, i, 0))
+				return (1);
+		tmp = *list;
+		if (*list != NULL)
 			(*list) = (*list)->next;
 	}
 	*list = tmp;

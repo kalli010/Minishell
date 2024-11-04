@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:28:06 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/27 20:33:55 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:14:33 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int		var_dquotes(char **env, t_list **list, int d);
 int		expander(char **env, t_list **list, int d);
 int		check_d(char *str, int i);
 int		check_squotes(char *str, int i);
-int		process_expansion(char **env, t_list **list, int i);
+int		process_expansion(char **env, t_list **list, int i, int status);
 int		check_expander(char **env, t_list **list);
 void	init_vs(t_var_split *vs, int *cw, int *end);
 int		var_split(char *str, char ***array);

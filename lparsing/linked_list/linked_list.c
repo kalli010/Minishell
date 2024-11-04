@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 20:50:58 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/27 20:29:51 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:19:20 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 	set_lst_null(&tmp, &start, &n_list);
 	while (list)
 	{
-		if (list->type == INPUT || list->type == OUTPUT || list->type == APPEND || list->type == HEREDOC)
+		if (list->type == INPUT || list->type == OUTPUT \
+				|| list->type == APPEND || list->type == HEREDOC)
 		{
 			if (collect_command_and_options(list, &n_list, tmp, start))
 				return (1);
@@ -36,10 +37,7 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 		else
 		{
 			if (ft_lstadd_back(&n_list, ft_lstnew(list->content)))
-			{
-				free_list(n_list);
-				return (1);
-			}
+				return (free_list(n_list), 1);
 		}
 		tmp = list;
 		list = list->next;

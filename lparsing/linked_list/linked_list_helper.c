@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:48:07 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/19 23:48:08 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:18:29 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	process_command_and_options(t_list **n_list, t_list **tmp, t_list *start,
 				free_list(*n_list);
 				return (1);
 			}
-			// set_token_type(*n_list);
 			*tmp = (*tmp)->next;
 		}
 		start->back->next = *tmp;
@@ -72,7 +71,6 @@ int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 	if (add_original_content(n_list, list))
 		return (1);
 	free(end);
-  // free_processed_commands(end);
 	return (0);
 }
 

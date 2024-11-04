@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:38:39 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 12:38:40 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:54:08 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	check_and_update_env(char ***env, char ***xenv, t_set_var *sv, t_list *list)
 				return (free(sv->var), free(sv->value), -2);
 			if (add_var(*env, sv->var, sv->value, s))
 				return (free(sv->var), free(sv->value), -1);
+			if ((*xenv)[s] == NULL)
+				return (s);
 			if (add_var(*xenv, sv->var, sv->value, s))
 				return (free(sv->var), free(sv->value), -1);
 			return (free(sv->var), free(sv->value), -2);

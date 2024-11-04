@@ -6,12 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 03:26:42 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/11/04 09:06:54 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 22:59:45 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
 
 static int	finish_status(pid_t pid)
 {
@@ -48,11 +47,11 @@ int	prepare_helper(t_tree *root, t_helper *helper)
 	{
 		if (g_helper.flag == 1)
 			return (no_file_no_dir(root->content->content));
-		if (root->content->content[len - 1] == '/' ||
-		has_slash(root->content->content))
+		if (root->content->content[len - 1] == '/' || \
+				has_slash(root->content->content))
 		{
-			if (stat(root->content->content, &path_stat) == 0
-				&& S_ISDIR(path_stat.st_mode))
+			if (stat(root->content->content, &path_stat) == 0 \
+					&& S_ISDIR(path_stat.st_mode))
 				return (is_dir(root->content->content));
 			else
 				return (no_file_no_dir(root->content->content));

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 04:57:51 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/15 17:52:54 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 22:58:48 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static int	ft_all_isdigit(char *data)
 	i = 0;
 	while (data[i] == ' ' || (data[i] >= 9 && data[i] <= 13))
 		i++;
-  if(data[i] == '\0')
-    return (0);
+	if (data[i] == '\0')
+		return (0);
 	if (data[i] == '-')
 		i++;
 	while (data[i])
@@ -31,8 +31,7 @@ static int	ft_all_isdigit(char *data)
 				i++;
 			if (data[i] != '\0')
 				return (0);
-			else
-				return (1);
+			return (1);
 		}
 		if (!ft_isdigit(data[i]))
 			return (0);

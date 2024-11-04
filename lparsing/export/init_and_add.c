@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 12:38:44 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 12:38:45 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:54:30 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	add_new_var_to_env(char ***env, char ***xenv, t_set_var *sv, int s)
 	init_params(&p_xenv, *xenv, sv->var, sv->value);
 	p_xenv.s = s;
 	p_xenv.check = 1;
-	*env = add_new_env(&p_env);
+	if ((*env)[s] == NULL)
+		*env = add_new_env(&p_env);
 	*xenv = add_new_env(&p_xenv);
 	if (*env == NULL || *xenv == NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 06:05:05 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/11/04 09:16:26 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 22:56:29 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	ft_env(t_list *list, char **env)
 {
 	int	i;
-	(void)list;
 
+	(void)list;
 	i = 0;
 	while (env[i])
 	{

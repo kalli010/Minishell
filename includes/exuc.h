@@ -6,7 +6,7 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:45:11 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/11/04 07:41:56 by ayel-mou         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:00:12 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define CHILD 666
 # define IN_HERE_DOC 555
 
-int 			has_slash(char *str);
+int				has_slash(char *str);
 char			*get_path(t_helper *help, t_list *list);
 int				find_command(t_tree *root, t_helper *helper, t_tree **rt);
 char			**get_options(t_helper *helper, t_list *list);

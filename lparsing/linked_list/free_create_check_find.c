@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 13:08:48 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/25 13:08:49 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:17:05 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,12 @@ int	check_red_with_cmd(t_list *list)
 {
 	while (list)
 	{
-		if (list->type == INPUT || list->type == OUTPUT || list->type == APPEND || list->type == HEREDOC)
+		if (list->type == INPUT || list->type == OUTPUT \
+				|| list->type == APPEND || list->type == HEREDOC)
 		{
-			if (list->next != NULL && list->next->next != NULL
-				&& (list->next->next->type == COMMAND
-					|| list->next->next->type == OPTIONS))
+			if (list->next != NULL && list->next->next != NULL \
+					&& (list->next->next->type == COMMAND \
+						|| list->next->next->type == OPTIONS))
 				return (1);
 		}
 		list = list->next;
@@ -70,8 +71,8 @@ int	check_red_with_cmd(t_list *list)
 void	find_command_end(t_list *list, t_list **tmp)
 {
 	*tmp = list->next;
-	while (*tmp && ((*tmp)->type == PATH || (*tmp)->type == PATH_COMMAND
-			|| (*tmp)->type == INPUT || (*tmp)->type == OUTPUT
-			|| (*tmp)->type == APPEND || (*tmp)->type == DELIMITER))
+	while (*tmp && ((*tmp)->type == PATH || (*tmp)->type == PATH_COMMAND \
+				|| (*tmp)->type == INPUT || (*tmp)->type == OUTPUT \
+				|| (*tmp)->type == APPEND || (*tmp)->type == DELIMITER))
 		*tmp = (*tmp)->next;
 }
