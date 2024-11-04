@@ -6,17 +6,11 @@
 /*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 02:21:52 by ayel-mou          #+#    #+#             */
-/*   Updated: 2024/10/26 14:48:21 by zelkalai         ###   ########.fr       */
+/*   Updated: 2024/11/04 06:04:56 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-void	check_signal(void)
-{
-	if (g_helper.exit_status == 130)
-		write(2, "\n", 1);
-}
 
 void	ctr_c(int sig)
 {

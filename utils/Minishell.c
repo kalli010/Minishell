@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iboutadg <iboutadg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayel-mou <ayel-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:47:25 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/10/28 02:02:01 by iboutadg         ###   ########.fr       */
+/*   Updated: 2024/11/04 06:12:16 by ayel-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,17 @@ t_helper	g_helper;
 
 int	build_and_execute_tree(int hd)
 {
+	int status;
+	
 	if (check_parenthesis(g_helper.list))
 		g_helper.root = creat_tree_with_parenthesis(g_helper.list);
 	else
 		g_helper.root = creat_tree(g_helper.list);
 	clean_linked_list_par(&g_helper.list);
-	find_command(g_helper.root, &g_helper, &g_helper.root);
-	check_signal();
+	print_tree(g_helper.root,0);
+	status = find_command(g_helper.root, &g_helper, &g_helper.root);
+	if (status == 130)
+		write(1,"\n",1);
 	if (hd)
 		if (clean_heredoc(g_helper.redfile, hd))
 			return (EXIT_FAILURE);
