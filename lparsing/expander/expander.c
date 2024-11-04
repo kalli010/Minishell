@@ -53,6 +53,7 @@ int	check_squotes(char *str, int i)
   char q;
 
   k = 0;
+  q = '\0';
 	while (k <= i)
 	{
 		if (str[k] == '\'' || str[k] == '"')
@@ -62,7 +63,7 @@ int	check_squotes(char *str, int i)
 		}
 	  k++;
   }
-  if (q == '"')
+  if (q == '"' || q == '\0')
 	  return (1);
   else {
     return (0);

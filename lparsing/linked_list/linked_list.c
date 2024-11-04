@@ -28,7 +28,7 @@ int	recreate_linked_list(t_list *list, t_list **lst)
 	set_lst_null(&tmp, &start, &n_list);
 	while (list)
 	{
-		if (list->type == INPUT || list->type == OUTPUT)
+		if (list->type == INPUT || list->type == OUTPUT || list->type == APPEND || list->type == HEREDOC)
 		{
 			if (collect_command_and_options(list, &n_list, tmp, start))
 				return (1);

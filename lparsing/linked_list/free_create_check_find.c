@@ -55,7 +55,7 @@ int	check_red_with_cmd(t_list *list)
 {
 	while (list)
 	{
-		if (list->type == INPUT || list->type == OUTPUT || list->type == APPEND)
+		if (list->type == INPUT || list->type == OUTPUT || list->type == APPEND || list->type == HEREDOC)
 		{
 			if (list->next != NULL && list->next->next != NULL
 				&& (list->next->next->type == COMMAND
@@ -72,6 +72,6 @@ void	find_command_end(t_list *list, t_list **tmp)
 	*tmp = list->next;
 	while (*tmp && ((*tmp)->type == PATH || (*tmp)->type == PATH_COMMAND
 			|| (*tmp)->type == INPUT || (*tmp)->type == OUTPUT
-			|| (*tmp)->type == APPEND))
+			|| (*tmp)->type == APPEND || (*tmp)->type == DELIMITER))
 		*tmp = (*tmp)->next;
 }

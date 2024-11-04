@@ -29,7 +29,7 @@ int	process_command_and_options(t_list **n_list, t_list **tmp, t_list *start,
 				free_list(*n_list);
 				return (1);
 			}
-			token_type(*n_list);
+			// set_token_type(*n_list);
 			*tmp = (*tmp)->next;
 		}
 		start->back->next = *tmp;
@@ -71,7 +71,8 @@ int	collect_command_and_options(t_list *list, t_list **n_list, t_list *tmp,
 		return (1);
 	if (add_original_content(n_list, list))
 		return (1);
-	free_processed_commands(end);
+	free(end);
+  // free_processed_commands(end);
 	return (0);
 }
 
